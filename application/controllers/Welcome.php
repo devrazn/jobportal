@@ -20,8 +20,30 @@ class Welcome extends CI_Controller {
 	 */
 	public function index()
 	{
-		
-		$this->load->view('blank_body');
-		//$this->load->view('admin/login');
+		//$this->load->view('blank_body');
+		$this->load->view('admin/login');
+	}
+
+	public function login_validation()
+	{
+		$this->load->library('form_validation');
+
+		$this->form_validation->set_rules('email','Email','required|trim|callback_validate_credentials');
+		$this->form_validation->set_rules('password','Password','required|md5|trim');
+
+		if($this->form_validation->run()){
+			$data = array(
+				'email' => $this->input->post('email'),
+				'is_logged_in' => 1
+				);
+			$this->session->set_userdata($data);
+
+			redirect('main/members');
+		} else {
+			$this->load->view('login');
+		}
+
+		//echo $_POST['email'];
+		//echo $this->input->post('email');
 	}
 }
