@@ -8,7 +8,6 @@ class Login extends CI_Controller {
 	  	parent::__construct();
 	  	$this->load->library('form_validation');
 	  	$this->load->helper('cookie');
-	  	$this->load->library('session');
 	}
 
 
@@ -73,14 +72,14 @@ class Login extends CI_Controller {
 				$cookie = array(
 					'name'   => 'admin_jp_un',
 					'value'  => $this->input->post('email'),
-					'expire' => time()+100 * 24 * 60 * 60
+					'expire' => time()+30 * 24 * 60 * 60
 					);
 				$this->input->set_cookie($cookie);
 
 				$cookie = array(
 					'name'   => 'admin_jp_pw',
 					'value'  => $this->input->post('password'),
-					'expire' => time()+100 * 24 * 60 * 60
+					'expire' => time()+30 * 24 * 60 * 60
 					);
 				$this->input->set_cookie($cookie);
 
@@ -111,7 +110,6 @@ class Login extends CI_Controller {
 		$this->load->model('model_login');
 
 		if($this->model_login->can_log_in()){
-
 			return true;
 		} else {
 			$this->form_validation->set_message('validate_credentials','Incorrect Email/Password');

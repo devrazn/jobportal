@@ -29,7 +29,7 @@ $config['base_url'] = '';
 | variable so that it is blank.
 |
 */
-$config['index_page'] = 'index.php';
+$config['index_page'] = '';
 
 /*
 |--------------------------------------------------------------------------
@@ -58,7 +58,7 @@ $config['uri_protocol']	= 'REQUEST_URI';
 |
 | http://codeigniter.com/user_guide/general/urls.html
 */
-$config['url_suffix'] = 'index.php';
+$config['url_suffix'] = '';
 
 /*
 |--------------------------------------------------------------------------
@@ -320,8 +320,8 @@ $config['encryption_key'] = 'A0zKcbD2x6oOYqm9V631csz471qTSWj';
 |
 |	The storage driver to use: files, database, redis, memcached
 |
-| 'sess_cookie_name'
-|
+|| 'sess_cookie_name'
+
 |	The session cookie name, must contain only [0-9a-z_-] characters
 |
 | 'sess_expiration'
@@ -361,11 +361,12 @@ $config['encryption_key'] = 'A0zKcbD2x6oOYqm9V631csz471qTSWj';
 */
 $config['sess_driver'] = 'files';
 $config['sess_cookie_name'] = 'ci_session';
-$config['sess_expiration'] = 7200;
+$config['sess_expiration'] = 30 * 24 * 60 * 60;
 $config['sess_save_path'] = NULL;
 $config['sess_match_ip'] = FALSE;
 $config['sess_time_to_update'] = 300;
 $config['sess_regenerate_destroy'] = FALSE;
+$config['sess_expire_on_close'] = FALSE;
 
 /*
 |--------------------------------------------------------------------------
