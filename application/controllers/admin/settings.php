@@ -12,7 +12,7 @@ class Settings extends CI_Controller {
     }
 
     public function index() {
-        
+        echo 1; exit;
         $this->site_settings();
     }
 
