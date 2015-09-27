@@ -3,11 +3,11 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 ?>
 
 <?php
-	$this->load->view('admin/header');
+    $this->load->view('admin/common/header');
 ?>
 
 <?php
-	$this->load->view('admin/sidenav');
+    $this->load->view('admin/common/sidenav');
 ?>
 
  <!-- Page Content -->
@@ -29,5 +29,5 @@ defined('BASEPATH') OR exit('No direct script access allowed');
     <!-- /#wrapper -->
     
 <?php
-	$this->load->view('admin/footer');
+    $this->load->view('admin/common/footer');
 ?>

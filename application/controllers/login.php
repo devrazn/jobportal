@@ -43,7 +43,7 @@ class Login extends CI_Controller {
 
 	public function dashboard() {
 		if($this->session->userdata('is_logged_in')){
-			$this->load->view('admin/blank_body');	
+			$this->load->view('admin/common/blank_body');	
 		} else {
 			redirect('login/login');
 		}
