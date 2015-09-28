@@ -18,8 +18,10 @@ class category extends CI_Controller {
 
 
     public function category() {
+        $data['main'] = 'admin/category/list';
+        $this->load->view('admin/admin', $data);
 
-        $this->load->view('admin/category/list');
+       // $this->load->view('admin/category/list');
     }
 
 }
