@@ -39,28 +39,35 @@
             <div class="col-md-4 col-md-offset-4">
                 <div class="login-panel panel panel-default">
                     <div class="panel-heading">
-                        <h3 class="panel-title">Please Sign In</h3>
+                        <h3 class="panel-title">Reset Your Password</h3>
                     </div>
                     <div class="panel-body">
-                        <form role="form" method="post" action="<?=base_url();?>login/admin_login_validation">
+                        <form role="form" method="post" action="<?=base_url();?>login/reset_pw_validation">
                             
                             <fieldset>
                                 <div class="form-group">
-                                    <input class="form-control" placeholder="E-mail" name="email" type="text" value="<?php if(isset($_COOKIE['admin_jp_un'])) echo $_COOKIE['admin_jp_un']; ?>" autofocus>
-                                    <?php echo form_error('email'); ?>
+                                    <input class="form-control" placeholder="New Password" name="password" type="password" autofocus>
+                                    <?php
+                                        if($this->session->pass_error!=null){
+                                            echo $this->session->pass_error;
+                                            $this->session->pass_error = null;
+                                        }
+                                    ?>
                                 </div>
+
                                 <div class="form-group">
-                                    <input class="form-control" placeholder="Password" name="password" value="<?php if(isset($_COOKIE['admin_jp_pw'])) echo $_COOKIE['admin_jp_pw']; ?>" type="password">
-                                    <?php echo form_error('password'); ?>
+                                    <input class="form-control" placeholder="Retype Your Password" name="cpassword" type="password">
+                                    <?php
+                                        if($this->session->pass_error!=null){
+                                            echo $this->session->cpass_error;
+                                            $this->session->cpass_error = null;
+                                        }
+                                    ?>
                                 </div>
-                                <div class="checkbox">
-                                    <label>
-                                        <input name="remember" type="checkbox" <?php if(isset($_COOKIE['admin_jp_un'])) echo "checked";?>>Remember Me
-                                    </label>
-                                </div>
+                                
                                 <!-- Change this to a button or input when using this as a form -->
-                                <input type="submit" class="btn btn-lg btn-success btn-block" value="Login">
-                                <span class="pull-right"><a href="<?=base_url();?>login/admin_forgot_pass">Forgot Password?</a></span>
+                                <input type="submit" class="btn btn-lg btn-success btn-block" value="Reset My Password">
+                                
                             </fieldset>
                         </form>
                     </div>

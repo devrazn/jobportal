@@ -22,38 +22,18 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                             <li class="active">
                                 <i class="fa fa-dashboard"></i> Dashboard
                             </li>
-                        </ol> 
+                        </ol>
                     </div>
                     <!-- /.col-lg-12 -->
                 </div>
-
-<?php
-if ($this->session->flashdata('flash_msg'))
-{
-    if ($this->session->userdata('flash_msg_type'))
-    {
-        $flash_class = $this->session->userdata('flash_msg_type');
-        $this->session->unset_userdata('flash_msg_type');
-    }
-    else
-    {
-        $flash_class = "info";
-    }
-    
-
-?>
-<div class="alert alert-<?php echo $flash_class; ?> fade in" role="alert" >
-    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-        <span aria-hidden="true">&times;</span>
-    </button>
-<?php echo $this->session->flashdata('flash_msg'); ?>
-</div>
-<?php
-// SESSION::delete('flash_msg');
-// SESSION::delete('flash_msg_type');
-}
-?>
-
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="alert alert-info alert-dismissable">
+                            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                            <i class="fa fa-info-circle"></i>  <strong>Like SB Admin?</strong> Try out <a href="http://startbootstrap.com/template-overviews/sb-admin-2" class="alert-link">SB Admin 2</a> for additional features!
+                        </div>
+                    </div>
+                </div>
                 <!-- /.row -->
             </div>
             <!-- /.container-fluid -->

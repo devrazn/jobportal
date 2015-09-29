@@ -73,4 +73,102 @@ class Model_Login extends CI_Model {
         return $this->encryption->decrypt($data);
 	}
 
+
+	public function is_valid_admin_email() {
+		$this->db->where('email', $this->input->post('email'));
+
+		$query = $this->db->get('tbl_admin');
+		
+		if($query->num_rows() == 1){
+			 return true;
+		} else {
+			return false;
+		}
+	}
+
+
+	public function is_admin_key_valid($data) {
+
+		$this->db->where('pw_reset_key', $data['key']);
+
+		$query = $this->db->get('tbl_admin');
+
+		if ($query->num_rows() > 0) {
+			//echo "got the key"; exit;
+			foreach ($query->result_array() as $row) {
+		   		if($data['email'] == sha1(md5($row['email']))) {
+		   			//echo 'got both the key & email'; exit;
+		   			return $row['email'];
+		   			break;
+		   		}
+			}
+			//echo 'got the key but not the email.'; exit;
+		} else {
+			//secho "can't find either the key or the email."; exit;
+			return false;
+		}
+	}
+
+
+	public function set_admin_pw_reset_key($key){
+		//echo 1; exit;
+		//echo $data['key'];
+		//print_r($data); exit;
+		//print_r($data['password']);
+		//echo $data['password']; exit;
+		$data1 = array(
+			'pw_reset_key' => $key
+			);
+
+		$this->db->where('email', $this->input->post('email'));
+
+		$query = $this->db->update('tbl_admin', $data1);
+		if($query){
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+
+	public function update_pw($update_data){
+
+		/*$data = array(
+               'title' => $title,
+               'name' => $name,
+               'date' => $date
+            );
+
+		$this->db->where('id', $id);
+		$this->db->update('mytable', $data);*/
+
+
+
+		/*$query = $this->db->update('tbl_admin', $data1);
+		if($query){
+			return true;
+		} else {
+			return false;
+		}*/
+
+		$data1 = array(
+			'pw_reset_key' => $update_data['key'],
+			'password' => $update_data['password']
+			);
+
+		$this->db->where('email', $this->session->userdata('email'));
+
+		if($this->db->update('tbl_admin', $data1)){
+			return true;
+		} else {
+			return false;
+		}
+
+		// $data2['email'] = $this->session->userdata('email');;
+		// echo $data2['email'];
+		// echo $update_data['password'];
+		// echo $update_data['key'];		
+		exit;
+
+	}
 }

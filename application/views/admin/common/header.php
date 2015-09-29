@@ -56,7 +56,7 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand" href="index.html">Online Job Portal</a>
+                <a class="navbar-brand" href="<?=base_url();?>">Online Job Portal</a>
             </div>
             <!-- /.navbar-header -->
 
