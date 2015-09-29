@@ -1,42 +1,48 @@
-<?php
-defined('BASEPATH') OR exit('No direct script access allowed');
-?>
+<script type="text/javascript">
+$(document).ready(function()
+{
+        $("#frm").validate({
+                            debug:false,
+                            onBlur:true,
+                            errorElement: "p",
+                            errorClass:"err"
+                                 });
+});
+</script>
 
-<?php
-	$this->load->view('admin/header');
-?>
-
-<?php
-	$this->load->view('admin/sidenav');
-?>
-
- <!-- Page Content -->
-        <div id="page-wrapper">
-            <div class="container-fluid">
-                <div class="row">
-                    <div class="col-lg-12">
-                        <h1 class="page-header">Blank</h1>
-                        <ol class="breadcrumb">
-                            <li class="active">
-                                <i class="fa fa-dashboard"></i> Blank
-                            </li>
-                        </ol>
-                        <div class="alert alert-info alert-dismissable">
-                            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-                            <i class="fa fa-info-circle"></i>  <strong>Like SB Admin?</strong> Try out <a href="http://startbootstrap.com/template-overviews/sb-admin-2" class="alert-link">SB Admin 2</a> for additional features!
-                        </div>
-                    </div>
-                    <!-- /.col-lg-12 -->
-                </div>
-                <!-- /.row -->
+<!-- Page Wrapper -->
+<div id="page-wrapper">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-lg-12">
+                <h1 class="page-header">Add Job Category</h1>                         
             </div>
-            <!-- /.container-fluid -->
-        </div>
-        <!-- /#page-wrapper -->
 
+            <form id="frm" method="post" class="form-horizontal" action="">
+                <div class="form-group">
+                    <label for="text1" class="control-label col-lg-2"> Name</label>
+                    <div class="col-lg-7">
+                        <input name="name" type="text" class="form-control required" value="<?=set_value('name');?>">
+                        <?=form_error('name')?>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="text1" class="control-label col-lg-2">Status</label>
+                    <div class="col-lg-7">
+                        <input name="status" type="radio" value="1"  />Active
+                        <input name="status" type="radio" value="0" />InActive
+                    </div>
+                </div>                              
+                <div class="form-group">
+                    <label for="text1" class="control-label col-lg-2"></label>
+                    <div class="col-lg-7">          
+                      <input type="submit" value="ADD" class="navigation_button btn btn-primary"/>
+                    </div>          
+                </div>
+            </form>
+        </div>
+                <!-- /.row -->
     </div>
-    <!-- /#wrapper -->
-    
-<?php
-	$this->load->view('admin/footer');
-?>
+    <!-- /.container-fluid -->
+</div>
+<!-- /#page-wrapper -->

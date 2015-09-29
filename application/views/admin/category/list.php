@@ -1,20 +1,29 @@
-
-
- <!-- Page Content -->
-        <div id="page-wrapper">
-            <div class="container-fluid">
-                <div class="row">
-                    <div class="col-lg-12">
-                                               
-                    </div>
-                    <!-- /.col-lg-12 -->
-                </div>
-                <!-- /.row -->
-            </div>
-            <!-- /.container-fluid -->
-        </div>
-        <!-- /#page-wrapper -->
-
+<div id="page-wrapper">
+    <div class="panel-body">
+       <a class="btn btn-primary" href="<?=base_url().'admin/category/add';?>">Add New</a>   
     </div>
-    <!-- /#wrapper -->
+   
+   <div class="panel-body">
+  <div class="table-responsive">
+    <table class="table table-striped table-bordered table-hover" id="dataTables-example">
+      <thead>
+        <tr>
+          <th>City</th>
+          <th>Status</th>
+          <th>Options</th>
+        </tr>
+      </thead>
+      <tbody>
+
+
+       
+      </tbody>
+     
+    </table>
+     </div>
+</div>
+      
+
+</div>
+<!-- /#wrapper -->
     
