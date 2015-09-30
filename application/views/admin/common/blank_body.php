@@ -15,43 +15,24 @@ defined('BASEPATH') OR exit('No direct script access allowed');
             <div class="container-fluid">
                 <div class="row">
                     <div class="col-lg-12">
-                        <h1 class="page-header">
-                            Dashboard <small>Statistics Overview</small>
-                        </h1>
+                        <h2><?php echo $this->uri->segment(2); ?></h2> <small><h2><?php echo $this->uri->segment(3); ?></h2></small>
+                        <!-- <h1 class="page-header">
+                        </h1> -->
+
                         <ol class="breadcrumb">
                             <li class="active">
-                                <i class="fa fa-dashboard"></i> Dashboard
-                            </li>
-                        </ol> 
+                                <i class="fa fa-dashboard"></i><?php if($this->uri->segment(1)!='') echo ' '.$this->uri->segment(1);?>
+                                <?php if($this->uri->segment(2)!='') echo '/ '.$this->uri->segment(2);?>
+                          
+                        </li>
+                        </ol>
+                        
                     </div>
                     <!-- /.col-lg-12 -->
                 </div>
 
 <?php
-if ($this->session->flashdata('flash_msg'))
-{
-    if ($this->session->userdata('flash_msg_type'))
-    {
-        $flash_class = $this->session->userdata('flash_msg_type');
-        $this->session->unset_userdata('flash_msg_type');
-    }
-    else
-    {
-        $flash_class = "info";
-    }
-    
-
-?>
-<div class="alert alert-<?php echo $flash_class; ?> fade in" role="alert" >
-    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-        <span aria-hidden="true">&times;</span>
-    </button>
-<?php echo $this->session->flashdata('flash_msg'); ?>
-</div>
-<?php
-// SESSION::delete('flash_msg');
-// SESSION::delete('flash_msg_type');
-}
+    $this->load->view('admin/common/alert');
 ?>
 
                 <!-- /.row -->

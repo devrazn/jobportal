@@ -201,7 +201,7 @@ class Login extends CI_Controller {
 			$this->email->to($this->input->post('email'));
 			$this->email->subject('Reset Password');
 
-			$message = "<p>Thank You for signing up!</p>";
+			$message = "<p>Reset your JobPortal Password.</p>";
 			$message .= "<p><a href='".base_url()."login/validate_admin_pw_reset_credentials/$key/$email'>Click Here</a> to reset your password.</p>";
 			$this->email->message($message);
 
