@@ -25,20 +25,20 @@
        if($category['status']=='1')
       {
       ?>
-            <a href="<?=site_url(ADMIN_PATH.'/category/change_status/1/'.$category['id'])?>">Active</a>
+            <a href="<?=site_url(ADMIN_PATH.'/category/change_status/1/'.$category['id'])?>">Deactivate</a>
             <?php
       }
       else if($category['status']=='0')
         {
         ?>
-            <a href="<?=site_url(ADMIN_PATH.'/category/change_status/0/'.$category['id'])?>">Inactive</a>
+            <a href="<?=site_url(ADMIN_PATH.'/category/change_status/0/'.$category['id'])?>">Activate</a>
             <?php
         }
   ?>
 
 
 
-            <?=$category['status']?></td>
+            <?php //$category['status']?></td>
      
 <td><a href="<?=site_url(ADMIN_PATH.'/category/edit/'.$category['id']) ?>" data-toggle="tooltip" title="" class="btn btn-effect-ripple btn-xs btn-success"  data-original-title="Edit"><i class="fa fa-pencil"></i></a>
   
