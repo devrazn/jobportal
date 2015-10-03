@@ -10,7 +10,7 @@ class Login extends CI_Controller {
 	  	parent::__construct();
 	  	$this->load->library('form_validation');
 	  	$this->load->helper('cookie');
-	  	$this->load->model('model_login');
+	  	$this->load->model('login_model');
 	}
 
 
@@ -19,14 +19,17 @@ class Login extends CI_Controller {
 			//$this->load->view('members');
 			$this->load->view('admin/login');
 		} else {
-			redirect('login/dashboard');
+			$data['main'] = 'admin/dashboard';
+			//$data['title'] = 'Dashboard';
+			$this->load->view('admin/admin', $data);
+			//redirect('login/dashboard');
 		}
 	}
 
 
 	public function sign_up() {
 		if($this->session->userdata('is_logged_in')){
-			redirect('login/dashboard');
+			redirect('admin/dashboard');
 		} else {
 			$this->load->view('admin/sign_up');
 		}
@@ -37,7 +40,7 @@ class Login extends CI_Controller {
 		//echo 1; exit;
 		if($this->session->userdata('is_logged_in')){
 			//$this->load->view('members');
-			redirect('login/dashboard');
+			redirect('admin/dashboard');
 		} else {
 			$this->load->view('admin/login');
 		}
@@ -46,17 +49,17 @@ class Login extends CI_Controller {
 
 	public function dashboard() {
 		if($this->session->userdata('is_logged_in')){
-			$this->load->view('admin/common/blank_body');	
+			$this->load->view('admin/dashboard');	
 		} else {
-			redirect('login/login');
+			redirect('login');
 		}
 		
 	}
 
 
 	public function admin_login_validation() {
-		$this->form_validation->set_rules('password','Password','required|trim');
-		$this->form_validation->set_rules('email','Email','required|valid_email|trim|callback_validate_credentials');
+		$this->form_validation->set_rules('password','Password','required|trim|xss_clean');
+		$this->form_validation->set_rules('email','Email','required|valid_email|trim|xss_clean|callback_validate_credentials');
 
 		if($this->form_validation->run()){
 			$data = array(
@@ -88,7 +91,7 @@ class Login extends CI_Controller {
 
 			}
 
-			redirect('login/dashboard');
+			redirect('admin/dashboard');
 
 		} else {
 			$this->load->view('admin/login');
@@ -100,9 +103,9 @@ class Login extends CI_Controller {
 	public function validate_credentials(){
 
 		//$ciphertext = $this->encrypt_me($this->input->post('password'));
-		$this->load->model('model_login');
+		//$this->load->model('login_model');
 
-		if($this->model_login->can_log_in()){
+		if($this->login_model->can_log_in()){
 			return true;
 		} else {
 			$this->form_validation->set_message('validate_credentials','Incorrect Email/Password');
@@ -113,14 +116,14 @@ class Login extends CI_Controller {
 
 	public function logout() {
 		$this->session->sess_destroy();
-		redirect('login/login');
+		redirect('login');
 	}
 
-	public function registered_user($key) {
-		$this->load->model('model_login');
+	/*public function registered_user($key) {
+		$this->load->model('login_model');
 
-		if($this->model_login->is_key_valid($key)){
-			if($new_email = $this->model_login->add_user($key)){
+		if($this->login_model->is_key_valid($key)){
+			if($new_email = $this->login_model->add_user($key)){
 				$data = array(
 					'email' => $new_email,
 					'is_logged_in' => 1
@@ -134,7 +137,7 @@ class Login extends CI_Controller {
 		} else {
 			echo 'invalid key';
 		}
-	}
+	}*/
 
 
 	public function encrypt_me($data) {
@@ -160,7 +163,7 @@ class Login extends CI_Controller {
 	
 
 	public function admin_forgot_pass_validation() {
-		$this->form_validation->set_rules('email','Email','required|valid_email|trim|callback_validate_admin_email');
+		$this->form_validation->set_rules('email','Email','required|valid_email|trim|xss_clean|callback_validate_admin_email');
 
 		if($this->form_validation->run()){
 			//send the password reset link to the email address.
@@ -179,12 +182,12 @@ class Login extends CI_Controller {
 												'smtp_host' => 'smtp.wlink.com.np',
 												//'smtp_host' => 'ssl://smtp.gmail.com',
 												//'smtp_port' => '465',
-												//'smtp_user' => 'rajanacharyapkr@gmail.com',
+												//'smtp_user' => 'acharya.rajanpkr@gmail.com',
 												//'smtp_pass' => '**********',
 												'charset' => 'iso-8859-1',
 												'newline' => "\r\n"));
 
-			$this->load->model('model_login');
+			//$this->load->model('login_model');
 
 			// $config['protocol'] = "smtp";
 			// $config['smtp_host'] = "ssl://smtp.gmail.com";
@@ -205,7 +208,7 @@ class Login extends CI_Controller {
 			$message .= "<p><a href='".base_url()."login/validate_admin_pw_reset_credentials/$key/$email'>Click Here</a> to reset your password.</p>";
 			$this->email->message($message);
 
-			if($this->model_login->set_admin_pw_reset_key($key)){
+			if($this->login_model->set_admin_pw_reset_key($key)){
 				echo $message;
 				/*if($this->email->send()) {
 					echo "The email has been sent.";
@@ -241,7 +244,7 @@ class Login extends CI_Controller {
 
 	public function validate_admin_email() {
 
-		if($this->model_login->is_valid_admin_email()){
+		if($this->login_model->is_valid_admin_email()){
 			return true;
 		} else {
 			$this->form_validation->set_message('validate_admin_email','Incorrect Email');
@@ -261,7 +264,7 @@ class Login extends CI_Controller {
 					'key' => $key,
 					'email' => $hash_email
 					);
-		$email = $this->model_login->is_admin_key_valid($data);
+		$email = $this->login_model->is_admin_key_valid($data);
 		if($email){
 			$data = array(
 				'email' => $email,
@@ -281,8 +284,8 @@ class Login extends CI_Controller {
 
 	public function reset_pw_validation() {
 
-		$this->form_validation->set_rules('password','Password','required|trim|alpha_numeric|min_length[6]|max_length[64]');
-		$this->form_validation->set_rules('cpassword','Confirm Password','required|trim|matches[password]');
+		$this->form_validation->set_rules('password','Password','required|trim|xss_clean|alpha_numeric|min_length[6]|max_length[64]');
+		$this->form_validation->set_rules('cpassword','Confirm Password','required|xss_clean|trim|matches[password]');
 
 		$this->form_validation->set_message('alpha_numeric','The password must be alphanumeric');
 
@@ -290,10 +293,10 @@ class Login extends CI_Controller {
 			//generate random key
 			$data['key'] = md5(uniqid());
 			$data['password'] = $this->encrypt_me($this->input->post('password'));
-			if($this->model_login->update_pw($data)){
+			if($this->login_model->update_pw($data)){
 				$this->session->set_userdata( 'flash_msg_type', "success" );
 				$this->session->set_flashdata( 'flash_msg', "Password successfully reset" );
-				return redirect(base_url()."login/dashboard");
+				return redirect(base_url()."admin/dashboard");
 				//echo 'password successfully reset'; exit;
 			} else {
 				$this->session->set_userdata( 'flash_msg_type', "danger" );

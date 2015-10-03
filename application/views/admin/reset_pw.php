@@ -9,7 +9,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>SB Admin 2 - Bootstrap Admin Theme</title>
+    <title>Job Portal - Reset Password</title>
 
     <!-- Bootstrap Core CSS -->
     <link href="<?=base_url();?>assets/admin/template/bower_components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -48,9 +48,9 @@
                                 <div class="form-group">
                                     <input class="form-control" placeholder="New Password" name="password" type="password" autofocus>
                                     <?php
-                                        if($this->session->pass_error!=null){
+                                        if($this->session->pass_error){
                                             echo $this->session->pass_error;
-                                            $this->session->pass_error = null;
+                                            unset($this->session->pass_error);
                                         }
                                     ?>
                                 </div>

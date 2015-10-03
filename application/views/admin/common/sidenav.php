@@ -19,7 +19,7 @@
                             <a href="#"><i class="fa fa-wrench fa-fw"></i> Settings<span class="fa arrow"></span></a>
                             <ul class="nav nav-second-level">
                                 <li>
-                                    <a href="<?=base_url().'admin/sitesettings';?>">Site Settings</a>
+                                    <a href="<?=base_url().'admin/settings';?>">Site Settings</a>
                                 </li>
                             </ul>
                             <!-- /.nav-second-level -->

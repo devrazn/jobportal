@@ -1,48 +1,44 @@
-<script type="text/javascript">
-$(document).ready(function()
-{
-        $("#frm").validate({
-                            debug:false,
-                            onBlur:true,
-                            errorElement: "p",
-                            errorClass:"err"
-                                 });
-});
-</script>
+<div class="row">
+  <div class="col-lg-12">
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <?=$title?>
+      </div>
+      <!-- /.panel-heading -->
 
-<!-- Page Wrapper -->
-<div id="page-wrapper">
-    <div class="container-fluid">
+      <div class="panel-body">
         <div class="row">
-            <div class="col-lg-12">
-                <h1 class="page-header">Add Job Category</h1>                         
-            </div>
+          <div class="col-lg-6">
+            <form role="form" id="frm" method="post" action="<?=base_url().'admin/category/add'?>">
+              <div class="form-group">
+                <label>Name</label>
+                <input name="name" type='text' class="form-control" placeholder="Enter Category Name" value="<?=set_value('name');?>">
+                <?=form_error('name')?>
+              </div>
+              
+              <div class="form-group">
+                <label>Status&nbsp;&nbsp;</label>
+                <label class="radio-inline">
+                    <input type="radio" value="1" name="status" <?php if(set_value('status')==1) echo "checked";?> >Active
+                </label>
+                <label class="radio-inline">
+                    <input type="radio" value="0" name="status" <?php if(set_value('status')==0) echo "checked";?> >Inactive
+                </label>
+                <?=form_error('status')?>
+              </div>
+              <button class="btn btn-success" type="submit">Submit</button>
+              <button class="btn btn-warning" type="reset">Reset</button>
 
-            <form id="frm" method="post" class="form-horizontal" action="">
-                <div class="form-group">
-                    <label for="text1" class="control-label col-lg-2"> Name</label>
-                    <div class="col-lg-7">
-                        <input name="name" type="text" class="form-control required" value="<?=set_value('name');?>">
-                        <?=form_error('name')?>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label for="text1" class="control-label col-lg-2">Status</label>
-                    <div class="col-lg-7">
-                        <input name="status" type="radio" value="1"  />Active
-                        <input name="status" type="radio" value="0" />InActive
-                    </div>
-                </div>                              
-                <div class="form-group">
-                    <label for="text1" class="control-label col-lg-2"></label>
-                    <div class="col-lg-7">          
-                      <input type="submit" value="ADD" class="navigation_button btn btn-primary"/>
-                    </div>          
-                </div>
             </form>
-        </div>
-                <!-- /.row -->
+          </div>
+          <!-- col-lg-6 -->
+		    </div>
+		    <!-- row -->
+      </div>
+      <!-- panel-body -->
     </div>
-    <!-- /.container-fluid -->
+    <!-- panel panel-default -->
+  </div>
+  <!-- col-lg-12 -->
 </div>
-<!-- /#page-wrapper -->
+<!-- row -->

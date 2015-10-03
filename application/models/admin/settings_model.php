@@ -1,5 +1,5 @@
 <?php
-class Site_setting_model extends CI_Model {	
+class Settings_model extends CI_Model {	
 		
 	function get_site_info($site_id)
 	{

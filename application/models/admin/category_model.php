@@ -1,6 +1,6 @@
 <?php
 
-class category_model extends CI_Model {	
+class Category_model extends CI_Model {	
 		
 	function __construct() {
        
@@ -35,11 +35,11 @@ class category_model extends CI_Model {
         return $query->row_array();
     }
 
-    function update_category() {
+    function update_category($id) {
         $data = array('name' => $this->input->post('name'),
                       'status' => $this->input->post('status')
         );
-        $this->db->where('id', $this->input->post('id'));
+        $this->db->where('id', $id);
         $this->db->update('tbl_job_category', $data);
     }
 
@@ -64,6 +64,3 @@ class category_model extends CI_Model {
 	
 	
 }
-
-/* End of file welcome.php */
-/* Location: ./system/application/controllers/welcome.php */

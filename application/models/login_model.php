@@ -1,6 +1,6 @@
 <?php
 
-class Model_Login extends CI_Model {
+class Login_model extends CI_Model {
 
 	public function can_log_in() {
 		$this->db->where('email', $this->input->post('email'));
@@ -102,6 +102,7 @@ class Model_Login extends CI_Model {
 		   			break;
 		   		}
 			}
+			return false;
 			//echo 'got the key but not the email.'; exit;
 		} else {
 			//secho "can't find either the key or the email."; exit;
@@ -111,11 +112,6 @@ class Model_Login extends CI_Model {
 
 
 	public function set_admin_pw_reset_key($key){
-		//echo 1; exit;
-		//echo $data['key'];
-		//print_r($data); exit;
-		//print_r($data['password']);
-		//echo $data['password']; exit;
 		$data1 = array(
 			'pw_reset_key' => $key
 			);
@@ -133,24 +129,6 @@ class Model_Login extends CI_Model {
 
 	public function update_pw($update_data){
 
-		/*$data = array(
-               'title' => $title,
-               'name' => $name,
-               'date' => $date
-            );
-
-		$this->db->where('id', $id);
-		$this->db->update('mytable', $data);*/
-
-
-
-		/*$query = $this->db->update('tbl_admin', $data1);
-		if($query){
-			return true;
-		} else {
-			return false;
-		}*/
-
 		$data1 = array(
 			'pw_reset_key' => $update_data['key'],
 			'password' => $update_data['password']
@@ -163,12 +141,6 @@ class Model_Login extends CI_Model {
 		} else {
 			return false;
 		}
-
-		// $data2['email'] = $this->session->userdata('email');;
-		// echo $data2['email'];
-		// echo $update_data['password'];
-		// echo $update_data['key'];		
-		exit;
 
 	}
 }
