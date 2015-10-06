@@ -30,13 +30,13 @@
        if($category['status']=='1')
       {
       ?>
-            Active -> <a href="<?=site_url(ADMIN_PATH.'/category/change_status/1/'.$category['id'])?>">Deactivate</a>
+            Active :: <a href="<?=site_url(ADMIN_PATH.'/category/change_status/1/'.$category['id'])?>">Deactivate</a>
             <?php
       }
       else if($category['status']=='0')
       {
         ?>
-            Inactive -> <a href="<?=site_url(ADMIN_PATH.'/category/change_status/0/'.$category['id'])?>">Activate</a>
+            Inactive :: <a href="<?=site_url(ADMIN_PATH.'/category/change_status/0/'.$category['id'])?>">Activate</a>
             <?php
       }
   ?>
@@ -45,9 +45,9 @@
 
             <?php //$category['status']?></td>
      
-                  <td><a href="<?=site_url(ADMIN_PATH.'/category/edit/'.$category['id']) ?>" data-toggle="tooltip" title="" class="btn btn-effect-ripple btn-xs btn-success"  data-original-title="Edit"><i class="fa fa-pencil"></i></a>
+                  <td><a href="<?=site_url(ADMIN_PATH.'/category/edit/'.$category['id']) ?>" data-toggle="tooltip" title="Edit" class="btn btn-effect-ripple btn-xs btn-success"  data-original-title="Edit"><i class="fa fa-pencil"></i></a>
   
-    <a href="<?=site_url(ADMIN_PATH.'/category/delete_category/'.$category['id']) ?>" data-toggle="tooltip" title="" class="btn btn-effect-ripple btn-xs btn-warning"  data-original-title="Delete"><i onClick="return doConfirm()" class="fa fa-times"></i></a>         <?php
+    <a href="<?=site_url(ADMIN_PATH.'/category/delete_category/'.$category['id']) ?>" data-toggle="tooltip" title="Delete" class="btn btn-effect-ripple btn-xs btn-warning"  data-original-title="Delete"><i onClick="return doConfirm()" class="fa fa-times"></i></a>         <?php
  }
  ?></td>    
           

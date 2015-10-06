@@ -33,7 +33,7 @@ class Category extends CI_Controller {
 
         $data['category_list'] = $this->category_model->category_list($config['per_page'], $offset);
         $data['links'] = $this->pagination->create_links();
-        $data['title'] = 'Category';
+        $data['title'] = 'Categories';
 
         $this->load->view('admin/admin', $data);
     }
