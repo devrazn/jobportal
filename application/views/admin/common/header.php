@@ -9,7 +9,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>Online Job Portal</title>
+    <title><?php echo 'Job Portal';?></title>
 
 
     <!-- DataTables CSS -->
@@ -77,7 +77,7 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand" href="<?=base_url();?>">Online Job Portal</a>
+                <a class="navbar-brand" href="<?=base_url();?>"><?php echo 'Job Portal';?></a>
             </div>
             <!-- /.navbar-header -->
 

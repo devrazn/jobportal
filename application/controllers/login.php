@@ -68,6 +68,8 @@ class Login extends CI_Controller {
 				);
 			$this->session->set_userdata($data);
 
+			//echo $this->session->userdata('email'); exit;
+
 			if($this->input->post('remember') !== null) {
 
 				$cookie = array(
@@ -119,39 +121,6 @@ class Login extends CI_Controller {
 		redirect('login');
 	}
 
-	/*public function registered_user($key) {
-		$this->load->model('login_model');
-
-		if($this->login_model->is_key_valid($key)){
-			if($new_email = $this->login_model->add_user($key)){
-				$data = array(
-					'email' => $new_email,
-					'is_logged_in' => 1
-					);
-
-				$this->session->set_userdata($data);
-				redirect('login/members');
-			} else {
-				echo "failed to add user.";
-			}
-		} else {
-			echo 'invalid key';
-		}
-	}*/
-
-
-	public function encrypt_me($data) {
-		$this->load->library('encryption');
-		$this->encryption->initialize(
-        array(
-                'cipher' => 'aes-256',
-                'driver' => 'openssl',
-                'mode' => 'ctr'
-        )
-        );
-        //echo $this->encryption->encrypt($data); exit;
-		return $this->encryption->encrypt($data);
-	}
 
 	public function admin_forgot_pass() {
 		if($this->session->userdata('is_logged_in')){
@@ -284,15 +253,15 @@ class Login extends CI_Controller {
 
 	public function reset_pw_validation() {
 
-		$this->form_validation->set_rules('password','Password','required|trim|xss_clean|alpha_numeric|min_length[6]|max_length[64]');
+		$this->form_validation->set_rules('password','Password','required|trim|xss_clean|min_length[6]|max_length[64]');
 		$this->form_validation->set_rules('cpassword','Confirm Password','required|xss_clean|trim|matches[password]');
 
-		$this->form_validation->set_message('alpha_numeric','The password must be alphanumeric');
+		//$this->form_validation->set_message('alpha_numeric','The password must be alphanumeric');
 
 		if($this->form_validation->run()) {
 			//generate random key
 			$data['key'] = md5(uniqid());
-			$data['password'] = $this->encrypt_me($this->input->post('password'));
+			$data['password'] = $this->helper_model->encrypt_me($this->input->post('password'));
 			if($this->login_model->update_pw($data)){
 				$this->session->set_userdata( 'flash_msg_type', "success" );
 				$this->session->set_flashdata( 'flash_msg', "Password successfully reset" );

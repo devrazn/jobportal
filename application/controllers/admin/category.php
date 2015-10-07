@@ -15,10 +15,6 @@ class Category extends CI_Controller {
         $this->cms_category();
     }
 
-    // public function category() {
-    //     $data['main'] = 'admin/category/list';
-    //     $this->load->view('admin/admin', $data);
-    // }
 
     function cms_category() {
         $config['base_url'] = site_url(ADMIN_PATH . '/category/page');
@@ -38,22 +34,6 @@ class Category extends CI_Controller {
         $this->load->view('admin/admin', $data);
     }
 
-    // function page() {
-
-    //     $config['base_url'] = site_url(ADMIN_PATH . '/category/page');
-    //     $data['main'] = 'admin/category/category';
-    //     $query = $this->db->get('tbl_city');
-    //     $config['total_rows'] = $query->num_rows();
-
-    //     $config['per_page'] = '300';
-    //     $offset = $this->uri->segment(4, 0);
-    //     $config['uri_segment'] = '4';
-    //     $this->pagination->initialize($config);
-
-    //     $data['city_list'] = $this->city_model->city_list($config['per_page'], $offset);
-
-    //     $this->load->view('admin/admin', $data);
-    // }
 
     function add() {
         $this->form_validation->set_rules('name', 'Name', 'required|xss_clean');
@@ -72,18 +52,17 @@ class Category extends CI_Controller {
         }
     }
 
+
     function edit($id) {
         $this->form_validation->set_rules('name', 'Name', 'required|xss_clean');
-         $this->form_validation->set_rules('status', 'Status', 'required|xss_clean');
+        $this->form_validation->set_rules('status', 'Status', 'required|xss_clean');
 
         if ($this->form_validation->run() == FALSE) {
             $data['info'] = $this->category_model->get_category($id);
             $data['main'] = 'admin/category/edit';
             $data['title'] = 'Edit Category';
             $this->load->view('admin/admin', $data);
-        } 
-        else {
-            //echo $id; exit;
+        } else {
             $this->category_model->update_category($id);
             $this->session->set_userdata( 'flash_msg_type', "success" );
             $this->session->set_flashdata('flash_msg', 'Category Updated Successfully');
@@ -91,11 +70,9 @@ class Category extends CI_Controller {
         }
     }
 
+
     function delete_category($id) {
-        //$this->Helper_model->validate_session();
         $this->category_model->delete_category($id);
-        /*$this->session->set_userdata( 'flash_msg_type', "danger" );
-        $this->session->set_flashdata( 'flash_msg', "Sorry, Password can't be updated in the db." );*/
         $this->session->set_userdata( 'flash_msg_type', "success" );
         $this->session->set_flashdata('flash_msg', 'Category Deleted Successfully.');
         redirect(ADMIN_PATH . '/category', 'refresh');

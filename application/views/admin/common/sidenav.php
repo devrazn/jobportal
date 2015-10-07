@@ -21,6 +21,9 @@
                                 <li>
                                     <a href="<?=base_url().'admin/settings';?>">Site Settings</a>
                                 </li>
+                                <li>
+                                    <a href="<?=base_url().'admin/settings/change_password';?>">Change Password</a>
+                                </li>
                             </ul>
                             <!-- /.nav-second-level -->
                         </li>

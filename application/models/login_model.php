@@ -9,10 +9,8 @@ class Login_model extends CI_Model {
 		
 		if($query->num_rows() == 1){
 			 $row = $query->row_array(); 
-			  $pass = $this->decrypt_me($row['password']);
-			  //echo $pass; exit;
+			  $pass = $this->helper_model->decrypt_me($row['password']);
 			  if($this->input->post('password') == $pass){
-			  	//echo $pass; exit;
 			  	return true;
 			  } else {
 			  	return false;
@@ -56,21 +54,6 @@ class Login_model extends CI_Model {
 			return $data['email'];
 		}
 		return false;
-	}
-	
-
-	public function decrypt_me($data){
-		$this->load->library('encryption');
-		$this->encryption->initialize(
-        array(
-                'cipher' => 'aes-256',
-                'driver' => 'openssl',
-                'mode' => 'ctr'
-        )
-        );
-
-        //echo $this->encryption->encrypt($data); exit;
-        return $this->encryption->decrypt($data);
 	}
 
 

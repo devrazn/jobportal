@@ -31,10 +31,10 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                                     <?php if($this->uri->segment(1)==''){
                                         echo ' / Dashboard';
                                     }?>
-                                    <?php if($this->uri->segment(2)!='' && !(is_numeric($this->uri->segment(2)))) echo '/ '.ucfirst($this->uri->segment(2));?>
-                                    <?php if($this->uri->segment(3)!='' && !(is_numeric($this->uri->segment(3)))) echo '/ '.ucfirst($this->uri->segment(3));?>
-                                    <?php if($this->uri->segment(4)!=''  && !(is_numeric($this->uri->segment(4)))) echo '/ '.ucfirst($this->uri->segment(4));?>
-                                    <?php if($this->uri->segment(5)!=''  && !(is_numeric($this->uri->segment(5)))) echo '/ '.ucfirst($this->uri->segment(5));?>
+                                    <?php if($this->uri->segment(2)!='' && !(is_numeric($this->uri->segment(2)))) echo '/ '.$this->helper_model->humanize_admin($this->uri->segment(2));?>
+                                    <?php if($this->uri->segment(3)!='' && !(is_numeric($this->uri->segment(3)))) echo '/ '.$this->helper_model->humanize_admin($this->uri->segment(3));?>
+                                    <?php if($this->uri->segment(4)!=''  && !(is_numeric($this->uri->segment(4)))) echo '/ '.$this->helper_model->humanize_admin($this->uri->segment(4));?>
+                                    <?php if($this->uri->segment(5)!=''  && !(is_numeric($this->uri->segment(5)))) echo '/ '.$this->helper_model->humanize_admin($this->uri->segment(5));?>
                         </li>
                         </ol>
                         

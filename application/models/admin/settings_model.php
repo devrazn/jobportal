@@ -1,51 +1,38 @@
 <?php
-class Settings_model extends CI_Model {	
-		
-	function get_site_info($site_id)
-	{
-		$data=array();
-		$options=array('site_id'=>$site_id);
+class Settings_model extends CI_Model {
 
-		//$query = $this->db->get_where('mytable', array('id' => $id), $limit, $offset);
+	function verify_current_pw() {
+		$this->db->where('email', $this->session->userdata('email'));
+		$query = $this->db->get_where('tbl_admin', array('email = ' => $this->session->userdata('email')));
+		
+		if($query->num_rows() == 1){
+			$row = $query->row_array(); 
+			$pass = $this->helper_model->decrypt_me($row['password']);
+			if($this->input->post('cPassword') == $pass){
+				return true;
+			} else {
+				return false;
+			}
+		} else {
+			return false;
+		}
 
-		$query = $this->db->get('tbl_site_setting');
-		
-		return $query->row();
-		
 	}
 	
 	
-	function update_site_settings($image='')
-	{
-		if($image=='')
-			$image=$this->input->post('prev_image');
-		
-		$data=array('site_name'=>$this->input->post('site_name'),
-                            'site_title'=>$this->input->post('site_title'),
-							 'site_slogan'=>$this->input->post('site_slogan'),
-							  'product_per_page'=>$this->input->post('product_per_page'),
-							
-						    'facebook'=>$this->input->post('facebook'),
-					        'twitter'=>$this->input->post('twitter'),
-                            'site_offline_msg'=>addslashes($this->input->post('site_offline_msg')),
-                            'site_email'=>$this->input->post('site_email'),
-                        	'site_meta_desc'=>addslashes($this->input->post('site_meta_desc')),
-                            'site_meta_keywords'=>addslashes($this->input->post('site_meta_keywords')),
-	                        'site_authors'=>addslashes($this->input->post('site_authors')),
-							
-							'logo'=>$image,
-							
-							'slider'=>$this->input->post('slider'),
-							
-                   			'site_status'=>$this->input->post('site_status'));
-		$this->db->where('site_id','1');
-		$this->db->update('tbl_site_setting',$data);
-		
-		//print_r($this->db->last_query());
+	public function update_password($password) {
+		$data = array(
+			'password' => $password
+			);
+
+		$this->db->where('email', $this->session->userdata('email'));
+
+		if($this->db->update('tbl_admin', $data)){
+			return true;
+		} else {
+			return false;
+		}
+
 	}
-	
 	
 }
-
-/* End of file welcome.php */
-/* Location: ./system/application/controllers/welcome.php */
