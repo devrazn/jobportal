@@ -34,5 +34,48 @@ class Settings_model extends CI_Model {
 		}
 
 	}
+
+
+	public function get_site_settings() {
+
+		$query = $this->db->get('tbl_site_settings');
+
+		if($query->num_rows() == 1){
+			return $query->row_array();
+		} else {
+			return false;
+		}
+
+	}
 	
+
+	public function update_site_settings($image = '') {
+		if ($image == '')
+            $image = $this->input->post('prev_image');
+        
+		$data = array(
+			'site_name' => $this->input->post('site_name'),
+			'site_title' => $this->input->post('site_title'),
+			'site_slogan' => $this->input->post('site_slogan'),
+			'site_email' => $this->input->post('site_email'),
+			'facebook' => $this->input->post('facebook'),
+			'twitter' => $this->input->post('twitter'),
+			'youtube' => $this->input->post('youtube'),
+			'meta_description' => $this->input->post('meta_description'),
+			'meta_keywords' => $this->input->post('meta_keywords'),
+			'site_authors' => $this->input->post('site_authors'),
+			'site_status' => $this->input->post('site_status'),
+			'logo' => $image,
+			'site_offline_msg' => $this->input->post('site_offline_msg')
+			);
+
+		$this->db->where('site_id', 1);
+		if($this->db->update('tbl_site_settings', $data)){
+			return true;
+		} else {
+			return false;
+		}
+
+	}
+
 }

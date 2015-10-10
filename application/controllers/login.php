@@ -47,16 +47,6 @@ class Login extends CI_Controller {
 	}
 
 
-	public function dashboard() {
-		if($this->session->userdata('is_logged_in')){
-			$this->load->view('admin/dashboard');	
-		} else {
-			redirect('login');
-		}
-		
-	}
-
-
 	public function admin_login_validation() {
 		$this->form_validation->set_rules('password','Password','required|trim|xss_clean');
 		$this->form_validation->set_rules('email','Email','required|valid_email|trim|xss_clean|callback_validate_credentials');
