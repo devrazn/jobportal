@@ -16,13 +16,10 @@ class Login extends CI_Controller {
 
 	public function index() {
 		if(!($this->session->userdata('is_logged_in'))) {
-			//$this->load->view('members');
 			$this->load->view('admin/login');
 		} else {
 			$data['main'] = 'admin/dashboard';
-			//$data['title'] = 'Dashboard';
 			$this->load->view('admin/admin', $data);
-			//redirect('login/dashboard');
 		}
 	}
 
@@ -37,9 +34,7 @@ class Login extends CI_Controller {
 
 
 	public function login() {
-		//echo 1; exit;
 		if($this->session->userdata('is_logged_in')){
-			//$this->load->view('members');
 			redirect('admin/dashboard');
 		} else {
 			$this->load->view('admin/login');
@@ -48,7 +43,7 @@ class Login extends CI_Controller {
 
 
 	public function admin_login_validation() {
-		$this->form_validation->set_rules('password','Password','required|trim|xss_clean');
+		$this->form_validation->set_rules('password','Password','required|xss_clean');
 		$this->form_validation->set_rules('email','Email','required|valid_email|trim|xss_clean|callback_validate_credentials');
 
 		if($this->form_validation->run()){
@@ -57,8 +52,6 @@ class Login extends CI_Controller {
 				'is_logged_in' => 1
 				);
 			$this->session->set_userdata($data);
-
-			//echo $this->session->userdata('email'); exit;
 
 			if($this->input->post('remember') !== null) {
 
@@ -93,10 +86,6 @@ class Login extends CI_Controller {
 
 
 	public function validate_credentials(){
-
-		//$ciphertext = $this->encrypt_me($this->input->post('password'));
-		//$this->load->model('login_model');
-
 		if($this->login_model->can_log_in()){
 			return true;
 		} else {
@@ -133,7 +122,6 @@ class Login extends CI_Controller {
 			$this->hash_key = $data['key'];
 			$email = sha1(md5($this->input->post('email')));
 			$this->hash_email = $email;
-			//echo $this->hash_key.' & '.$this->hash_email; exit;
 
 
 			$this->load->library('email',array('mailtype' => 'html',
@@ -187,13 +175,6 @@ class Login extends CI_Controller {
 				echo "The email couldn't be sent.";
 				echo $this->email->print_debugger();
 			}*/
-
-			//add them to the temp_users table
-			/*} else {
-				echo 'fail';
-				$this->load->view('sign_up');
-			}*/
-
 		} else {
 			$this->load->view('admin/forgot_pass');
 		}
@@ -213,12 +194,6 @@ class Login extends CI_Controller {
 
 
 	public function validate_admin_pw_reset_credentials($key='', $hash_email='') {
-
-		//echo 'key = '.$key.' and email = '.$email; exit;
-		if($this->uri->segment(3)=='' || $this->uri->segment(4)==''){
-			echo "The page doesn't exist."; exit;
-		}
-		//echo 'key = ' . $key . ' & email = ' . $email; exit;
 		$data = array(
 					'key' => $key,
 					'email' => $hash_email
@@ -243,10 +218,8 @@ class Login extends CI_Controller {
 
 	public function reset_pw_validation() {
 
-		$this->form_validation->set_rules('password','Password','required|trim|xss_clean|min_length[6]|max_length[64]');
-		$this->form_validation->set_rules('cpassword','Confirm Password','required|xss_clean|trim|matches[password]');
-
-		//$this->form_validation->set_message('alpha_numeric','The password must be alphanumeric');
+		$this->form_validation->set_rules('password','Password','required|xss_clean|min_length[6]|max_length[64]');
+		$this->form_validation->set_rules('cpassword','Confirm Password','required|xss_clean|matches[password]');
 
 		if($this->form_validation->run()) {
 			//generate random key
@@ -256,19 +229,18 @@ class Login extends CI_Controller {
 				$this->session->set_userdata( 'flash_msg_type', "success" );
 				$this->session->set_flashdata( 'flash_msg', "Password successfully reset" );
 				return redirect(base_url()."admin/dashboard");
-				//echo 'password successfully reset'; exit;
 			} else {
 				$this->session->set_userdata( 'flash_msg_type', "danger" );
-				$this->session->set_flashdata( 'flash_msg', "Sorry, Password can't be updated in the db." );
-				return redirect(base_url().'login/validate_admin_pw_reset_credentials/'.$this->session->key .'/'.$this->session->hash_email);
+				$this->session->set_flashdata( 'flash_msg', "Sorry, We cannot reset your password currently." );
+				$this->validate_admin_pw_reset_credentials($this->session->key, $this->session->hash_email);
+				//return redirect(base_url().'login/validate_admin_pw_reset_credentials/'.$this->session->key .'/'.$this->session->hash_email);
 			}
 
 		} else {
-
 			$this->session->pass_error = form_error('password');
 			$this->session->cpass_error = form_error('cpassword');
-			
-			redirect('login/validate_admin_pw_reset_credentials/'.$this->session->key .'/'.$this->session->hash_email);
+			$this->validate_admin_pw_reset_credentials($this->session->key, $this->session->hash_email);
+			//redirect('login/validate_admin_pw_reset_credentials/'.$this->session->key .'/'.$this->session->hash_email);
 		}
 	}
 }

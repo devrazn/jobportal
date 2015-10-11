@@ -12,7 +12,6 @@ class Settings extends CI_Controller {
     }
 
     public function index() {
-        //echo 1; exit;
         $this->site_settings();
     }
 
@@ -34,7 +33,6 @@ class Settings extends CI_Controller {
 
         $this->helper_model->editor();
         
-
         if ($this->form_validation->run() == FALSE) {        
             $data['info'] = $this->settings_model->get_site_settings();
             $data['main'] = 'admin/site_settings';
@@ -68,12 +66,11 @@ class Settings extends CI_Controller {
 
 
     function upload_image($file) {
-
         $config['upload_path'] = './uploads/admin/images/';
         $config['allowed_types'] = 'gif|jpg|png';
         $config['max_size'] = '10000000';
-        $config['max_width'] = '1000';
-        $config['max_height'] = '768';
+        $config['max_width'] = '65';
+        $config['max_height'] = '50';
         $config['remove_spaces'] = true;
         $config['encrypt_name'] = true;
 
@@ -125,34 +122,30 @@ class Settings extends CI_Controller {
     }
 
 
+    public function email_templates($template_code='REGISTRATION'){
+        $this->form_validation->set_rules('subject', 'Subject', 'required|xss_clean');
+        $this->form_validation->set_rules('content', 'Email Body', 'required|xss_clean');
 
-    public function index2() {
-    // $path = base_url().'js/ckfinder';
-    $path = '../js/ckfinder';
-    $width = '850px';
-    $this->editor($path, $width);
-    $this->form_validation->set_rules('description', 'Page Description', 'trim|required|xss_clean');
-    if ($this->form_validation->run() == FALSE) {
-      $this->load->view('welcome_message');
-    }
-    else {
-      // do your stuff with post data.
-      echo $this->input->post('description');
-    }
-  }
-  function editor($width='') {
-    $path = base_url().'assets/ckeditor/ckfinder';
-    //Loading Library For Ckeditor
-    $this->load->library('ckeditor');
-    $this->load->library('ckFinder');
-    //configure base path of ckeditor folder 
-    $this->ckeditor->basePath = base_url().'js/ckeditor/';
-    $this->ckeditor-> config['toolbar'] = 'Full';
-    $this->ckeditor->config['language'] = 'en';
-    $this->ckeditor-> config['width'] = $width;
-    //configure ckfinder with ckeditor config 
-    $this->ckfinder->SetupCKEditor($this->ckeditor,$path); 
-  }
+        $this->helper_model->editor();
 
+         if ($this->form_validation->run() == FALSE) {
+            $data['info'] = $this->settings_model->get_email_template($template_code);
+            $data['main'] = 'admin/email_templates';
+            $data['title'] = 'Email Templates';
+            $this->load->view('admin/admin', $data);
+        } else {
+            if($this->settings_model->update_email_template($this->input->post('temp_name'))) {
+                $this->session->set_userdata( 'flash_msg_type', "success" );
+                $this->session->set_flashdata('flash_msg', 'Email Template Updated Successfully');
+                redirect(ADMIN_PATH . '/settings/email_templates/' . $this->input->post('temp_name'), 'refresh');
+            } else {
+                $this->session->set_userdata( 'flash_msg_type', "danger" );
+                $this->session->set_flashdata('flash_msg', 'Sorry, Unable to Update Email Template');
+                redirect(ADMIN_PATH . '/settings/email_templates' . $this->input->post('temp_name'), 'refresh');
+            }
+
+        }
+
+    }
 
 }

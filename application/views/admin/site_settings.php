@@ -63,7 +63,7 @@
 
               <div class="form-group">
                 <label>Meta Keywords</label>
-                <textarea class="form-control" name="meta_keywords" rows="10"><?=set_value('meta_keywords',$info['meta_keywords']);?></textarea>
+                <textarea class="form-control" name="meta_keywords" rows="5"><?=set_value('meta_keywords',$info['meta_keywords']);?></textarea>
                 <?=form_error('meta_keywords')?>
               </div>
 
@@ -85,7 +85,6 @@
 
               <div class="form-group">
                 <label>Site Offline Message </label>
-
                 <?php
                   if(isset($info['site_offline_msg'])) {
                     $value = stripslashes($info['site_offline_msg']);
@@ -95,12 +94,6 @@
                   echo $this->ckeditor->editor('site_offline_msg',$value);
                 ?>
                 <?=form_error('site_offline_msg')?>
-
-                <?php
-                /*if(isset($info['site_offline_msg'])) $value = stripslashes($info['site_offline_msg']);
-                elseif($this->input->post('site_offline_msg')) $value = stripslashes($this->input->post('site_offline_msg'));
-        echo form_fckeditor('site_offline_msg', $value,'','','','' );*/
-            ?>
               </div>              
 
               <div class="form-group">

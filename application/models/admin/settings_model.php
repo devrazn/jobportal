@@ -37,15 +37,12 @@ class Settings_model extends CI_Model {
 
 
 	public function get_site_settings() {
-
 		$query = $this->db->get('tbl_site_settings');
-
 		if($query->num_rows() == 1){
 			return $query->row_array();
 		} else {
 			return false;
 		}
-
 	}
 	
 
@@ -78,4 +75,29 @@ class Settings_model extends CI_Model {
 
 	}
 
+
+	public function get_email_template($template_code){
+		$this->db->where('template_code', $template_code);
+		$query = $this->db->get('tbl_email_templates');
+		if($query->num_rows() == 1){
+			return $query->row_array();
+		} else {
+			return false;
+		}
+	}
+
+
+	public function update_email_template($template_code){
+		$data = array(
+			'subject' => $this->input->post('subject'),
+			'content' => $this->input->post('content')
+			);
+
+		$this->db->where('template_code', $template_code);
+		if($this->db->update('tbl_email_templates',$data)){
+			return true;
+		} else {
+			return false;
+		}
+	}
 }

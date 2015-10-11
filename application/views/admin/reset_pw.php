@@ -48,20 +48,14 @@
                                 <div class="form-group">
                                     <input class="form-control" placeholder="New Password" name="password" type="password" autofocus>
                                     <?php
-                                        if($this->session->pass_error){
-                                            echo $this->session->pass_error;
-                                            unset($this->session->pass_error);
-                                        }
+                                    echo form_error('password');
                                     ?>
                                 </div>
 
                                 <div class="form-group">
                                     <input class="form-control" placeholder="Retype Your Password" name="cpassword" type="password">
                                     <?php
-                                        if($this->session->pass_error!=null){
-                                            echo $this->session->cpass_error;
-                                            $this->session->cpass_error = null;
-                                        }
+                                    echo form_error('cpassword');
                                     ?>
                                 </div>
                                 

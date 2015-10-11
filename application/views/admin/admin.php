@@ -41,6 +41,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                     </div>
                     <!-- /.col-lg-12 -->
                 </div>
+                <!-- /.row -->
 
 <?php
     $this->load->view('admin/common/alert');
