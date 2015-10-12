@@ -15,14 +15,27 @@
                 <input name="name" type='text' class="form-control" placeholder="Enter Category Name" value="<?=set_value('name');?>">
                 <?=form_error('name')?>
               </div>
+
+              <!-- <div class="form-group">
+                                            <label>Selects</label>
+                                            <select name = "subCategory" class="form-control">
+                                                <option value="0">Select Parent Category</option>
+                                                <option>2</option>
+                                                 <optgroup label="Swedish Cars">
+                                                <option>3</option>
+                                                <option>4</option>
+                                              </optgroup>
+                                                <option>5</option>
+                                            </select>
+                                        </div> -->
               
               <div class="form-group">
                 <label>Status&nbsp;&nbsp;</label>
                 <label class="radio-inline">
-                    <input type="radio" value="1" name="status" <?php if(set_value('status')==1) echo "checked";?> >Active
+                    <input type="radio" value="active" name="status" <?php if(set_value('status')=='active') echo "checked";?> >Active
                 </label>
                 <label class="radio-inline">
-                    <input type="radio" value="0" name="status" <?php if(set_value('status')==0) echo "checked";?> >Inactive
+                    <input type="radio" value="inactive" name="status" <?php if(set_value('status')=='inactive') echo "checked";?> >Inactive
                 </label>
                 <?=form_error('status')?>
               </div>

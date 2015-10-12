@@ -87,14 +87,54 @@ class Settings_model extends CI_Model {
 	}
 
 
-	public function update_email_template($template_code){
+	public function update_email_template(){
 		$data = array(
 			'subject' => $this->input->post('subject'),
 			'content' => $this->input->post('content')
 			);
 
-		$this->db->where('template_code', $template_code);
+		$this->db->where('template_code', $this->input->post('temp_name'));
 		if($this->db->update('tbl_email_templates',$data)){
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+
+	public function get_cms($title=''){
+		if($title!=''){
+			$this->db->where(array(
+				'title' => $title,
+				'del_flag' => 0
+				));
+			$query = $this->db->get('tbl_cms');
+			if($query->num_rows() == 1){
+				return $query->row_array();
+			} else {
+				return false;
+			}
+		} else {
+			$this->db->where('del_flag', 0);
+	        $this->db->order_by('id', 'ASC');
+	        $query = $this->db->get('tbl_cms');
+	        return $query->result_array();
+		}
+	}
+
+
+	public function update_cms(){
+		$data = array(
+			'page_title' => $this->input->post('page_title'),
+			'head_text' => $this->input->post('head_text'),
+			'meta_keywords' => $this->input->post('meta_keywords'),
+			'meta_description' => $this->input->post('meta_description'),
+			'status' => $this->input->post('status'),
+			'content' => $this->input->post('content')
+			);
+
+		$this->db->where('title', $this->input->post('cms_page'));
+		if($this->db->update('tbl_cms',$data)){
 			return true;
 		} else {
 			return false;

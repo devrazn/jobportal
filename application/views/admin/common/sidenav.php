@@ -27,6 +27,9 @@
                                 <li>
                                     <a href="<?=base_url().'admin/settings/email_templates';?>">Email Templates</a>
                                 </li>
+                                <li>
+                                    <a href="<?=base_url().'admin/settings/cms';?>">Content Management</a>
+                                </li>
                             </ul>
                             <!-- /.nav-second-level -->
                         </li>
