@@ -29,6 +29,12 @@ class Category_model extends CI_Model {
         return $query->result_array();
     }
 
+    function category_list_all() {
+        $sql = "SELECT * FROM tbl_job_category";
+        $query = $this->db->query($sql);
+        return $query->result_array();
+    }
+
     function get_category($id) {
         $options = array('id' => $id);
         $query = $this->db->get_where('tbl_job_category', $options, 1);
@@ -61,6 +67,12 @@ class Category_model extends CI_Model {
         $this->db->update('tbl_job_category', $data);
     }
 
-	
-	
+    function category_name_by_id($id) {
+        $query = $this->db->get_where('tbl_job_category', array("id" => $id));
+        $data = $query->row_array();
+        if($data['name'])
+            return $data['name'];
+        else
+            return "NONE";  
+    }
 }

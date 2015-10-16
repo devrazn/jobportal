@@ -82,5 +82,4 @@ class Category extends CI_Controller {
         $this->category_model->change_status($status, $id);
         redirect(ADMIN_PATH . '/category', 'refresh');
     }
-
 }

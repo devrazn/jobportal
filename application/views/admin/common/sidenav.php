@@ -37,6 +37,9 @@
                             <a href="<?=base_url().'admin/category';?>"><i class="fa fa-table fa-fw"></i>Job Category</a>
                         </li>
                         <li>
+                            <a href="<?=base_url().'admin/tags';?>"><i class="fa fa-edit fa-fw"></i>Tags</a>
+                        <li>
+                        <li>
                             <a href="forms.html"><i class="fa fa-edit fa-fw"></i> Forms</a>
                         </li>
                         <li>
