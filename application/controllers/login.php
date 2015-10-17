@@ -217,7 +217,6 @@ class Login extends CI_Controller {
 	
 
 	public function reset_pw_validation() {
-
 		$this->form_validation->set_rules('password','Password','required|xss_clean|min_length[6]|max_length[64]');
 		$this->form_validation->set_rules('cpassword','Confirm Password','required|xss_clean|matches[password]');
 

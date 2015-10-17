@@ -8,11 +8,29 @@ class Category extends CI_Controller {
         $this->load->model('admin/category_model');
         $this->load->library('form_validation');
         $this->helper_model->validate_session();
-
+        $this->load->library('datatables');
     }
 
     public function index() {
-        $this->cms_category();
+                $data['main'] = 'admin/category/list';
+        $data['title'] = 'Categories';
+        $this->load->view('admin/admin', $data);
+        //$this->cms_category();
+    }
+
+
+    function datatable() {
+        //$this->datatables->where('id', '5');
+        $this->datatables->select('id,name,status')
+            ->from('tbl_job_category')
+            ->where('del_flag', '0');
+        $this->datatables->add_column('edit', '<a href="category/edit/$1/" data-toggle="tooltip" title="Edit" class="btn btn-effect-ripple btn-xs btn-success" data-original-title="Edit"><i class="fa fa-pencil"></i></a>', 'id');
+        $this->datatables->add_column('delete', '<div class=""><a onClick="return doConfirm()" class="delete btn btn-effect-ripple btn-xs btn-warning" href="category/delete_category/$1" data-original-title="Delete"><i class="fa fa-times"></i></a></div>', 'id');
+        //if()
+        $this->datatables->edit_column('status', '$1 :: <a href="category/change_status/$2/$3">$4</a>', 'ucfirst(status), status, id, Change Status');
+        $this->datatables->unset_column('id');
+        
+        echo $this->datatables->generate();
     }
 
 
@@ -32,6 +50,8 @@ class Category extends CI_Controller {
         $data['title'] = 'Categories';
 
         $this->load->view('admin/admin', $data);
+
+
     }
 
 
@@ -72,14 +92,18 @@ class Category extends CI_Controller {
 
 
     function delete_category($id) {
-        $this->category_model->delete_category($id);
-        $this->session->set_userdata( 'flash_msg_type', "success" );
-        $this->session->set_flashdata('flash_msg', 'Category Deleted Successfully.');
-        redirect(ADMIN_PATH . '/category', 'refresh');
+        if($this->category_model->delete_category($id)){
+            $this->session->set_userdata( 'flash_msg_type', "success" );
+            $this->session->set_flashdata('flash_msg', 'Category Deleted Successfully.');
+            redirect(ADMIN_PATH . '/category', 'refresh');
+        } else {
+            echo 'error';
+        }
     }
 
     function change_status($status = '', $id = '') {
-        $this->category_model->change_status($status, $id);
+        $this->category_model->change_status(strtolower($status), $id);
         redirect(ADMIN_PATH . '/category', 'refresh');
     }
+
 }

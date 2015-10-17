@@ -12,46 +12,25 @@
     <title><?php echo 'Job Portal';?></title>
 
 
-    <!-- DataTables CSS -->
-    <!-- <link href="../bower_components/datatables-plugins/integration/bootstrap/3/dataTables.bootstrap.css" rel="stylesheet"> -->
-
-    <!-- DataTables Responsive CSS -->
-    <!-- <link href="../bower_components/datatables-responsive/css/dataTables.responsive.css" rel="stylesheet"> -->
-
-    <!-- Custom CSS -->
-    <!-- <link href="../dist/css/sb-admin-2.css" rel="stylesheet"> -->
-
-    <!-- Custom Fonts -->
-    <!-- <link href="../bower_components/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css"> -->
-
-
-
-
      <!-- Bootstrap Core CSS -->
-    <!--<link href="../bower_components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">-->
     <link href="<?=base_url();?>assets/admin/template/bower_components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
 
     <!-- MetisMenu CSS -->
-    <!--<link href="../bower_components/metisMenu/dist/metisMenu.min.css" rel="stylesheet">-->
     <link href="<?=base_url();?>assets/admin/template/bower_components/metisMenu/dist/metisMenu.css" rel="stylesheet">
 
     <!-- DataTables Responsive CSS -->
     <link href="<?=base_url();?>assets/admin/template/bower_components/datatables-responsive/css/dataTables.responsive.css" rel="stylesheet">
 
     <!-- Timeline CSS -->
-    <!--<link href="../dist/css/timeline.css" rel="stylesheet">-->
     <!--<link href="../../assets/admin/template/dist/css/timeline.css" rel="stylesheet">-->
 
     <!-- Custom CSS -->
-    <!--<link href="../dist/css/sb-admin-2.css" rel="stylesheet">-->
     <link href="<?=base_url();?>assets/admin/template/dist/css/sb-admin-2.css" rel="stylesheet">
 
     <!-- Morris Charts CSS -->
-    <!--<link href="../bower_components/morrisjs/morris.css" rel="stylesheet">-->
     <!--<link href="../../assets/admin/template/bower_components/morrisjs/morris.css" rel="stylesheet">-->
 
     <!-- Custom Fonts -->
-    <!--<link href="../bower_components/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">-->
     <link href="<?=base_url();?>assets/admin/template/bower_components/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
 
     <link href="<?=base_url()?>assets/admin/template/dist/css/dataTables.bootstrap.css" rel="stylesheet">
@@ -62,6 +41,23 @@
         <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
         <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
     <![endif]-->
+
+    <!-- jQuery -->
+    <script src="<?=base_url();?>assets/admin/template/bower_components/jquery/dist/jquery.min.js"></script>
+
+    <!-- Bootstrap Core JavaScript -->
+    <script src="<?=base_url();?>assets/admin/template/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+
+    <!-- Metis Menu Plugin JavaScript -->
+    <script src="<?=base_url();?>assets/admin/template/bower_components/metisMenu/dist/metisMenu.js"></script>
+
+    <!-- Custom Theme JavaScript -->
+    <script src="<?=base_url();?>assets/admin/template/dist/js/sb-admin-2.js"></script>
+
+     <!-- DataTables JavaScript -->
+    <script src="<?=base_url();?>assets/admin/template/bower_components/datatables/media/js/jquery.dataTables.min.js"></script>
+    <script src="<?=base_url();?>assets/admin/template/bower_components/datatables-plugins/integration/bootstrap/3/dataTables.bootstrap.min.js"></script>
+    <script src="http://ajax.aspnetcdn.com/ajax/jquery.validate/1.11.1/jquery.validate.min.js"></script>
 
 </head>
 
