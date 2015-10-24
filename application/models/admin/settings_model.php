@@ -140,4 +140,33 @@ class Settings_model extends CI_Model {
 			return false;
 		}
 	}
+
+
+	public function get_contact_info() {
+		$query = $this->db->get('tbl_contact_us');
+		return $query->row_array();
+	}
+
+
+	public function update_contact(){
+		$data = array(
+			'phone' => $this->input->post('phone'),
+			'fax' => $this->input->post('fax'),
+			'email' => $this->input->post('email'),
+			'weekday_start_time' => $this->input->post('weekday_start_time'),
+			'weekday_end_time' => $this->input->post('weekday_end_time'),
+			'weekend_start_time' => $this->input->post('weekend_start_time'),
+			'weekend_end_time' => $this->input->post('weekend_end_time'),
+			'lat' => $this->input->post('lat'),
+			'lon' => $this->input->post('lon'),
+			'address' => $this->input->post('address'),
+			);
+
+		$this->db->where('id', '1');
+		if($this->db->update('tbl_contact_us',$data)){
+			return true;
+		} else {
+			return false;
+		}
+	}
 }

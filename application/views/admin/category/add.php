@@ -9,10 +9,11 @@
       <div class="panel-body">
         <div class="row">
           <div class="col-lg-6">
-            <form role="form" id="frm" method="post" action="<?=base_url().'admin/category/add'?>">
+            <form role="form" id="frm" method="post" action="<?=base_url().'admin/category/contact_us'?>">
               <div class="form-group">
                 <label>Name</label>
                 <input name="name" type='text' class="form-control" placeholder="Enter Category Name" value="<?=set_value('name');?>">
+                <span class="input-group-addon"><span class="glyphicon glyphicon-asterisk"></span></span>
                 <?=form_error('name')?>
               </div>
 

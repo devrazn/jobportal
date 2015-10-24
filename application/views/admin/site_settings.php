@@ -7,7 +7,8 @@
       <div class="panel-body">
         <div class="row">
           <form role="form" id="frm" method="post" enctype="multipart/form-data" action="<?=site_url(ADMIN_PATH.'/settings/site_settings/')?>">
-            <?php if(validation_errors()) echo "<div class = 'error' style='color:red'><b>Please enter the required fields</b></div>"; ?>
+            <div class='col-lg-12'>
+              <?php if(validation_errors()) echo "<p style='color:red'><b>Please enter the required fields correctly.</b></p>"; ?>
             <div class="col-lg-6">
               <div class="form-group">
                 <label>Site Name</label>
@@ -54,7 +55,9 @@
               <div class="form-group">
                 <label>Site Logo</label>
                 <?php if($info['logo']!="") { ?>
-                  <img class="" src="<?=base_url()?>uploads/admin/images/<?=$info['logo']?>">
+                  <div class='controls'>
+                    <img class="" src="<?=base_url()?>uploads/admin/images/<?=$info['logo']?>">
+                  </div>
                 <?php } ?>
                 <input name="logo" type='file' class="">
                 <?=form_error('logo')?>
@@ -66,8 +69,6 @@
                 <textarea class="form-control" name="meta_keywords" rows="5"><?=set_value('meta_keywords',$info['meta_keywords']);?></textarea>
                 <?=form_error('meta_keywords')?>
               </div>
-
-
             </div>
 
             <div class='col-lg-6'>
@@ -106,9 +107,18 @@
                 </label>
                 <?=form_error('site_status')?>
               </div>
-              <button class="btn btn-success" type="submit">Update</button>
-              <button class="btn btn-warning" type="reset">Reset</button>
             </div>
+            <!-- /.col-lg-6 -->
+          </div>
+
+          <legend>&nbsp;</legend>
+            <div class='pull-right col-lg-12'>
+              <div class='pull-right'>
+                <button class="btn btn-success" type="submit">Submit</button>
+                <button class="btn btn-warning" type="reset">Reset</button>
+              </div>
+            </div>
+
           </form>
         </div>
         <!-- row -->

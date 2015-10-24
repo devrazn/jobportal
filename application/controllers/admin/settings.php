@@ -159,7 +159,9 @@ class Settings extends CI_Controller {
 
         $this->helper_model->editor();
 
-         if ($this->form_validation->run() == FALSE) {
+        $page_title=$this->input->post('page_title');
+
+         if($this->form_validation->run() == FALSE) {
             $data['info'] = $this->settings_model->get_cms($title);
             //echo json_encode($data['info']); exit;
             $data['select_info'] = $this->settings_model->get_cms();
@@ -172,7 +174,8 @@ class Settings extends CI_Controller {
                 /*$data['main'] = $this->input->post('cms_page');
                 $this->load->view('admin/admin', $data);*/
                 //redirect(ADMIN_PATH . '/settings/cms/' . $this->input->post('cms_page'));
-                $this->cms($this->input->post('cms_page'));
+                //$this->cms($this->input->post('cms_page'));
+                redirect(ADMIN_PATH . '/settings/cms/' . $this->input->post('cms_page'), 'refresh');
             }
         } else {
             if($this->settings_model->update_cms($this->input->post('cms_page'))) {
@@ -190,30 +193,57 @@ class Settings extends CI_Controller {
     }
 
 
-    public function contact_us(){
-        $this->form_validation->set_rules('subject', 'Subject', 'required|xss_clean');
-        $this->form_validation->set_rules('content', 'Email Body', 'required|xss_clean');
-
-        $this->helper_model->editor();
+    public function contact_details(){
+        $this->form_validation->set_rules('phone', 'Phone', 'required|xss_clean');
+        $this->form_validation->set_rules('email', 'Email', 'valid_email|required|xss_clean');
+        $this->form_validation->set_rules('fax', 'Fax', 'trim|xss_clean');
+        $this->form_validation->set_rules('weekday_start_time', 'Time', 'required|trim|xss_clean|callback_validate_time');
+        $this->form_validation->set_rules('weekday_end_time', 'Time', 'required|trim|xss_clean|callback_validate_time');
+        $this->form_validation->set_rules('weekend_start_time', 'Time', 'required|trim|xss_clean|callback_validate_time');
+        $this->form_validation->set_rules('weekend_end_time', 'Time', 'required|trim|xss_clean|callback_validate_time');
+        $this->form_validation->set_rules('lat', 'Latitude', 'required|xss_clean');
+        $this->form_validation->set_rules('lon', 'Longitude', 'required|xss_clean');
 
          if ($this->form_validation->run() == FALSE) {
-            $data['info'] = $this->settings_model->get_email_template($template_code);
-            $data['main'] = 'admin/email_templates';
-            $data['title'] = 'Email Templates';
+            $data['info'] = $this->settings_model->get_contact_info();
+            $data['main'] = 'admin/contact_details';
+
+            $data['title'] = 'Contact Details';
             $this->load->view('admin/admin', $data);
         } else {
-            if($this->settings_model->update_email_template()) {
+            if($this->settings_model->update_contact()) {
                 $this->session->set_userdata( 'flash_msg_type', "success" );
-                $this->session->set_flashdata('flash_msg', 'Email Template Updated Successfully');
-                redirect(ADMIN_PATH . '/settings/email_templates/' . $this->input->post('temp_name'), 'refresh');
+                $this->session->set_flashdata('flash_msg', 'Contact Details Updated Successfully');
+                redirect(ADMIN_PATH . '/settings/contact_details','refresh');
             } else {
                 $this->session->set_userdata( 'flash_msg_type', "danger" );
-                $this->session->set_flashdata('flash_msg', 'Sorry, Unable to Update Email Template');
-                redirect(ADMIN_PATH . '/settings/email_templates' . $this->input->post('temp_name'), 'refresh');
+                $this->session->set_flashdata('flash_msg', 'Sorry, Unable to Update Contact Details');
+                redirect(ADMIN_PATH . '/settings/contact_details', 'refresh');
             }
 
         }
 
+    }
+
+
+    public function validate_time($str) {
+        //Assume $str SHOULD be entered as HH:MM
+        $time = explode(':', $str);
+        if(isset($time[0]) && isset($time[1]) && (count($time)==2)) {
+            if (!is_numeric($time[0]) || !is_numeric($time[1])) {
+                return FALSE;
+            } else if ((int) $time[0] > 23 || (int) $time[1] > 59) {
+                return FALSE;
+            } else if ((int) $time[0] < 0 || (int) $time[1] < 0) {
+                return false;
+            } else if (mktime((int) $time[0], (int) $time[1]) === FALSE) {
+                return FALSE;
+            } else {
+                return TRUE;
+            }
+        } else {
+            return FALSE;
+        }
     }
 
 }
