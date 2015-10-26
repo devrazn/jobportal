@@ -1,5 +1,5 @@
 <div class="panel-heading">
-  <a class="btn btn-primary" href="<?=base_url().'admin/tags/add';?>">Add New</a>   
+    <a class="btn btn-primary" href="<?=base_url().'admin/tags/add';?>">Add New</a>   
 </div>
 <div class="row">
   <div class="col-lg-12">
@@ -66,7 +66,6 @@
           
         }
       ?>
-        
 		              </tbody>
      
             </table>
@@ -74,22 +73,12 @@
         <!-- dataTable_wrapper -->
 	</div>
     <!-- panel-body -->
-</div>
+    </div>
 <!-- panel panel-default -->
             </div>
             <!-- col-lg-12 -->
-            </div>
-            <!-- row -->
-
-            <script>
-    $(document).ready(function() {
-        $('#dataTables-example').dataTable({
-                responsive: true,
-                sPaginationType: "full_numbers"
-        });
-    });
-    </script>
-            
+</div>
+<!-- row -->
 
 <script>
 function doConfirm() {

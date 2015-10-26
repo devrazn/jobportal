@@ -5,18 +5,24 @@
 </script>
 
 <script type="text/javascript">
-
-$(document).ready(function()
-{
-        $("#frm").validate({
-                            debug:false,
-                            onBlur:true,
-                            errorElement: "p",
-                            errorClass:"err"
-                                 });
-});
+	$(document).ready(function()
+	{
+	        $("#frm").validate({
+	                            debug:false,
+	                            onBlur:true,
+	                            errorElement: "p",
+	                            errorClass:"err"
+	                                 });
+	});
 </script>
 
+<script>
+    $(document).ready(function() {
+        $('#dataTables-example').dataTable({
+                responsive: true,
+                sPaginationType: "full_numbers"
+        });
+    });
+</script>
 </body>
-
 </html>
