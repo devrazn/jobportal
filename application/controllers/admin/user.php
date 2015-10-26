@@ -15,7 +15,6 @@ class User extends CI_Controller {
         $this->cms_user();
     }
 
-
     function cms_user() {
         $config['base_url'] = site_url(ADMIN_PATH . '/user/page');
         $data['main'] = 'admin/user/list';
