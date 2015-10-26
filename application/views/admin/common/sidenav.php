@@ -37,13 +37,13 @@
                 <!-- /.nav-second-level -->
             </li>
             <li>
-                <a href="<?=base_url().'admin/category';?>"><i class="fa fa-table fa-fw"></i>Job Category</a>
+                <a href="<?=base_url().'admin/category';?>"><i class="fa fa-table fa-fw"></i>Job Category Management</a>
             </li>
             <li>
-                <a href="<?=base_url().'admin/tags';?>"><i class="fa fa-table fa-fw"></i>Tags</a>
+                <a href="<?=base_url().'admin/tags';?>"><i class="fa fa-table fa-fw"></i>Tags Management</a>
             </li>
             <li>
-                <a href="<?=base_url().'admin/user';?>"><i class="fa fa-edit fa-fw"></i>User</a>
+                <a href="<?=base_url().'admin/user';?>"><i class="fa fa-edit fa-fw"></i>User Management</a>
             <li>
             <li>
                 <a href="forms.html"><i class="fa fa-edit fa-fw"></i> Forms</a>

@@ -10,9 +10,10 @@
             <table class="table table-striped table-bordered table-hover" id="dataTables-example">
               <thead>
                 <tr>
-                  <th>Email</th>
                   <th>Full Name</th>
+                  <th>Email</th>
                   <th>Address</th>
+                  <th>User Type</th>
                   <th>Established</th>
                   <th>Company Type</th>
                   <th>Profile</th>
@@ -27,9 +28,22 @@
                   foreach($user_list as $user){
                 ?>
                 <tr>
+                  <?php 
+                    if($user['user_type']=='0'){
+                  ?>
+                      <td><a target="_blank" href="<?=site_url(ADMIN_PATH.'/experience/list_experience/'.$user['id'])?>"><?=$user['f_name']." ".$user['l_name']?></a></td> 
+                  <?php
+                    }
+                    else 
+                    {
+                    ?>
+                      <td><a target="_blank" href="<?=site_url(ADMIN_PATH.'/qualification/list_qualification/'.$user['id'])?>"><?=$user['f_name']." ".$user['l_name']?></a></td> 
+                  <?php 
+                    }
+                  ?>
                   <td><?=$user['email']?></td>
-                  <td><?=$user['f_name']." ".$user['l_name']?></td>
                   <td><?=$user['address']?></td>
+                  <td><?=$user['user_type']?></td>
                   <td><?=$user['dob_estd']?></td>
                   <td><?=$user['company_type']?></td>
                   <td><?=$user['profile']?></td>
@@ -108,7 +122,7 @@ function doConfirm() {
     data: {id:$(current_element).attr('data'),status:status},
     success: function(data)
       {   
-        debugger;
+        //debugger;
         location.reload();
       }
     });

@@ -28,7 +28,7 @@ class User extends CI_Controller {
 
         $data['user_list'] = $this->user_model->user_list($config['per_page'], $offset);
         $data['links'] = $this->pagination->create_links();
-        $data['title'] = 'user';
+        $data['title'] = 'User';
 
         $this->load->view('admin/admin', $data);
     }
