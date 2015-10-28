@@ -33,6 +33,9 @@
                     <li>
                         <a href="<?=base_url().'admin/settings/contact_details';?>">Contact Details</a>
                     </li>
+                    <li>
+                        <a href="<?=base_url().'admin/newsletter';?>">Newsletter</a>
+                    </li>
                 </ul>
                 <!-- /.nav-second-level -->
             </li>
