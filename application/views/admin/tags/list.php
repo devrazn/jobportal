@@ -1,4 +1,19 @@
 <script>
+    $(document).on('click', '.delete', function(event){    
+        if( ! confirm("Are you sure to perform this operation?"))
+            return false;
+        _this=$(this);
+        var id = $(this).attr('data');
+        
+        jQuery.ajax({
+            url: "<?=base_url().'admin/tags/delete_tags'; ?>/"+id,
+            beforeSend: function(){_this.html("<img src='<?php echo base_url('images/ajax-loader.gif');?>' >")},
+            success: function(data) {
+               _this.closest('tr').remove();                  
+            }
+        });               
+    });
+
     $(document).on('click', '.change_status', function(){
         _this=$(this);
         id=_this.attr("data");
@@ -7,7 +22,7 @@
             url : "<?=base_url().'admin/tags/change_status'; ?>/"+id,
             beforeSend: function(){_this.html("<img src='<?php echo base_url('images/ajax-loader.gif');?>' >")},
             success: function(data) {
-        _this.html(data);
+                _this.html(data);
         }
         });         
     });  
@@ -45,7 +60,7 @@
                   <td><i href="javascript:void(0)" data="<?php echo $tags['id'];?>" class="change_status btn <?php echo ($tags['status'])? 'btn-success' : 'btn-danger'?>"><?php echo ($tags['status'])? 'Active' : 'Inactive'?></i></td>
                   <td>
                     <a href="<?=site_url(ADMIN_PATH.'/tags/edit/'.$tags['id']) ?>" data-toggle="tooltip" title="Edit" class="btn btn-effect-ripple btn-xs btn-success"  data-original-title="Edit"><i class="fa fa-pencil"></i></a>
-                    <a href="<?=site_url(ADMIN_PATH.'/tags/delete_tags/'.$tags['id']) ?>" data-toggle="tooltip" title="Delete" class="btn btn-effect-ripple btn-xs btn-warning"  data-original-title="Delete"><i onClick="return doConfirm()" class="fa fa-times"></i></a>
+                    <a data="<?php echo $tags['id'];?>" data-toggle="tooltip" title="Delete" class="btn btn-effect-ripple btn-xs btn-warning delete"  data-original-title="Delete"><i class="fa fa-times"></i></a>
                         <?php
                         }
                         ?>
@@ -81,11 +96,3 @@
 </div>
 <!-- row -->
 
-<script>
-function doConfirm() {
-  msg=confirm("Are you sure you want to delete this Permanently?");
-  if(msg != true) {
-    return false;
-  }
-}
-</script>

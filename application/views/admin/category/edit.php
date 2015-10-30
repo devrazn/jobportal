@@ -19,10 +19,10 @@
               <div class="form-group">
                 <label>Status&nbsp;&nbsp;</label>
                 <label class="radio-inline">
-                    <input type="radio" value="active" name="status" <?php if(set_value('status',$info['status'])=='active'){echo "checked";}?> >Active
+                    <input type="radio" value="1" name="status" <?php if(set_value('status',$info['status'])==1){echo "checked";}?> >Active
                 </label>
                 <label class="radio-inline">
-                    <input type="radio" value="inactive" name="status" <?php if(set_value('status',$info['status'])=='inactive') {echo "checked";}?> >Inactive
+                    <input type="radio" value="0" name="status" <?php if(set_value('status',$info['status'])==0) {echo "checked";}?> >Inactive
                 </label>
                 <?=form_error('status')?>
               </div>

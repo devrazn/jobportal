@@ -95,14 +95,13 @@ class Tags extends CI_Controller {
             $txt="Inactive";
         } elseif ($det['status'] === '0') {
             $status = '1';
-                        $txt="Active";
+            $txt="Active";
         }
 
         $data = array('status' => $status);
         $this->db->where('id', $id);
         $this->db->update('tbl_tags', $data);
         echo $txt;
-       
     }
 
 }
