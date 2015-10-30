@@ -19,7 +19,16 @@ class Category_model extends CI_Model {
     function category_list($per_page, $offset = '1') {
         $this->db->where('del_flag', 0);
         $this->db->order_by('id', 'ASC');
+
         $query = $this->db->get('tbl_job_category');
+
+
+        // $options = array('del_flag' => 0);
+        // $this->db->where('tbl_job_category', $options);
+        //$orderby = " ORDER BY id ASC";
+
+        // $sql = "SELECT * FROM tbl_job_category WHERE del_flag = '0'".$orderby ;
+        // $query = $this->db->query($sql);
         return $query->result_array();
     }
 

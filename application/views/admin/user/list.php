@@ -129,3 +129,12 @@ function doConfirm() {
     }      
   });
 </script>
+
+<script>
+    $(document).ready(function() {
+        $('#dataTables-example').dataTable({
+                responsive: true,
+                sPaginationType: "full_numbers"
+        });
+    });
+</script>

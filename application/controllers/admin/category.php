@@ -8,11 +8,31 @@ class Category extends CI_Controller {
         $this->load->model('admin/category_model');
         $this->load->library('form_validation');
         $this->helper_model->validate_session();
+        $this->load->library('datatables');
     }
 
     public function index() {
-        $this->cms_category();
+                $data['main'] = 'admin/category/list';
+        $data['title'] = 'Categories';
+        $this->load->view('admin/admin', $data);
+        //$this->cms_category();
     }
+
+
+    function datatable() {
+        //$this->datatables->where('id', '5');
+        $this->datatables->select('id,name,status')
+            ->from('tbl_job_category')
+            ->where('del_flag', '0');
+        $this->datatables->add_column('edit', '<a href="category/edit/$1/" data-toggle="tooltip" title="Edit" class="btn btn-effect-ripple btn-xs btn-success" data-original-title="Edit"><i class="fa fa-pencil"></i></a>', 'id');
+        $this->datatables->add_column('delete', '<div class=""><a onClick="return doConfirm()" class="delete btn btn-effect-ripple btn-xs btn-warning" href="category/delete_category/$1" data-original-title="Delete"><i class="fa fa-times"></i></a></div>', 'id');
+        //if()
+        $this->datatables->edit_column('status', '$1 :: <a href="category/change_status/$2/$3">$4</a>', 'ucfirst(status), status, id, Change Status');
+        $this->datatables->unset_column('id');
+        
+        echo $this->datatables->generate();
+    }
+
 
     function cms_category() {
         $config['base_url'] = site_url(ADMIN_PATH . '/category/page');
@@ -30,6 +50,8 @@ class Category extends CI_Controller {
         $data['title'] = 'Categories';
 
         $this->load->view('admin/admin', $data);
+
+
     }
 
 
@@ -78,25 +100,10 @@ class Category extends CI_Controller {
             echo 'error';
         }
     }
-    
-    public function change_status($id) {
-        $options = array('id' => $id);
-        $query = $this->db->get_where('tbl_job_category', $options, 1);
-        $det=$query->row_array();
-                
-        if ($det['status'] === '1') {
-            $status = '0';
-            $txt="Inactive";
-        } elseif ($det['status'] === '0') {
-            $status = '1';
-            $txt="Active";
-        }
 
-        $data = array('status' => $status);
-        $this->db->where('id', $id);
-        $this->db->update('tbl_job_category', $data);
-        echo $txt;
-       
+    function change_status($status = '', $id = '') {
+        $this->category_model->change_status(strtolower($status), $id);
+        redirect(ADMIN_PATH . '/category', 'refresh');
     }
 
 }
