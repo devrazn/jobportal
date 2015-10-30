@@ -80,9 +80,28 @@ class Tags extends CI_Controller {
         redirect(ADMIN_PATH . '/tags', 'refresh');
     }
 
-    function change_status($status = '', $id = '') {
-        $this->tags_model->change_status($status, $id);
-        redirect(ADMIN_PATH . '/tags', 'refresh');
+    // function change_status($status = '', $id = '') {
+    //     $this->tags_model->change_status($status, $id);
+    //     redirect(ADMIN_PATH . '/tags', 'refresh');
+    // }
+
+    public function change_status($id) {
+        $options = array('id' => $id);
+        $query = $this->db->get_where('tbl_tags', $options, 1);
+        $det=$query->row_array();
+                
+        if ($det['status'] === '1') {
+            $status = '0';
+            $txt="Inactive";
+        } elseif ($det['status'] === '0') {
+            $status = '1';
+            $txt="Active";
+        }
+
+        $data = array('status' => $status);
+        $this->db->where('id', $id);
+        $this->db->update('tbl_tags', $data);
+        echo $txt;
     }
 
 }
