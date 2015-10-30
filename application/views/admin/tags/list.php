@@ -22,6 +22,12 @@
             url : "<?=base_url().'admin/tags/change_status'; ?>/"+id,
             beforeSend: function(){_this.html("<img src='<?php echo base_url('images/ajax-loader.gif');?>' >")},
             success: function(data) {
+              if(data == 'Active') {
+                _this.removeClass('btn-danger').addClass('btn-success');
+              } else {
+                _this.removeClass('btn-success').addClass('btn-danger');
+              }
+                //_this.css("");
                 _this.html(data);
         }
         });         
