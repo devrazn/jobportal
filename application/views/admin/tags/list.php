@@ -1,3 +1,18 @@
+<script>
+    $(document).on('click', '.change_status', function(){
+        _this=$(this);
+        id=_this.attr("data");
+        
+        jQuery.ajax({
+            url : "<?=base_url().'admin/tags/change_status'; ?>/"+id,
+            beforeSend: function(){_this.html("<img src='<?php echo base_url('images/ajax-loader.gif');?>' >")},
+            success: function(data) {
+        _this.html(data);
+        }
+        });         
+    });  
+</script>
+
 <div class="panel-heading">
     <a class="btn btn-primary" href="<?=base_url().'admin/tags/add';?>">Add New</a>   
 </div>
@@ -20,63 +35,49 @@
                 </tr>
               </thead>
               <tbody>
-            <?php
-              if(count($tags_list)>0){
-              foreach($tags_list as $tags){
-            ?>
+                <?php
+                  if(count($tags_list)>0){
+                  foreach($tags_list as $tags){
+                ?>
                 <tr>
                   <td><?=$tags['name']?></td>
                   <td><?=$this->category_model->category_name_by_id($tags['category_id'])?></td>
-                <td>
-               <?php 
-       if($tags['status']=='1')
-      {
-      ?>
-            Active :: <a href="<?=site_url(ADMIN_PATH.'/tags/change_status/1/'.$tags['id'])?>">Deactivate</a>
-            <?php
-      }
-      else if($tags['status']=='0')
-      {
-        ?>
-            Inactive :: <a href="<?=site_url(ADMIN_PATH.'/tags/change_status/0/'.$tags['id'])?>">Activate</a>
-            <?php
-      }
-  ?>
-        <td><a href="<?=site_url(ADMIN_PATH.'/tags/edit/'.$tags['id']) ?>" data-toggle="tooltip" title="Edit" class="btn btn-effect-ripple btn-xs btn-success"  data-original-title="Edit"><i class="fa fa-pencil"></i></a>
-  
-    <a href="<?=site_url(ADMIN_PATH.'/tags/delete_tags/'.$tags['id']) ?>" data-toggle="tooltip" title="Delete" class="btn btn-effect-ripple btn-xs btn-warning"  data-original-title="Delete"><i onClick="return doConfirm()" class="fa fa-times"></i></a>
-    <?php
- }
- ?></td>    
-        </tr>
-        <?php
-            
-          }
-      else
-        {
-          ?>
-                        <tr>
-                          <td colspan="5">
-                            <center>
-                              <font color="#FF0000">::No Records Yet.::</font>
-                            </center>
-                          </td>
-                        </tr>
-        <?php
-          
-        }
-      ?>
-		              </tbody>
-     
+                  <td><i href="javascript:void(0)" data="<?php echo $tags['id'];?>" class="change_status btn <?php echo ($tags['status'])? 'btn-success' : 'btn-danger'?>"><?php echo ($tags['status'])? 'Active' : 'Inactive'?></i></td>
+                  <td>
+                    <a href="<?=site_url(ADMIN_PATH.'/tags/edit/'.$tags['id']) ?>" data-toggle="tooltip" title="Edit" class="btn btn-effect-ripple btn-xs btn-success"  data-original-title="Edit"><i class="fa fa-pencil"></i></a>
+                    <a href="<?=site_url(ADMIN_PATH.'/tags/delete_tags/'.$tags['id']) ?>" data-toggle="tooltip" title="Delete" class="btn btn-effect-ripple btn-xs btn-warning"  data-original-title="Delete"><i onClick="return doConfirm()" class="fa fa-times"></i></a>
+                        <?php
+                        }
+                        ?>
+                  </td>    
+                </tr>
+                        <?php
+                            
+                          }
+                      else
+                        {
+                          ?>
+                <tr>
+                  <td colspan="5">
+                    <center>
+                      <font color="#FF0000">::No Records Yet.::</font>
+                    </center>
+                  </td>
+                </tr>
+                        <?php
+                          
+                        }
+                      ?>
+		          </tbody>
             </table>
-		</div>
-        <!-- dataTable_wrapper -->
-	</div>
-    <!-- panel-body -->
+      		</div>
+              <!-- dataTable_wrapper -->
+    	</div>
+        <!-- panel-body -->
     </div>
-<!-- panel panel-default -->
-            </div>
-            <!-- col-lg-12 -->
+        <!-- panel panel-default -->
+  </div>
+  <!-- col-lg-12 -->
 </div>
 <!-- row -->
 
