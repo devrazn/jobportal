@@ -110,6 +110,7 @@
             </div>
             <!-- /.col-lg-6 -->
           </div>
+          <!-- /.col-lg-12 -->
 
           <legend>&nbsp;</legend>
             <div class='pull-right col-lg-12'>

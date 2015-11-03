@@ -92,12 +92,19 @@ class Category extends CI_Controller {
 
 
     function delete_category($id) {
-        if($this->category_model->delete_category($id)){
-            $this->session->set_userdata( 'flash_msg_type', "success" );
-            $this->session->set_flashdata('flash_msg', 'Category Deleted Successfully.');
-            redirect(ADMIN_PATH . '/category', 'refresh');
+        $this->load->model('admin/tags_model');
+        if(!($this->tags_model->tags_list())) {
+            if($this->category_model->delete_category($id)){
+                $this->session->set_userdata( 'flash_msg_type', "success" );
+                $this->session->set_flashdata('flash_msg', 'Category Deleted Successfully.');
+                redirect(ADMIN_PATH . '/category', 'refresh');
+            } else {
+                echo 'error';
+            }
         } else {
-            echo 'error';
+            $this->session->set_userdata( 'flash_msg_type', "danger" );
+            $this->session->set_flashdata('flash_msg', 'Sorry, Unable to Delete the Category. Please empty the tags & jobs under this category first.');
+            redirect(ADMIN_PATH . '/category', 'refresh');
         }
     }
 

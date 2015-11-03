@@ -35,7 +35,8 @@ class Newsletter extends CI_Controller {
     }
 
     function add() {
-        $this->form_validation->set_rules('title', 'Title', 'required|xss_clean');
+        $this->form_validation->set_rules('subject', 'Subject', 'required|xss_clean');
+         $this->form_validation->set_rules('content', 'Content', 'required|xss_clean');
         $this->helper_model->editor();
 
         if ($this->form_validation->run() == FALSE) {
@@ -51,7 +52,7 @@ class Newsletter extends CI_Controller {
     }
 
     function edit($id) {
-        $this->form_validation->set_rules('title', 'Title', 'required|xss_clean');
+        $this->form_validation->set_rules('subject', 'Subject', 'required|xss_clean');
         $this->helper_model->editor();
 
         if ($this->form_validation->run() == FALSE) {
@@ -93,27 +94,90 @@ class Newsletter extends CI_Controller {
         echo $txt;
     }
 
-    function use_newsletter($id) {
-        $this->helper_model->editor();
-        $data['info'] = $this->newsletter_model->get_newsletter($id);
-        $data['title'] = 'Send Newsletter';
-        $data['main'] = 'admin/newsletter/use_newsletter';
-        $this->load->view('admin/admin', $data);
-    }
-
     function send_newsletter($id) {
+        $this->load->model('admin/settings_model');
+        $data['mail_settings']=$this->settings_model->get_email_settings();
+        $this->form_validation->set_rules('subject', 'Subject', 'required');
+        $this->form_validation->set_rules('receiver_options', 'Receiver', 'required');
 
-        $this->form_validation->set_rules('title', 'Heading', 'required');
-        $this->form_validation->set_rules('for', 'for', 'required');
-        $this->form_validation->set_rules('sender', 'Sender', 'required');
+        if($this->input->post('receiver_options')=='1') {
+            $this->form_validation->set_rules('receiver', 'Receiver Email', 'required|valid_email|callback_validate_receiver');
+        }
+
+        $this->form_validation->set_rules('content', 'Content', 'required');
+        $this->form_validation->set_rules('sender', 'Sender Email', 'required|valid_email');
+        $this->form_validation->set_rules('password', 'Sender Email\'s Password', 'required');
+
+        $this->helper_model->editor();
+
         if ($this->form_validation->run() == FALSE) {
-
-            $data['main'] = 'admin/newsletter/use_newsletter/' . $id;
+            $data['info'] = $this->newsletter_model->get_newsletter($id);
+            $data['title'] = 'Send Newsletter';
+            $data['main'] = 'admin/newsletter/send_newsletter';
             $this->load->view('admin/admin', $data);
         } else {
-            $this->Newsletter_model->send_newsletter();
-            $this->session->set_flashdata('message', 'Sent');
-            redirect(ADMIN_PATH . '/newsletter', 'refresh');
+            if($this->send_email($data['mail_settings'])) {
+                $this->session->set_userdata( 'flash_msg_type', "success" );
+                $this->session->set_flashdata('flash_msg', 'Newsletter Sent Successfully.');
+                redirect(ADMIN_PATH . '/newsletter/send_newsletter' . '/' .$id, 'refresh');
+            } else {
+                $this->session->set_userdata( 'flash_msg_type', "danger" );
+                $this->session->set_flashdata('flash_msg', 'Newsletter Can\'t be sent. The log report is below.');
+                redirect(ADMIN_PATH . '/newsletter/send_newsletter' . '/' .$id, 'refresh');
+            }
+        }
+    }
+
+
+    function validate_receiver() {
+        if($this->newsletter_model->verify_receiver()){
+            return true;
+        } else {
+            $this->form_validation->set_message('validate_receiver', 'Incorrect Receiver Email');
+            return false;
+        }
+    }
+
+
+    public function send_email($mail_settings) {
+        $this->load->library('email',array('mailtype' => $mail_settings['mailtype'],
+                                                'protocol' => $mail_settings['protocol'],
+                                                //'smtp_host' => 'smtp.wlink.com.np',
+                                                'smtp_host' => $mail_settings['smtp_host'],
+                                                'smtp_port' => $mail_settings['smtp_port'],
+                                                'smtp_user' => $this->input->post('sender'),
+                                                'smtp_pass' => $this->input->post('password'),
+                                                'charset' => $mail_settings['charset'],
+                                                'newline' => "\r\n"));
+
+            // $config['protocol'] = "smtp";
+            // $config['smtp_host'] = "ssl://smtp.gmail.com";
+            // $config['smtp_port'] = "465";
+            // $config['smtp_user'] = "blablabla@gmail.com"; 
+            // $config['smtp_pass'] = "yourpassword";
+            // $config['charset'] = "utf-8";
+            // $config['mailtype'] = "html";
+            // $config['newline'] = "\r\n";
+
+            // $ci->email->initialize($config);
+
+        $this->email->from($mail_settings['receive_email'], 'The JobPortal');
+        if($this->input->post('receiver_options')=='1') {
+            $this->email->to($this->input->post('receiver'));
+        } else  {
+            $this->email->to($this->newsletter_model->get_receivers());
+        }
+
+        $this->email->subject($this->input->post('subject'));
+
+        $message = $this->input->post('content');
+        $this->email->message($message);
+
+        if($this->email->send()) {
+            return true;
+        } else {
+            $this->session->set_userdata('email_status', $this->email->print_debugger());
+            return false;
         }
     }
 

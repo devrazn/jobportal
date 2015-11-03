@@ -48,8 +48,8 @@
             <table class="table table-striped table-bordered table-hover" id="dataTables-example">
               <thead>
                 <tr>
-                  <th>Title</th>
-                  <th>Use</th>
+                  <th>Subject</th>
+                  <th>Send</th>
                   <th>Status</th>
                   <th>Options</th>
                 </tr>
@@ -60,9 +60,9 @@
                     foreach($newsletter_list as $newsletter){
                   ?>
                 <tr>
-                  <td><?=$newsletter['title']?></td>
-                  <td><a href="<?=site_url(ADMIN_PATH.'/newsletter/use_newsletter/'.$newsletter['id'])?>">
-                    USE
+                  <td><?=$newsletter['subject']?></td>
+                  <td><a href="<?=site_url(ADMIN_PATH.'/newsletter/send_newsletter/'.$newsletter['id'])?>">
+                    SEND
                     </a></td>
                   <td><i href="javascript:void(0)" data="<?php echo $newsletter['id'];?>" class="change_status btn <?php echo ($newsletter['status'])? 'btn-success' : 'btn-danger'?>"><?php echo ($newsletter['status'])? 'Active' : 'Inactive'?></i></td>
                   <td>

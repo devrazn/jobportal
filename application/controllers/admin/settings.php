@@ -59,7 +59,7 @@ class Settings extends CI_Controller {
             } else {
                 $this->session->set_userdata( 'flash_msg_type', "danger" );
                 $this->session->set_flashdata('flash_msg', 'Sorry, Unable to Update Settings');
-                redirect(ADMIN_PATH . '/settings/change_password', 'refresh');
+                redirect(ADMIN_PATH . '/settings/site_settings', 'refresh');
             }
         }
     }
@@ -204,7 +204,7 @@ class Settings extends CI_Controller {
         $this->form_validation->set_rules('lat', 'Latitude', 'required|xss_clean');
         $this->form_validation->set_rules('lon', 'Longitude', 'required|xss_clean');
 
-         if ($this->form_validation->run() == FALSE) {
+        if ($this->form_validation->run() == FALSE) {
             $data['info'] = $this->settings_model->get_contact_info();
             $data['main'] = 'admin/contact_details';
 
@@ -225,7 +225,6 @@ class Settings extends CI_Controller {
 
     }
 
-
     public function validate_time($str) {
         //Assume $str SHOULD be entered as HH:MM
         $time = explode(':', $str);
@@ -244,6 +243,38 @@ class Settings extends CI_Controller {
         } else {
             return FALSE;
         }
+    }
+
+
+    public function email_settings() {
+        $this->form_validation->set_rules('mailtype', 'Mail Type', 'required|xss_clean');
+        $this->form_validation->set_rules('protocol', 'Protocol', 'required|xss_clean');
+        $this->form_validation->set_rules('smtp_host', 'SMTP Host', 'required');
+        $this->form_validation->set_rules('smtp_port', 'SMTP Port', 'xss_clean');
+        $this->form_validation->set_rules('smtp_user', 'SMTP Username', 'xss_clean');
+        $this->form_validation->set_rules('receive_email', 'Receiver Email', 'required|xss_clean');
+        //$this->form_validation->set_rules('smtp_pass', 'SMTP Password', 'required|xss_clean');
+        //$this->form_validation->set_rules('charset', 'CharSet', 'required|xss_clean');
+
+        if ($this->form_validation->run() == FALSE) {
+            $data['info'] = $this->settings_model->get_email_settings();
+            $data['main'] = 'admin/email_settings';
+
+            $data['title'] = 'Email Settings';
+            $this->load->view('admin/admin', $data);
+        } else {
+            if($this->settings_model->update_email_settings()) {
+                $this->session->set_userdata( 'flash_msg_type', "success" );
+                $this->session->set_flashdata('flash_msg', 'Email Settings Updated Successfully');
+                redirect(ADMIN_PATH . '/settings/email_settings','refresh');
+            } else {
+                $this->session->set_userdata( 'flash_msg_type', "danger" );
+                $this->session->set_flashdata('flash_msg', 'Sorry, Unable to Update Email Settings');
+                redirect(ADMIN_PATH . '/settings/email_settings', 'refresh');
+            }
+
+        }
+
     }
 
 }

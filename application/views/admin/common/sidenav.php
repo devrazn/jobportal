@@ -19,7 +19,10 @@
                 <a href="#"><i class="fa fa-wrench fa-fw"></i> Settings<span class="fa arrow"></span></a>
                 <ul class="nav nav-second-level">
                     <li>
-                        <a href="<?=base_url().'admin/settings';?>">Site Settings</a>
+                        <a href="<?=base_url().'admin/settings/site_settings';?>">Site Settings</a>
+                    </li>
+                    <li>
+                        <a href="<?=base_url().'admin/settings/email_settings';?>">Email Settings</a>
                     </li>
                     <li>
                         <a href="<?=base_url().'admin/settings/change_password';?>">Change Password</a>
@@ -33,15 +36,17 @@
                     <li>
                         <a href="<?=base_url().'admin/settings/contact_details';?>">Contact Details</a>
                     </li>
-                    <li>
-                        <a href="<?=base_url().'admin/newsletter';?>">Newsletter</a>
-                    </li>
                 </ul>
                 <!-- /.nav-second-level -->
             </li>
             <li>
                 <a href="<?=base_url().'admin/category';?>"><i class="fa fa-table fa-fw"></i>Job Category Management</a>
             </li>
+
+            <li>
+                <a href="<?=base_url().'admin/newsletter';?>"><i class="fa fa-table fa-fw"></i>Newsletters</a>
+            </li>
+
             <li>
                 <a href="<?=base_url().'admin/tags';?>"><i class="fa fa-table fa-fw"></i>Tags Management</a>
             </li>

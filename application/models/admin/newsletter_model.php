@@ -7,7 +7,7 @@ class Newsletter_model extends CI_Model {
     }
 
     function add_newsletter() {
-        $data = array('title' => $this->input->post('title'),
+        $data = array('subject' => $this->input->post('subject'),
                       'content' => $this->input->post('content'),
                       'status' => $this->input->post('status')
         );
@@ -29,7 +29,7 @@ class Newsletter_model extends CI_Model {
     }
 
     function update_newsletter($id) {
-        $data = array('title' => $this->input->post('title'),
+        $data = array('subject' => $this->input->post('subject'),
                       'content' => $this->input->post('content'),
                       'status' => $this->input->post('status')
         );
@@ -55,25 +55,31 @@ class Newsletter_model extends CI_Model {
         $this->db->update('tbl_newsletter', $data);
     }
 
-    function send_newsletter() {
-        $headers = "From: " . $this->input->post('sender') . "\r\n" .
-                    "Reply-To: " . $this->input->post('sender') . "\r\n" .
-                    'X-Mailer: PHP/' . phpversion() . "\r\n" .
-                    "MIME-Version: 1.0\r\n" .
-                    "Content-Type: text/html; charset=utf-8\r\n" .
-                    "Content-Transfer-Encoding: 8bit\r\n\r\n";
-        $subject = $this->input->post('title');
-        $emailbody = $this->input->post('content');
 
-        if ($this->input->post('for') == 'selected') {
+    function get_receivers() {
+        $options = array('newsletter_subscription' => '1',
+                            'del_flag' => '0');
+        if($this->input->post('receiver_options')=='3') {
+            $options += ['user_type' => '1'];
+        } else if($this->input->post('receiver_options')=='4') {
+            $options += ['user_type' => '2'];
+        } else if($this->input->post('receiver_options')=='5') {
+            $options += ['status' => '2'];
+        }
+        $this->db->select('email');
+        return $this->db->get_where('tbl_users', $options)->row_array();
+    }
 
-            @mail($this->input->post('receiver'), $subject, $emailbody, $headers);
+
+    function verify_receiver(){
+        $options = array('email' => $this->input->post('receiver'),
+                        'newsletter_subscription' => '1',
+                        'del_flag' => '0');
+        $query = $this->db->get_where('tbl_users', $options, 1);
+        if($query->num_rows() == 1) {
+            return true;
         } else {
-            foreach ($this->newsletter_subscriber_list($this->input->post('for')) as $subscriber_list) {
-
-                //echo $subscriber_list['email']; exit;
-                @mail($subscriber_list['email'], $subject, $emailbody, $headers);
-            }
+            return false;
         }
     }
 }

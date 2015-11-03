@@ -11,9 +11,9 @@
           <div class="col-lg-6">
             <form role="form" id="frm" method="post" action="<?=site_url(ADMIN_PATH.'/newsletter/edit/'.$info['id'])?>">
               <div class="form-group">
-                <label>Title</label>
-                <input name="title" type='text' class="form-control" placeholder="Enter Title" value="<?=set_value('title',$info['title']);?>">
-                <?=form_error('title')?>
+                <label>Subject</label>
+                <input name="subject" type='text' class="form-control" placeholder="Enter Subject" value="<?=set_value('subject',$info['subject']);?>">
+                <?=form_error('subject')?>
               </div>
               <div class="form-group">
                 <label>Content</label>

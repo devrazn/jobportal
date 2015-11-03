@@ -14,7 +14,7 @@ class Tags_model extends CI_Model {
         $this->db->insert('tbl_tags', $data);
     }
 
-    function tags_list($per_page, $offset = '1') {
+    function tags_list($per_page='', $offset = '1') {
         $this->db->where('del_flag', 0);
         $this->db->order_by('id', 'ASC');
 

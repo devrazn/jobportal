@@ -10,10 +10,11 @@
         <div class="row">
           <div class="col-lg-6">
             <form role="form" id="frm" method="post" action="<?=base_url().'admin/newsletter/add'?>">
+              <?php if(validation_errors()) echo "<div class = 'error' style='color:red'><b>Please enter the required fields</b></div>"; ?>
               <div class="form-group">
-                <label>Title</label>
-                <input name="title" type='text' class="form-control" placeholder="Enter Title" value="<?=set_value('title');?>">
-                <?=form_error('title')?>
+                <label>Subject</label>
+                <input name="subject" type='text' class="form-control" placeholder="Enter Subject" value="<?=set_value('subject');?>">
+                <?=form_error('subject')?>
               </div>
               <div class="form-group">
                 <label> Content</label>
@@ -22,6 +23,7 @@
                       $value = stripslashes($this->input->post('content'));
                        echo $this->ckeditor->editor('content', '');
                   ?>
+                  <?=form_error('content')?>
                 </div>
               <div class="form-group">
                 <label>Status&nbsp;&nbsp;</label>

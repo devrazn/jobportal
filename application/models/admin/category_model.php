@@ -81,7 +81,7 @@ class Category_model extends CI_Model {
 
 
     function category_list_all() {
-        $sql = "SELECT * FROM tbl_job_category";
+        $sql = "SELECT * FROM tbl_job_category WHERE del_flag = '0'";
         $query = $this->db->query($sql);
         return $query->result_array();
     }

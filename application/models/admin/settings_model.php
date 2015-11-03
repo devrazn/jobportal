@@ -169,4 +169,29 @@ class Settings_model extends CI_Model {
 			return false;
 		}
 	}
+
+
+	public function get_email_settings() {
+		return $this->db->get_where('tbl_email_settings',array('del_flag' => '0'), 1)->row_array();
+	}
+
+	public function update_email_settings(){
+		$data = array(
+			'mailtype' => $this->input->post('mailtype'),
+			'protocol' => $this->input->post('protocol'),
+			'smtp_host' => $this->input->post('smtp_host'),
+			'smtp_port' => $this->input->post('smtp_port'),
+			'smtp_user' => $this->input->post('smtp_user'),
+			'receive_email' => $this->input->post('receive_email')
+			//'charset' => $this->input->post('charset'),
+			//'newline' => $this->input->post('newline')			
+			);
+
+		$this->db->where('id', '1');
+		if($this->db->update('tbl_email_settings',$data)){
+			return true;
+		} else {
+			return false;
+		}
+	}
 }
