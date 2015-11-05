@@ -16,5 +16,11 @@
 	});
 </script>
 
+<script type="text/javascript">
+		alertify.defaults.glossary.title= 'Job Portal';
+		alertify.defaults.glossary.ok= 'Ok';
+		alertify.defaults.glossary.cancel= 'Cancel';
+</script>
+
 </body>
 </html>
