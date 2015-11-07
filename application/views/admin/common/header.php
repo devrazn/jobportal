@@ -26,6 +26,7 @@
 
     <!-- Custom CSS -->
     <link href="<?=base_url();?>assets/admin/template/dist/css/sb-admin-2.css" rel="stylesheet">
+    <link href="<?=base_url();?>assets/admin/css/style.css" rel="stylesheet">
 
     <!-- Morris Charts CSS -->
     <!--<link href="../../assets/admin/template/bower_components/morrisjs/morris.css" rel="stylesheet">-->

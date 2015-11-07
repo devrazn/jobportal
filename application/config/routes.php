@@ -56,5 +56,5 @@ $route['404_override'] = '';
 $route['translate_uri_dashes'] = FALSE;
 //$route['admin/rescue_calls'] ="relief_admin/reliefcrud/rescue_calls";
 //$route['register'] = 'home/register';
-//$route['admin'] = "admin/index";
+$route['admin'] = "login";
 //$route['login/validate_admin_pw_reset_credentials/(:any)/(:any)'] = "login/validate_admin_pw_reset_credentials/$1/$2";

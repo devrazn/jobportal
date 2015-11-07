@@ -77,7 +77,7 @@
                             
                             <div class="myLoc">
                                     <a class="btn btn-primary pull-left" onClick="getMyLocation()">Get My Current Location</a>
-                                    <a class="btn btn-warning pull-right" onClick="getMap()">Reset My Location</a>
+                                    <a class="btn btn-warning pull-right" onClick="getMap()">Reset Office Location</a>
                                     <br /><br />
                                 </div>
                             
