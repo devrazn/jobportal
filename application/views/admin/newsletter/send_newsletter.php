@@ -1,12 +1,5 @@
 <div class="row">
   <div class="col-lg-12">
-    <?php
-             if($this->session->userdata('email_status')){
-                echo "<h3><u>Email Log:</u></h3>";
-                echo "<p>" .  $this->session->userdata('email_status') . "</p>";
-                $this->session->unset_userdata('email_status');
-             }
-          ?>
     <div class="panel panel-default">
       <div class="panel-heading">
         <?=$title?>
@@ -117,9 +110,13 @@
     $("#single").prop("checked", true);
   });
   
-  $( document ).ready(function() {
+  /*$( document ).ready(function() {
     $('#sender').on('input', function() {
       $("#password").attr("placeholder", "Enter password for " + $('#sender').val());
     });
+  });*/
+
+  $('#sender').on('input', function() {
+    $("#password").attr("placeholder", "Enter password for " + $('#sender').val());
   });
 </script>

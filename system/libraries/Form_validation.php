@@ -88,7 +88,7 @@ class CI_Form_validation {
 	 *
 	 * @var string
 	 */
-	protected $_error_prefix	= "<p style='color:#F00'>";
+	protected $_error_prefix	= "<p class='ci_error' style='color:#F00'>";
 
 	/**
 	 * End tag for error wrapping

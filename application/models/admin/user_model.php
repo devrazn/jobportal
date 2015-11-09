@@ -29,16 +29,16 @@ class User_model extends CI_Model {
     }
 
     function get_user($id) {
-        $options = array('id' => $id);
+        $options = array('id' => $id,
+                          'del_flag' => '0');
         $query = $this->db->get_where('tbl_users', $options, 1);
         return $query->row_array();
     }
 
     function change_status($status, $id) {
         $sql ="Update tbl_users SET status='$status' where id='$id'";
-        $this->db->query($sql);
+        return($this->db->query($sql));
         
-
         // if ($status === '1')
         //     $status = '0';
         // else if ($status === '0')
@@ -49,5 +49,55 @@ class User_model extends CI_Model {
         // );
         // $this->db->where('id', $id);
         // $this->db->update('tbl_users', $data);
+    }
+
+
+    public function get_user_type($id) {
+      $options = array('id' => $id,
+                      'del_flag' => '0');
+      $this->db->select('user_type');
+      return $this->db->get_where('tbl_users', $options)->row_array();
+    }
+
+
+    public function get_qualification($id) {
+      $options = array('user_id' => $id,
+                      'del_flag' => '0');
+      return $this->db->get_where('tbl_qualification', $options)->result_array();
+    }
+
+
+    public function get_experience($id) {
+      $options = array('user_id' => $id,
+                      'del_flag' => '0');
+      return $this->db->get_where('tbl_experience', $options)->result_array();
+    }
+
+
+    function verify_receiver(){
+        $options = array('email' => $this->input->post('receiver_email'),
+                        'del_flag' => '0');
+        $query = $this->db->get_where('tbl_users', $options, 1);
+        if($query->num_rows() == 1) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+
+    function update_qualification_status() {
+      $data = array('status' => $this->input->post('status')
+        );
+      $this->db->where('id', $this->input->post('id'));
+      return($this->db->update('tbl_qualification', $data));
+    }
+
+
+    function update_experience_status() {
+      $data = array('status' => $this->input->post('status')
+        );
+      $this->db->where('id', $this->input->post('id'));
+      return($this->db->update('tbl_experience', $data));
     }
 }

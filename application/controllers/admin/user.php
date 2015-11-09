@@ -28,7 +28,7 @@ class User extends CI_Controller {
 
         $data['user_list'] = $this->user_model->user_list($config['per_page'], $offset);
         $data['links'] = $this->pagination->create_links();
-        $data['title'] = 'User';
+        $data['title'] = 'Users';
 
         $this->load->view('admin/admin', $data);
     }
@@ -58,8 +58,126 @@ class User extends CI_Controller {
     }
 
     function change_status($status = '', $id = '') {
-        $this->user_model->change_status($status, $id);
-        redirect(ADMIN_PATH . '/user', 'refresh');
+        if($this->user_model->change_status($status, $id)){
+            echo 'success';
+        } else {
+            echo 'failure';
+        }
+    }
+
+
+    public function details($id) {
+        $this->load->model('admin/settings_model');
+        $data['mail_settings']=$this->settings_model->get_email_settings();
+        $data['user_info'] = $this->user_model->get_user($id);
+        //echo json_encode($data['user_type']); exit;
+        $data['title'] = 'User Details';
+
+        $this->helper_model->editor();
+
+
+        if(json_encode($data['user_info']['user_type']=='1')) {
+           // echo json_encode($data['user_info']['user_type']); exit;
+            $data['qualification'] = $this->user_model->get_qualification($id);
+            $data['experience'] = $this->user_model->get_experience($id);
+        } else if ($data['user_type']=='2') {
+            $data['info'] = $this->user_model->get_jobs($id);
+        } else {
+        }
+
+        $config['base_url'] = site_url(ADMIN_PATH . '/user/page');
+        if(json_encode($data['user_info']['user_type']=='1')) {
+            $data['main'] = 'admin/user/user_details';
+        } else {
+            $data['main'] = 'admin/user/employer_details';
+        }
+
+        /*$query = $this->db->get('tbl_users');
+        $config['total_rows'] = $query->num_rows();
+
+        $config['per_page'] = '300';
+        $offset = $this->uri->segment(4, 0);
+        $config['uri_segment'] = '4';
+        $this->pagination->initialize($config);*/
+
+        //$data['user_list'] = $this->user_model->user_list($config['per_page'], $offset);
+        //$data['links'] = $this->pagination->create_links();
+        //$data['title'] = 'User';
+
+        $this->load->view('admin/admin', $data);
+    }
+
+
+    public function check_user_type($id) {
+        $options = array('id' => '1',
+                        'del_flag' => '0');
+        $this->db->select('user_type');
+        return $this->db->get_where('tbl_users', $options)->row_array();
+    }
+
+
+    public function send_email() {
+        $this->form_validation->set_rules('sender', 'Sender Email', 'required|xss_clean|valid_email');
+        $this->form_validation->set_rules('receiver_email', 'Receiver', 'required|xss_clean|valid_email|callback_validate_receiver');
+        $this->form_validation->set_rules('password', 'Sender Email\'s Password', 'required|xss_clean');
+        $this->form_validation->set_rules('subject', 'Subject', 'required|xss_clean');
+        $this->form_validation->set_rules('content', 'Content', 'required|xss_clean');
+
+        if ($this->form_validation->run() == FALSE) {
+            echo json_encode(array(
+                'error_title' => 'validation_error',
+                'error_description' => "<p style='color:red'>Please fill all the required fields correctly.</p>",
+                'subject' => form_error('subject'),
+                'content' => form_error('content'),
+                'sender' => form_error('sender'),
+                'password' => form_error('password'),
+            ));
+        } else {
+            $this->load->model('admin/settings_model');
+            $data['mail_settings']=$this->settings_model->get_email_settings();
+            
+            if($this->helper_model->send_email($data['mail_settings'])) {
+                echo json_encode(array(
+                    'error_msg' => 'Email Sent Successfully.',
+                    'error_title' => 'success'
+                ));
+            } else {
+                echo json_encode(array(
+                    'error_msg' => 'Email sending failed. Please try again later.',
+                    'error_log' => $this->session->userdata('error_log'),
+                    'error_title' => 'email_error'
+                ));
+            }
+        }
+
+    }
+
+
+    function validate_receiver() {
+        if($this->user_model->verify_receiver()){
+            return true;
+        } else {
+            $this->form_validation->set_message('validate_receiver', 'Incorrect Receiver Email');
+            return false;
+        }
+    }
+
+
+    function update_qualification_status() {
+        if($this->user_model->update_qualification_status()) {
+            echo 'success';
+        } else {
+            echo 'failure';
+        }
+    }
+
+
+    function update_experience_status() {
+        if($this->user_model->update_experience_status()) {
+            echo 'success';
+        } else {
+            echo 'failure';
+        }
     }
 
 }

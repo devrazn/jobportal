@@ -64,6 +64,10 @@
     <script src="<?=base_url();?>assets/admin/template/bower_components/datatables-plugins/integration/bootstrap/3/dataTables.bootstrap.min.js"></script>
     <script src="<?=base_url();?>assets/jquery.validate.min.js"></script>
 
+    <script type="text/javascript">
+        var admin_path = "<?=base_url() . 'admin/'?>";
+    </script>
+
 </head>
 
 <body>
@@ -78,7 +82,7 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand" href="<?=base_url();?>"><?php echo 'Job Portal';?></a>
+                <a class="navbar-brand" href="<?=base_url('admin');?>"><?php echo 'Job Portal';?></a>
             </div>
             <!-- /.navbar-header -->
 

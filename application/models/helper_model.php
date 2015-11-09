@@ -62,6 +62,32 @@ class Helper_model extends CI_Model {
         $this->ckfinder->SetupCKEditor($this->ckeditor,$path); 
     }
 
+
+    public function send_email($mail_settings='', $receiver='') {
+        $this->load->library('email',array('mailtype' => $mail_settings['mailtype'],
+                                                'protocol' => $mail_settings['protocol'],
+                                                //'smtp_host' => 'smtp.wlink.com.np',
+                                                'smtp_host' => $mail_settings['smtp_host'],
+                                                'smtp_port' => $mail_settings['smtp_port'],
+                                                'smtp_user' => $this->input->post('sender'),
+                                                'smtp_pass' => $this->input->post('password'),
+                                                'charset' => $mail_settings['charset'],
+                                                'newline' => "\r\n"));
+
+        $this->email->from($mail_settings['receive_email'], 'The JobPortal');
+        $this->email->to($this->input->post('receiver_email'));
+        $this->email->subject($this->input->post('subject'));
+        $this->email->message($this->input->post('content'));
+
+        if($this->email->send()) {
+            return true;
+        } else {
+            $this->session->set_userdata('error_log_title', "Error while sending email");
+            $this->session->set_userdata('error_log', $this->email->print_debugger());
+            return false;
+        }
+    }
+
 }
 
 ?>

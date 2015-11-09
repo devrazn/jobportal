@@ -31,7 +31,7 @@
                     </div>  
 
                     <div class="butpro butstyle">
-                        <div class="sub"><h6>Mail Settings</h6></div>
+                        <div class="sub"><h6>Mail Templates</h6></div>
                         <div class="stat"><a href="<?=base_url().'admin/settings/email_templates';?>"><img src="<?=base_url()?>images/mail_settings.png" /></a> </div>
                     </div>
 

@@ -122,7 +122,7 @@ class Newsletter extends CI_Controller {
                 redirect(ADMIN_PATH . '/newsletter/send_newsletter' . '/' .$id, 'refresh');
             } else {
                 $this->session->set_userdata( 'flash_msg_type', "danger" );
-                $this->session->set_flashdata('flash_msg', 'Newsletter Can\'t be sent. The log report is below.');
+                $this->session->set_flashdata('flash_msg', "Newsletter Can't be sent. Please try again later. Click <a target='_blank' href='" . base_url('admin/error_log') . "'>here</a> to view the error log.");
                 redirect(ADMIN_PATH . '/newsletter/send_newsletter' . '/' .$id, 'refresh');
             }
         }
@@ -150,17 +150,6 @@ class Newsletter extends CI_Controller {
                                                 'charset' => $mail_settings['charset'],
                                                 'newline' => "\r\n"));
 
-            // $config['protocol'] = "smtp";
-            // $config['smtp_host'] = "ssl://smtp.gmail.com";
-            // $config['smtp_port'] = "465";
-            // $config['smtp_user'] = "blablabla@gmail.com"; 
-            // $config['smtp_pass'] = "yourpassword";
-            // $config['charset'] = "utf-8";
-            // $config['mailtype'] = "html";
-            // $config['newline'] = "\r\n";
-
-            // $ci->email->initialize($config);
-
         $this->email->from($mail_settings['receive_email'], 'The JobPortal');
         if($this->input->post('receiver_options')=='1') {
             $this->email->to($this->input->post('receiver'));
@@ -176,7 +165,8 @@ class Newsletter extends CI_Controller {
         if($this->email->send()) {
             return true;
         } else {
-            $this->session->set_userdata('email_status', $this->email->print_debugger());
+            $this->session->set_userdata('error_log_title', "Error while sending email");
+            $this->session->set_userdata('error_log', $this->email->print_debugger());
             return false;
         }
     }

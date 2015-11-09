@@ -13,7 +13,7 @@
                 <!-- /input-group -->
             </li>
             <li>
-                <a href="<?=base_url();?>"><i class="fa fa-dashboard fa-fw"></i> Dashboard</a>
+                <a href="<?=base_url('admin');?>"><i class="fa fa-dashboard fa-fw"></i> Dashboard</a>
             </li>
             <li>
                 <a href="#"><i class="fa fa-wrench fa-fw"></i> Settings<span class="fa arrow"></span></a>
@@ -36,6 +36,9 @@
                     <li>
                         <a href="<?=base_url().'admin/settings/contact_details';?>">Contact Details</a>
                     </li>
+                    <li>
+                        <a href="<?=base_url().'admin/error_log';?>"><i class="fa fa-edit fa-fw"></i>Recent Error Log</a>
+                    <li>
                 </ul>
                 <!-- /.nav-second-level -->
             </li>
@@ -52,7 +55,7 @@
             </li>
             <li>
                 <a href="<?=base_url().'admin/user';?>"><i class="fa fa-edit fa-fw"></i>User Management</a>
-            <li>
+            <li>                
             <li>
                 <a href="forms.html"><i class="fa fa-edit fa-fw"></i> Forms</a>
             </li>

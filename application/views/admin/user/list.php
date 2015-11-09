@@ -14,10 +14,8 @@
                   <th>Email</th>
                   <th>Address</th>
                   <th>User Type</th>
-                  <th>Established</th>
+                  <th>DoB/Estd</th>
                   <th>Company Type</th>
-                  <th>Profile</th>
-                  <th>Benefits</th>
                   <th>Status</th>
                   <th>Options</th>
                 </tr>
@@ -28,53 +26,39 @@
                   foreach($user_list as $user){
                 ?>
                 <tr>
-                  <?php 
-                    if($user['user_type']=='0'){
-                  ?>
-                      <td><a target="_blank" href="<?=site_url(ADMIN_PATH.'/experience/list_experience/'.$user['id'])?>"><?=$user['f_name']." ".$user['l_name']?></a></td> 
-                  <?php
-                    }
-                    else 
-                    {
-                    ?>
-                      <td><a target="_blank" href="<?=site_url(ADMIN_PATH.'/qualification/list_qualification/'.$user['id'])?>"><?=$user['f_name']." ".$user['l_name']?></a></td> 
-                  <?php 
-                    }
-                  ?>
+                  <td><a href="<?=site_url(ADMIN_PATH.'/user/details/'.$user['id'])?>"><?=$user['f_name']." ".$user['l_name']?></a></td>
                   <td><?=$user['email']?></td>
                   <td><?=$user['address']?></td>
-                  <td><?=$user['user_type']?></td>
+                  <td><?php 
+                        if($user['user_type']==0){
+                          echo 'Job Seeker';
+                        } else {
+                          echo 'Employer';
+                        }
+                      ?>
+                  </td>
                   <td><?=$user['dob_estd']?></td>
                   <td><?=$user['company_type']?></td>
-                  <td><?=$user['profile']?></td>
-                  <td><?=$user['benefits']?></td>
+                  <td><?php 
+                        if($user['status']==0){
+                          echo 'Not Verified';
+                        } else if ($user['status']==1){
+                          echo 'Active';
+                        } else if ($user['status']==2){
+                          echo 'Suspended';
+                        } else if ($user['status']==3){
+                          echo 'Blocked';
+                        }
+                      ?>
+                  </td>
                   <td>
-                      <?php 
-                         if($user['status']=='1')
-                        {
-                      ?>
-                         Active :: <a href="<?=site_url(ADMIN_PATH.'/user/change_status/1/'.$user['id'])?>">Deactivate</a>
-                      <?php
-                        }
-                          else if($user['status']=='0')
-                        {
-                      ?>
-                        Inactive :: <a href="<?=site_url(ADMIN_PATH.'/user/change_status/0/'.$user['id'])?>">Activate</a>
-                      <?php
-                        }
-                      ?>
-                  <td><a href="<?=site_url(ADMIN_PATH.'/user/edit/'.$user['id']) ?>" data-toggle="tooltip" title="Edit" class="btn btn-effect-ripple btn-xs btn-success"  data-original-title="Edit"><i class="fa fa-pencil"></i></a>
-   
-                      <?php
-                        }
-                      ?>
-                  </td>    
+                    <a href="<?=site_url(ADMIN_PATH.'/user/edit/'.$user['id']) ?>" data-toggle="tooltip" title="Edit" class="btn btn-effect-ripple btn-xs btn-success"  data-original-title="Edit"><i class="fa fa-pencil"></i></a>
+                  </td>
                 </tr>
                       <?php
                           
                         }
-                    else
-                      {
+                      } else {
                         ?>
                 <tr>
                   <td colspan="5">

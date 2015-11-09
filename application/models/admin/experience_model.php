@@ -19,12 +19,12 @@ class Experience_model extends CI_Model {
         return $query->row_array();
   }
 
-    function update_experience($id) {
+  function update_experience($id) {
         $data = array('status' => $this->input->post('status')
         );
         $this->db->where('id', $id);
         $this->db->update('tbl_experience', $data);
-    }
+  }
     
   
 }

@@ -13,13 +13,13 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 <!-- Page Content -->
         <div id="page-wrapper">
                 <div class="row">
-                    <div class="col-lg-12">
+                    <div id="alert_parent" class="col-lg-12">
                         <h2 class='page-header'>
                             <?php
-                                if($this->uri->segment(2)!='') {
-                                    echo ucfirst($this->uri->segment(2));
-                                } else if($this->uri->segment(1)!='') {
-                                    echo ucfirst($this->uri->segment(1));
+                                if($this->uri->segment(3)!='') {
+                                    echo ucfirst($this->helper_model->humanize_admin($this->uri->segment(2)));
+                                } else if($this->uri->segment(2)!='') {
+                                    echo ucfirst($this->helper_model->humanize_admin($this->uri->segment(2)));
                                 } else {
                                     echo 'Dashboard';
                                 }
