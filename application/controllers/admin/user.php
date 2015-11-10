@@ -7,6 +7,7 @@ class User extends CI_Controller {
         parent::__construct();
         $this->load->model('admin/user_model');
         $this->load->library('form_validation');
+        $this->load->model('admin/category_model');
         $this->helper_model->validate_session();
 
     }
@@ -71,38 +72,23 @@ class User extends CI_Controller {
         $data['mail_settings']=$this->settings_model->get_email_settings();
         $data['user_info'] = $this->user_model->get_user($id);
         //echo json_encode($data['user_type']); exit;
-        $data['title'] = 'User Details';
 
-        $this->helper_model->editor();
+        //$this->helper_model->editor();
 
-
-        if(json_encode($data['user_info']['user_type']=='1')) {
+        if($data['user_info']['user_type']=='0') {
+            //echo json_encode($data['user_info']['user_type']); exit;
            // echo json_encode($data['user_info']['user_type']); exit;
+            $data['title'] = 'User Details';
             $data['qualification'] = $this->user_model->get_qualification($id);
             $data['experience'] = $this->user_model->get_experience($id);
-        } else if ($data['user_type']=='2') {
-            $data['info'] = $this->user_model->get_jobs($id);
-        } else {
-        }
-
-        $config['base_url'] = site_url(ADMIN_PATH . '/user/page');
-        if(json_encode($data['user_info']['user_type']=='1')) {
             $data['main'] = 'admin/user/user_details';
-        } else {
+        } else if ($data['user_info']['user_type']=='1') {
+            //echo json_encode($data['user_info']['user_type']) . " else if"; exit;
+            $data['title'] = 'Employer Details';
+            $data['jobs'] = $this->user_model->get_jobs($id);
             $data['main'] = 'admin/user/employer_details';
+        } else {
         }
-
-        /*$query = $this->db->get('tbl_users');
-        $config['total_rows'] = $query->num_rows();
-
-        $config['per_page'] = '300';
-        $offset = $this->uri->segment(4, 0);
-        $config['uri_segment'] = '4';
-        $this->pagination->initialize($config);*/
-
-        //$data['user_list'] = $this->user_model->user_list($config['per_page'], $offset);
-        //$data['links'] = $this->pagination->create_links();
-        //$data['title'] = 'User';
 
         $this->load->view('admin/admin', $data);
     }
@@ -174,6 +160,24 @@ class User extends CI_Controller {
 
     function update_experience_status() {
         if($this->user_model->update_experience_status()) {
+            echo 'success';
+        } else {
+            echo 'failure';
+        }
+    }
+
+
+    function update_job_status_and_procedure() {
+        if($this->user_model->update_job_status_and_procedure()) {
+            echo 'success';
+        } else {
+            echo 'failure';
+        }
+    }
+
+
+    function update_application_procedure() {
+        if($this->user_model->update_application_procedure()) {
             echo 'success';
         } else {
             echo 'failure';

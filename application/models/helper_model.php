@@ -88,6 +88,38 @@ class Helper_model extends CI_Model {
         }
     }
 
+
+    function humanize_date($date) {
+        $temp_date = date_create_from_format('Y-m-d', $date);
+        return(date_format($temp_date,  'jS M Y'));
+    }
+
+
+    function calculate_age_year_from_y_m_d($date) {
+        return(DateTime::createFromFormat('Y-m-d', $date)->diff(new DateTime('now'))->y);
+    }
+
+
+    function calculate_age_day($date) {
+        return(DateTime::createFromFormat('Y-m-d', $date)->diff(new DateTime('now'))->d);
+    }
+    
+
+    function calculate_age_day_signed($date) {
+        $date1 = date_create($date);
+        $date2 = new DateTime("now");
+        if($date2 > $date1) {
+            return (0-(DateTime::createFromFormat('Y-m-d', $date)->diff(new DateTime('now'))->d));
+        } else {
+            return (DateTime::createFromFormat('Y-m-d', $date)->diff(new DateTime('now'))->d);
+        }
+    }
+
+
+    /*function calculate_age_year_from_year($date) {
+        return(DateTime::createFromFormat('Y', $date)->diff(new DateTime('now'))->y);
+    }*/
+
 }
 
 ?>

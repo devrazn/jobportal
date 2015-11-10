@@ -38,17 +38,6 @@ class User_model extends CI_Model {
     function change_status($status, $id) {
         $sql ="Update tbl_users SET status='$status' where id='$id'";
         return($this->db->query($sql));
-        
-        // if ($status === '1')
-        //     $status = '0';
-        // else if ($status === '0')
-        //     $status = '1';
-
-        // $data = array(
-        //     'status' => $status
-        // );
-        // $this->db->where('id', $id);
-        // $this->db->update('tbl_users', $data);
     }
 
 
@@ -102,4 +91,29 @@ class User_model extends CI_Model {
       $this->db->where('id', $this->input->post('id'));
       return($this->db->update('tbl_experience', $data));
     }
+
+
+    public function get_jobs($id) {
+      $options = array('user_id' => $id,
+                      'del_flag' => '0');
+      $this->db->order_by('published_date ASC');
+      return $this->db->get_where('tbl_jobs', $options)->result_array();
+    }
+
+
+    function update_job_status_and_procedure() {
+      $data = array('status' => $this->input->post('status'),
+          'application_procedure' => $this->input->post('application_procedure')
+        );
+      $this->db->where('id', $this->input->post('id'));
+      return($this->db->update('tbl_jobs', $data));
+    }
+
+
+    /*function update_application_procedure() {
+      $data = array('application_procedure' => $this->input->post('application_procedure')
+        );
+      $this->db->where('id', $this->input->post('id'));
+      return($this->db->update('tbl_jobs', $data));
+    }*/
 }

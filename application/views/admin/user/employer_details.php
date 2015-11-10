@@ -10,12 +10,9 @@
                 <div class="panel-body">
                     <!-- Nav tabs -->
                     <ul class="nav nav-tabs">
-                        <li class="active"><a href="#info" data-toggle="tab">Personal Info</a>
+                        <li class="active"><a href="#info" data-toggle="tab">Employer Info</a>
                         </li>
-                        <li><a href="#qualification" data-toggle="tab">Qualification</a>
-                        </li>
-                        <li><a href="#experience" data-toggle="tab">Experience</a>
-                        </li>
+                        <li><a href="#jobs" data-toggle="tab">Jobs <?='(' . count($jobs) . ')'?></a>
                     </ul>
 
                     <!-- Tab panes -->
@@ -27,20 +24,22 @@
                         <div class="panel-body">
                             <img src="<?=base_url().'uploads/user/'.$user_info['image']?>" class="img-responsive img-rounded" style="max-width:400px; width:200px">
                             <dl class="dl-horizontal">
-                                <dt>Full Name</dt>
-                                <dd><?=$user_info['f_name']. ' '.$user_info['l_name']?></dd>
-                                <dt>Date of Birth</dt>
+                                <dt>Employer / Company</dt>
+                                <dd><?=$user_info['f_name']?></dd>
+                                <dt>Established</dt>
                                 <dd>
-                                    <?=$this->helper_model->humanize_date($user_info['dob_estd'])?> 
-                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                    <b>Age </b><?=$this->helper_model->calculate_age_year_from_y_m_d($user_info['dob_estd']).' Yrs'?>
+                                    <?php
+                                        echo $this->helper_model->humanize_date($user_info['dob_estd']);
+                                        $age = $this->helper_model->calculate_age_year_from_y_m_d($user_info['dob_estd']); 
+                                    ?> &nbsp;&nbsp;&nbsp;(<?php
+                                                                        echo $age . ' Yr';
+                                                                        if($age>1) echo 's';
+                                                                    ?> ago)
                                 </dd>
-                                <dt>Gender</dt>
-                                <dd><?php if( strcasecmp($user_info['gender'], 'm') == 0 ) echo 'Male'; else echo 'Female';?></dd>
+                                <dt>Type</dt>
+                                <dd><?=$user_info['company_type']?></dd>
                                 <dt>Email</dt>
                                 <dd><a href='javascript:void(0)'data-toggle="modal" data-target="#myModal"><?=$user_info['email']?></a></dd>
-                                <dt>Marital Status</dt>
-                                <dd><?php echo ($user_info['marital_status'])? 'Married' : 'Single'?></dd>
                                 <dt>Address</dt>
                                 <dd><?=$user_info['address']?></dd>
                                 <dt>Phone</dt>
@@ -48,6 +47,21 @@
                             </dl>
                             <dl>
                                 <dd>
+
+                                    <?php if($user_info['benefits']) { ?>
+                    <div class="col-lg-6">
+                        <div class="panel panel-success">
+                            <div class="panel-heading">
+                                Employee Benefits
+                            </div>
+                            <div class="panel-body">
+                                <?=$user_info['benefits']?>
+                            </div>
+                        </div>
+                    </div>
+                    <?php } ?>
+                
+
                                     <div class="well">
                                         <h4><b>Profile</b></h4>
                                         <p class="text-justify"><?=$user_info['profile']?></p>
@@ -135,44 +149,102 @@
 
                         </div>
                         <br>
-                        <div class="tab-pane fade" id="qualification">
+                        <div class="tab-pane fade" id="jobs">
                                 <?php
                                     $i=0;
-                                    foreach($qualification as $row) {
-                                        if($i%2==0) echo "<div class='col-lg-12'>";
+                                    foreach($jobs as $row) {
                                 ?>
-                                    <div class="col-lg-6">
+                                    <div class="col-lg-12">
                                     <div class="panel panel-default">
                         <div class="panel-heading">
-                            <a href="javascript:void(0)"class='fa fa-<?php if($i<=1 ) echo 'minus'; else echo 'plus';?>'><?php echo "&nbsp;&nbsp;".$row['degree'];?></a>
+                            <a href="javascript:void(0)"class='fa fa-plus'><?php echo "&nbsp;&nbsp;".$row['title'];?></a>
                         </div>
-                        <div class="panel-body" <?php if($i>1) echo "style='display:none'" ?>>
+                        <div class="panel-body" style='display:none'>
                             <dl class="dl-horizontal">
-                                                    <dt>Degree</dt>
-                                                    <dd><?=$row['degree']?></dd>
-                                                    <dt>Institution</dt>
-                                                    <dd><?=$row['institution']?></dd>
-                                                    <dt>Completion Date</dt>
-                                                    <dd><?=$row['completion_date']?></dd>
-                                                    <dt><?php 
-                                                        if($row['gpa_pct']<=4) 
-                                                            echo 'GPA';
-                                                        else echo 'Percentage';
+                                <dt>Category</dt>
+                                <dd><?=$this->category_model->category_name_by_id($row['category_id'])?></dd>
+                                                    <dt>Title</dt>
+                                                    <dd><?=$row['title']?></dd>
+                                                    <dt>Position</dt>
+                                                    <dd><?=$row['position']?></dd>
+                                                    <dt>Published On</dt>
+                                                    <dd>
+                                                        <?=$this->helper_model->humanize_date($row['published_date'])?>&nbsp;&nbsp;&nbsp;
+                                                            <?php
+                                                                        $age_day = $this->helper_model->calculate_age_day($row['published_date']);
+                                                                        if($age_day==0) echo ' (Today)';
+                                                                        else if($age_day==1) echo ' (Yesterday)';
+                                                                        else {
+                                                                            echo '(' . $age_day . ' Days ago)';
+                                                                        }
+                                                                    ?>
+                                                    </dd>
+                                                    <dt>Deadline</dt>
+                                                    <dd>
+                                                        <?=$this->helper_model->humanize_date($row['deadline_date'])?>&nbsp;&nbsp;&nbsp;
+                                                        
+                                                        <?php
+                                                            $age_day = $this->helper_model->calculate_age_day_signed($row['deadline_date']);
+                                                            if($age_day==0){
+                                                                echo ' (Today)';
+                                                            } else if($age_day == 1) {
+                                                                echo ' (Tomorrow)';
+                                                            } else if($age_day==-1){
+                                                                echo ' (Yesterday)';
+                                                            } else if($age_day>1) {
+                                                                echo " (After " . $age_day . ' Days)';
+                                                            } else if($age_day<-1) {
+                                                                echo '(' . abs($age_day) . ' Days ago)';
+                                                            }
                                                         ?>
-                                                    </dt>
-                                                    <dd><?=$row['gpa_pct']?></dd>
+                                                    </dd>
+                                                    <dt>Location</dt>
+                                                    <dd><?=$row['city']?></dd>
+                                                    <dt>Qualification</dt>
+                                                    <dd><?=$row['qualification']?></dd>
+                                                    <dt>Experience</dt>
+                                                    <dd><?php 
+                                                            echo $row['experience']. ' Yr';
+                                                            if($row['experience']>1) echo 's';
+                                                        ?>
+                                                    </dd>
                                                 </dl>
-                                                <?php 
-                                                    if($row['remarks']){
-                                                ?>
+
                                                 <div class="well">
-                        <h4>Remarks</h4>
-                        <p class="text-justify"><?=$row['remarks']?></p>
+                        <h4>Requirements</h4>
+                        <p class="text-justify"><?=$row['requirements']?></p>
                     </div>
-                    <?php 
+
+                    <div class="well">
+                        <h4>Job Description / Responsibilities</h4>
+                        <p class="text-justify"><?=$row['job_description']?></p>
+                    </div>
+
+                    <?php
+                        if($row['facilities']){
+                    ?>
+                            <div class="well">
+                                <h4>Facilities</h4>
+                                <p class="text-justify"><?=$row['facilities']?></p>
+                            </div>
+                    <?php
                         }
                     ?>
-                        <form class='qualification_form' role="form" id="frm" method="post" action="">           
+
+                        <form class='job_form' role="form" id="frm" method="post" action="">
+                            <div class="form-group">
+                              <label>Application Procedure&nbsp;&nbsp;</label>
+                              <label class="radio-inline">
+                                  <input type="radio" value="0" name="application_procedure" <?php if(set_value('application_procedure',$row['application_procedure'])==0){echo "checked";}?> >Apply Manually
+                              </label>
+                              <label class="radio-inline">
+                                  <input type="radio" value="1" name="application_procedure" <?php if(set_value('application_procedure',$row['application_procedure'])==1) {echo "checked";}?> >Apply via company's email
+                              </label>
+                              <label class="radio-inline">
+                                  <input type="radio" value="2" name="application_procedure" <?php if(set_value('application_procedure',$row['application_procedure'])==2) {echo "checked";}?> >Apply via JobPortal
+                              </label>
+                              <?=form_error('application_procedure')?>
+                            </div>
                             <div class="form-group">
                               <label>Status&nbsp;&nbsp;</label>
                               <label class="radio-inline">
@@ -181,11 +253,14 @@
                               <label class="radio-inline">
                                   <input type="radio" value="0" name="status" <?php if(set_value('status',$row['status'])==0) {echo "checked";}?> >Inactive
                               </label>
+                              <label class="radio-inline">
+                                  <input type="radio" value="2" name="status" <?php if(set_value('status',$row['status'])==2) {echo "checked";}?> >Closed
+                              </label>
                               <?=form_error('status')?>
                             </div>
                             <input type="hidden" name="id" value="<?=$row['id']?>">
-                            <div class='action_status_qualification'>
-                                <button class='btn btn-success' type='submit'>Update Status</button>
+                            <div class='action_status_job'>
+                                <button class='btn btn-success' type='submit'>Update this Job</button>
                                 <button class='btn btn-warning' type='reset'>Reset</button>
                             </div>
                         </form>
@@ -195,74 +270,6 @@
                 </div>
                                 <?php
                                     $i++;
-                                    if($i%2==0) echo "</div>";
-                                    }
-                                ?>
-                            </div>
-                            <div class="tab-pane fade" id="experience">
-                                
-                                <?php
-                                    $i=0;
-                                    foreach($experience as $row) {
-                                        if($i%2==0) echo "<div class='col-lg-12'>";
-                                ?>
-                                    <div class="col-lg-6">
-                                    <div class="panel panel-default">
-                        <div class="panel-heading">
-                            <a href="javascript:void(0)"class='fa fa-<?php if($i<=1 ) echo 'minus'; else echo 'plus';?>'><?php echo "&nbsp;&nbsp;".$row['position'];?></a>
-                        </div>
-                        <div class="panel-body" <?php if($i>1) echo "style='display:none'" ?>>
-                            <dl class="dl-horizontal">
-                                                    <dt>Position</dt>
-                                                    <dd><?=$row['position']?></dd>
-                                                    <dt>Company</dt>
-                                                    <dd><?=$row['company_name']?></dd>
-                                                    <dt>Start Year</dt>
-                                                    <dd><?=$row['start_year']?></dd>
-                                                    <dt>Duration</dt>
-                                                    <dd>
-                                                        <?php
-                                                            echo $row['duration'] . ' ' . ucfirst($row['duration_unit']);
-                                                            if($row['duration']>1) echo 's';
-                                                        ?>
-                                                    </dd>
-                                                </dl>
-                                                <?php 
-                                                    if($row['description']){
-                                                ?>
-                                                <div class="well">
-                        <h4>Job Description</h4>
-                        <p class="text-justify"><?=$row['description']?></p>
-                    </div>
-                    <?php 
-                        }
-                    ?>
-
-                    <form class='experience_form' role="form" id="frm" method="post" action="">           
-                            <div class="form-group">
-                              <label>Status&nbsp;&nbsp;</label>
-                              <label class="radio-inline">
-                                  <input type="radio" value="1" name="status" <?php if(set_value('status',$row['status'])==1){echo "checked";}?> >Active
-                              </label>
-                              <label class="radio-inline">
-                                  <input type="radio" value="0" name="status" <?php if(set_value('status',$row['status'])==0) {echo "checked";}?> >Inactive
-                              </label>
-                              <?=form_error('status')?>
-                            </div>
-                            <input type="hidden" name="id" value="<?=$row['id']?>">
-                            <div class='action_status_experience'>
-                                <button class='btn btn-success' type='submit'>Update Status</button>
-                                <button class='btn btn-warning' type='reset'>Reset</button>
-                            </div>
-                        </form>
-
-                        </div>
-                        <!-- /.panel-body -->
-                    </div>
-                    </div>
-                                <?php
-                                    $i++;
-                                    if($i%2==0) echo "</div>";
                                     }
                                 ?>
                             </div>
@@ -347,17 +354,17 @@
 
     $(document).on('click', '.fa', function(){
         if($(this).hasClass('fa-minus')){
-            $(this).closest('.col-lg-6').find('.panel-body').slideUp();
+            $(this).closest('.col-lg-12').find('.panel-body').slideUp();
             $(this).removeClass('fa-minus').addClass('fa-plus');
              $('html, body').animate({
-                scrollBottom: $(this).closest('.col-lg-6').find('.panel-body').offset().top
+                scrollBottom: $(this).closest('.col-lg-12').find('.panel-body').offset().top
             }, 1000);
 
         } else if ($(this).hasClass('fa-plus')){
-            $(this).closest('.col-lg-6').find('.panel-body').slideDown();
+            $(this).closest('.col-lg-12').find('.panel-body').slideDown();
             $(this).removeClass('fa-plus').addClass('fa-minus');
             $('html, body').animate({
-                scrollTop: $(this).closest('.col-lg-6').find('.panel-body').offset().top
+                scrollTop: $(this).closest('.col-lg-12').find('.panel-body').offset().top
             }, 1000);
         }
     });
@@ -367,77 +374,18 @@
             $("#password").attr("placeholder", "Enter password for " + $('#sender').val());
         });
 
-
-        $('.experience_form').on('submit', function (e) {
+        $('.job_form').on('submit', function (e) {
             e.preventDefault();
-            if(confirm("Are you sure to update status?")) {
+            if(confirm("Are you sure to update this job?")) {
 
-                _thisButtons = $(this).find('.action_status_experience');
+                _thisButtons = $(this).find('.action_status_job');
                 var divHTML =  _thisButtons.html();
                 _thisButtons.html("<img src='<?php echo base_url('assets/ajax/images/ajax-loader_dark.gif');?>' >");
                 var values = $(this).serializeArray();
 
                 $.ajax({
                     type: 'post',
-                    url: "<?=base_url().'admin/user/update_experience_status'; ?>",
-                    data: values,
-                    beforeSend: function(){
-                        _thisButtons.html("<img src='<?php echo base_url('assets/ajax/images/ajax-loader_dark.gif');?>' >");
-                    },
-
-                    success: function (data) {
-                        _thisButtons.html(divHTML);
-                        if(data=='success') {
-                            var responseHTML = "<div role='alert' class='alert alert-success fade in' id='alert'>" + 
-                                "<button aria-label='Close' data-dismiss='alert' class='close' type='button'>" + 
-                                "<span aria-hidden='true'>×</span>" +
-                                "</button>" + 
-                                "Experience Status Updated Successfully" + 
-                                "</div>";
-
-                            $("#alert_parent").append(responseHTML);
-                            $('html, body').animate({
-                                scrollTop: $("body").offset().top
-                            }, 1000);
-
-                        } else {
-                            var responseHTML = "<div role='alert' class='alert alert-warning fade in' id='alert'>" + 
-                            "<button aria-label='Close' data-dismiss='alert' class='close' type='button'>" + 
-                            "<span aria-hidden='true'>×</span>" +
-                            "</button>" + 
-                            "An Unknown Error Occured. Please Try Again Later" + 
-                            "</div>";
-
-                            $("#alert_parent").append(responseHTML);
-                            $('html, body').animate({
-                                scrollTop: $("body").offset().top
-                            }, 1000);
-                        }
-                    },
-
-                    error: function(data) {
-                        _thisButtons.html(divHTML);
-                        alert("An unknown error occured. Please try again later");
-                    }
-                }); 
-            } else {
-                return false;
-            }
-        });
-
-
-        $('.qualification_form').on('submit', function (e) {
-            e.preventDefault();
-            if(confirm("Are you sure to update status?")) {
-
-                _thisButtons = $(this).find('.action_status_qualification');
-                var divHTML =  _thisButtons.html();
-                _thisButtons.html("<img src='<?php echo base_url('assets/ajax/images/ajax-loader_dark.gif');?>' >");
-                var values = $(this).serializeArray();
-
-                $.ajax({
-                    type: 'post',
-                    url: "<?=base_url().'admin/user/update_qualification_status'; ?>",
+                    url: "<?=base_url().'admin/user/update_job_status_and_procedure'; ?>",
                     data: values,
                     beforeSend: function(){
                         _thisButtons.html("<img src='<?php echo base_url('assets/ajax/images/ajax-loader_dark.gif');?>' >");
@@ -450,7 +398,7 @@
                                 "<button aria-label='Close' data-dismiss='alert' class='close' type='button'>" + 
                                 "<span aria-hidden='true'>×</span>" +
                                 "</button>" + 
-                                "Qualification Status Updated Successfully" + 
+                                "Job Status Updated Successfully" + 
                                 "</div>";
 
                             $("#alert_parent").append(responseHTML);

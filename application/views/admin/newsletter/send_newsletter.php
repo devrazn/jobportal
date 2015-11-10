@@ -99,22 +99,16 @@
 <script type="text/javascript">
   $("input:radio[name=receiver_options]:first-child").click(function(){
     if($(this).val()==1){
-      $("#receiver_email").show().focus();
+      $("#receiver_email").slideDown().focus();
       
     }else{
-      $("#receiver_email").hide();
+      $("#receiver_email").slideUp();
     }
   });
 
   $("#receiver_email").click(function(){
     $("#single").prop("checked", true);
   });
-  
-  /*$( document ).ready(function() {
-    $('#sender').on('input', function() {
-      $("#password").attr("placeholder", "Enter password for " + $('#sender').val());
-    });
-  });*/
 
   $('#sender').on('input', function() {
     $("#password").attr("placeholder", "Enter password for " + $('#sender').val());
