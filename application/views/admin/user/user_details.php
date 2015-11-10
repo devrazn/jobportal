@@ -334,6 +334,11 @@
                             scrollTop: $("body").offset().top
                         }, 1000);
                     }
+                },
+
+                error: function(data) {
+                    $('#action_status_user').html(divHTML);
+                    alert("An unknown error occured. Please try again later");
                 }
             });
         } else {
@@ -411,20 +416,9 @@
                         }
                     },
 
-                    error:function(data) {
+                    error: function(data) {
                         _thisButtons.html(divHTML);
-                        var responseHTML = "<div role='alert' class='alert alert-danger fade in' id='alert'>" + 
-                            "<button aria-label='Close' data-dismiss='alert' class='close' type='button'>" + 
-                            "<span aria-hidden='true'>×</span>" +
-                            "</button>" + 
-                            "An Unknown Error Occured. Please try again later." 
-                            "</div>";
-                        alert(parseJSON(data));
-                            
-                        $("#alert_parent").append(responseHTML);
-                        $('html, body').animate({
-                                scrollTop: $("body").offset().top
-                        }, 1000);
+                        alert("An unknown error occured. Please try again later");
                     }
                 }); 
             } else {
@@ -480,18 +474,9 @@
                         }
                     },
 
-                    error:function(data) {
-                        var responseHTML = "<div role='alert' class='alert alert-danger fade in' id='alert'>" + 
-                                "<button aria-label='Close' data-dismiss='alert' class='close' type='button'>" + 
-                                "<span aria-hidden='true'>×</span>" +
-                                "</button>" + 
-                                "An Unknown Error Occured. Please try again later." 
-                                "</div>";
-                            
-                         $("#alert_parent").append(responseHTML);
-                         $('html, body').animate({
-                                scrollTop: $("body").offset().top
-                        }, 1000);
+                    error: function(data) {
+                        _thisButtons.html(divHTML);
+                        alert("An unknown error occured. Please try again later");
                     }
                 });
             } else {

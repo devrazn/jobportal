@@ -63,6 +63,7 @@ class User_model extends CI_Model {
     public function get_qualification($id) {
       $options = array('user_id' => $id,
                       'del_flag' => '0');
+      $this->db->order_by('completion_date ASC');
       return $this->db->get_where('tbl_qualification', $options)->result_array();
     }
 
@@ -70,6 +71,7 @@ class User_model extends CI_Model {
     public function get_experience($id) {
       $options = array('user_id' => $id,
                       'del_flag' => '0');
+      $this->db->order_by('start_year ASC');
       return $this->db->get_where('tbl_experience', $options)->result_array();
     }
 
