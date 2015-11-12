@@ -40,7 +40,7 @@
                                 <dt>Email</dt>
                                 <dd><a href='javascript:void(0)'data-toggle="modal" data-target="#myModal"><?=$user_info['email']?></a></dd>
                                 <dt>Marital Status</dt>
-                                <dd><?php echo ($user_info['marital_status'])? 'Married' : 'Single'?></dd>
+                                <dd><?php echo ($user_info['marital_status'])? 'Married' : 'Unmarried'?></dd>
                                 <dt>Address</dt>
                                 <dd><?=$user_info['address']?></dd>
                                 <dt>Phone</dt>
