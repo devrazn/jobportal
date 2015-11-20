@@ -17,6 +17,12 @@
                 <!-- font-Awesome -->
                 <link href="<?=base_url();?>assets/user/css/font-awesome.css" rel="stylesheet"> 
                 <!-- font-Awesome -->
+                <link href="<?=base_url();?>assets/user/css/jquery-ui.css" rel="stylesheet">
+
+                <script src="<?=base_url();?>assets/user/js/jquery-ui.min.js"></script> 
+
+
+
     </head>
 
     <body>
@@ -110,7 +116,8 @@
                                 <li><a href="jobs.html">Defence Jobs</a></li>
                             </ul>
                         </li>
-                        <li><a href="login.html">Login</a></li>
+                        <li><a href="login.php">Login</a></li>
+                        <li><a href="<?=base_url().'register'; ?>/">Register</a></li>
                         <li><a href="resume.html">Upload Resume</a></li>
                     </ul>
                 </div>

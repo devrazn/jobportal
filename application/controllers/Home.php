@@ -49,7 +49,14 @@ class Home extends CI_Controller {
 	
 	   public function landing()
 		{
-		$this->load->view('layout/index');
+		//$this->load->view('layout/index');
+		 $this->template->set_template('home');
+		 //echo 1;exit;
+		 $data['menu_active']='register';
+         $this->template->__set('title', 'Home');
+		
+		 $this->template->publish('home',$data);
+      	 //$this->template->render();
 		
     }
 

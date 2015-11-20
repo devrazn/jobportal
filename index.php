@@ -221,6 +221,11 @@ switch (ENVIRONMENT)
  *  Now that we know the path, set the main path constants
  * -------------------------------------------------------------------
  */
+
+	// The PHP file extension
+	// this global constant is deprecated.
+	define('EXT', '.php');
+
 	// The name of THIS file
 	define('SELF', pathinfo(__FILE__, PATHINFO_BASENAME));
 

@@ -115,10 +115,43 @@ class Helper_model extends CI_Model {
         }
     }
 
+    function get_local_time($time = "none") {
+        $time_zone = $this->get_time_zone_setting();
 
-    /*function calculate_age_year_from_year($date) {
-        return(DateTime::createFromFormat('Y', $date)->diff(new DateTime('now'))->y);
-    }*/
+        $hour_delay = $time_zone[0];
+        $minute_delay = $time_zone[1];
+
+        if ($time != 'none')
+        {
+             return date("Y-m-d H:i:s");
+             
+            if ($time_zone[2] == '+') {
+                return date("Y-m-d H:i:s", mktime(gmdate("H") + $hour_delay, gmdate("i") + $minute_delay, gmdate("s"), gmdate("m"), gmdate("d"), gmdate("Y")));
+            } else {
+                return date("Y-m-d H:i:s", mktime(gmdate("H") - $hour_delay, gmdate("i") - $minute_delay, gmdate("s"), gmdate("m"), gmdate("d"), gmdate("Y")));
+            }
+        }else
+        {
+             return date("Y-m-d");
+             
+        if ($time_zone[2] == '+') {
+            return date("Y-m-d", mktime(gmdate("H") + $hour_delay, gmdate("i") + $minute_delay, gmdate("s"), gmdate("m"), gmdate("d"), gmdate("Y")));
+        } else {
+            return date("Y-m-d", mktime(gmdate("H") - $hour_delay, gmdate("i") - $minute_delay, gmdate("s"), gmdate("m"), gmdate("d"), gmdate("Y")));
+        }
+        }
+    }
+
+     function get_time_zone_setting() {
+
+        $sql = "SELECT delay,sign FROM tbl_timezone WHERE status='1'";
+        $query = $this->db->query($sql);
+        $record = $query->row_array();
+        $data = $record['delay'] . ":" . $record['sign'];
+        $split = explode(":", $data);
+
+        return $split;
+    }
 
 }
 
