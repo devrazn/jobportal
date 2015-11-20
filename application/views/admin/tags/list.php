@@ -1,8 +1,20 @@
 <script>
-    $(document).on('click', '.delete', function(event){    
-        if( ! confirm("Are you sure to perform this operation?"))
-            return false;
-        _this=$(this);
+
+// $("#Button1").on("click", function () {
+//     alertify.confirm("This is an alert dialog", function (e) {
+//         if (e) {
+//             // user clicked ok
+//         } else {
+//             // user clicked cancel
+//         }
+//     });
+// });
+
+    $(document).on('click', '.delete', function(event){
+        alertify.confirm("Are you sure you want to perform this operation?", function (e) {
+            if (e) {
+               
+                _this=$(this);
         var id = $(this).attr('data');
         
         jQuery.ajax({
@@ -11,7 +23,25 @@
             success: function(data) {
                _this.closest('tr').remove();                  
             }
-        });               
+        });    
+            } else {
+                return false;
+            }
+
+
+        // if( ! confirm("Are you sure to perform this operation?"))
+        //     return false;
+        // _this=$(this);
+        // var id = $(this).attr('data');
+        
+        // jQuery.ajax({
+        //     url: "<?=base_url().'admin/tags/delete_tags'; ?>/"+id,
+        //     beforeSend: function(){_this.html("<img src='<?php echo base_url('images/ajax-loader.gif');?>' >")},
+        //     success: function(data) {
+        //        _this.closest('tr').remove();                  
+        //     }
+        // }); 
+        });              
     });
 
     $(document).on('click', '.change_status', function(){

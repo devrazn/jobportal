@@ -39,7 +39,7 @@ class Registration_model extends CI_Model {
         return $a;
     }
 
-    function register() {
+    function register($image) {
         $activation_code = $this->genRandomString('12');
         $pwd = $this->incrypt($this->input->post('password'));
         $data = array(
@@ -60,11 +60,11 @@ class Registration_model extends CI_Model {
             'user_type' => $this->input->post('user_type'),
             'newsletter_subscription' => $this->input->post('newsletter_subscription'),
             'status' => $this->input->post('status'),
-            //'image'=>$image,
+            'image'=>$image,
             'reg_date' => $this->Helper_model->get_local_time('time'),
             'activation_code' => $activation_code
         );
-         //echo "<pre>";print_r($data);die;
+         echo "<pre>";print_r($data);die;
        
         $this->db->insert('tbl_users', $data);
         //$user_id = $this->db->insert_id();

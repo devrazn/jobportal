@@ -48,7 +48,7 @@ class Register extends CI_Controller {
 		$this->form_validation->set_rules('company_type', "Company Type",'required');
 		$this->form_validation->set_rules('profile', "Profile",'required');
 		$this->form_validation->set_rules('benefits', "Benefits",'required');
-		$this->form_validation->set_rules('website', "Website",'required');
+		$this->form_validation->set_rules('website', "Website","required|callback_valid_url");
 		$this->form_validation->set_rules('address', "Address",'required');
 		$this->form_validation->set_rules('marital_status', "Marital Status",'required');
 		$this->form_validation->set_rules('phone', "Phone",'required|regex_match[/^[0-9]{10}$/]');
@@ -62,7 +62,33 @@ class Register extends CI_Controller {
          	$this->template->__set('title', 'Register');
 		    $this->template->publish('register',$data);
 		} else {
-			$this->Registration_model->register();
+			print_r($_FILES['image']['name']);
+
+				if ($_FILES['image']['name'] != '') {
+				                $uploaded_details = $this->upload_image('image');
+				                if (!$uploaded_details) {
+				                  
+				                }
+								else
+								{
+					
+				$this->load->library(array('Image_lib'));
+				$config['image_library'] = 'gd2';
+                $config['source_image'] = './uploads/user/'.$uploaded_details['file_name'];
+                $config['create_thumb'] = TRUE;
+                $config['thumb_marker'] = false;
+                $config['maintain_ratio'] = TRUE;
+                $config['width'] = $this->config->item('width');
+                $config['height'] = $this->config->item('height');
+               
+                $config['new_image'] = './uploads/user/';
+                $this->image_lib->initialize($config);
+                $this->image_lib->resize();
+				
+				}
+            }
+
+			$this->Registration_model->register($uploaded_details['file_name']);
 			$this->template->set_template('home');
 			$data['menu_active']='register';
 	        $this->template->__set('title', 'Home');
@@ -259,7 +285,7 @@ class Register extends CI_Controller {
 	
 	 function upload_image($file) {
 
-        $config['upload_path'] = './user_upload/images/';
+        $config['upload_path'] = './uploads/user/';
         $config['allowed_types'] = 'gif|jpg|jpeg|png';
         $config['max_size'] = '9999999999999999999999999999999999999999';
         $config['max_width'] = '9999999999999999999999999999999999999999';
@@ -277,6 +303,16 @@ class Register extends CI_Controller {
             return $data;
         }
     }
+
+    function valid_url($url){
+    $pattern = "|^http(s)?://[a-z0-9-]+(.[a-z0-9-]+)*(:[0-9]+)?(/.*)?$|i";
+    if (!preg_match($pattern, $url))
+    {
+        return FALSE;
+    }
+
+    return TRUE;
+}
 
 }
 

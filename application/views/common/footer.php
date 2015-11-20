@@ -47,8 +47,8 @@
 
 </body>
 </html>
-<script>
-  $(function() {
-    $( "#datepicker" ).datepicker(dateFormat: 'dd-mm-yy' );
-  });
-  </script>
+<script type="text/javascript">
+  $('#datepicker').datepicker({
+      dateFormat: 'yy-mm-dd'
+})
+</script>
