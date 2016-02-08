@@ -23,7 +23,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
     <div class="single">  
 	   <div class="form-container">
         <h2>Register Form</h2>
-        <form role="form" id="frmRegister" method="post" action="<?=base_url().'register/add_user'?>">
+        <form role="form" id="frmRegister" method="post" action="<?=base_url().'register/add_user/1'?>" enctype="multipart/form-data">
 	        <div class="form-group">
 	            <div class="form-group col-md-12">
 	                <label class="col-md-3 control-lable">First Name</label>
@@ -83,6 +83,15 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                         </div>
                 </div>
             </div>
+            <div class="form-group">
+                <div class="form-group col-md-12">
+                    <label class="col-md-3 control-lable">Image</label>
+                    <div class="col-md-4">
+                       <input type="file" name="image" value="<?= set_value('image') ?>" accept="gif|GIF|png|PNG|jpg|JPG|jpeg|JPEG">
+                    <?= form_error('image') ?>
+                    </div>
+                </div>
+            </div>
              <div class="form-group">
                 <div class="form-group col-md-12">
                     <label class="col-md-3 control-lable">Phone</label>
@@ -112,7 +121,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
     	    </div>
 
 
-            <div class="form-group">
+            <!-- <div class="form-group">
                 <div class="form-group col-md-12">
                     <label class="col-md-3 control-lable">Company Type</label>
                     <div class="col-md-4">
@@ -123,8 +132,8 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                         </select>
                         <?= form_error('company_type') ?>
                     </div>
-            </div>
-            <div class="form-group">
+            </div> -->
+            <!-- <div class="form-group">
                 <div class="form-group col-md-12">
                     <label class="col-md-3 control-lable">Profile</label>
                     <div class="col-md-4">
@@ -132,8 +141,8 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                     <?= form_error('profile') ?>
                     </div>
                 </div>
-            </div>
-            <div class="form-group">
+            </div> -->
+            <!-- <div class="form-group">
                 <div class="form-group col-md-12">
                     <label class="col-md-3 control-lable">Benefits</label>
                     <div class="col-md-4">
@@ -141,8 +150,8 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                     <?= form_error('benefits') ?>
                     </div>
                 </div>
-            </div>
-            <div class="form-group">
+            </div> -->
+            <!-- <div class="form-group">
                 <div class="form-group col-md-12">
                     <label class="col-md-3 control-lable">Website</label>
                     <div class="col-md-4">
@@ -150,7 +159,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                     <?= form_error('website') ?>
                     </div>
                 </div>
-            </div>
+            </div> -->
             <div class="form-group">
                 <div class="form-group col-md-12">
                     <label class="col-md-3 control-lable">Marital Status</label>
@@ -165,7 +174,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                         </div>
                 </div>
             </div>
-            <div class="form-group">
+           <!--  <div class="form-group">
                 <div class="form-group col-md-12">
                     <label class="col-md-3 control-lable">User Type</label>
                     <div class="col-md-4">
@@ -176,7 +185,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                         </select>
                         <?= form_error('user_type') ?>
                     </div>
-            </div>
+            </div> -->
             <div class="form-group">
                 <div class="form-group col-md-12">
                     <label class="col-md-3 control-lable">Newsletter Subscription</label>
@@ -187,16 +196,8 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                     </div>
                 </div>
             </div>
-            <div class="form-group">
-                <div class="form-group col-md-12">
-                    <label class="col-md-3 control-lable">Image</label>
-                    <div class="col-md-4">
-                       <input type="file" id="image" name="image" value="<?= set_value('image') ?>" accept="gif|GIF|png|PNG|jpg|JPG|jpeg|JPEG">
-                    <?= form_error('image') ?>
-                    </div>
-                </div>
-            </div>
-            <div class="form-group">
+
+            <!-- <div class="form-group">
                 <div class="form-group col-md-12">
                     <label class="col-md-3 control-lable">Status</label>
                         <div class="col-md-4">
@@ -209,7 +210,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                             <?= form_error('status') ?>
                         </div>
                 </div>
-            </div>
+            </div> -->
             <div class="form-group">
                 <div class="form-actions floatRight">
                     <input type="submit" value="Register" class="btn btn-primary btn-sm">

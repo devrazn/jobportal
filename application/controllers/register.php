@@ -14,9 +14,9 @@ class Register extends CI_Controller {
 			// }
 			
 			//  if($this->session->userdata(SESSION.'user_id'))
-   //                      {
-   //                            redirect(site_url(''));      
-   //                      }
+            //                      {
+             //                            redirect(site_url(''));      
+            //                      }
 		
 		$this->load->model('Registration_model');
 		$this->load->model('Helper_model');
@@ -24,8 +24,7 @@ class Register extends CI_Controller {
 		//$this->form_validation->set_error_delimiters('<p class="error_class_register">', '</p>');
 	}
 
-    public function index()
-		{
+    public function index() {
 			//$this->load->view('register');
 	
 		 $this->template->set_template('register');
@@ -33,154 +32,107 @@ class Register extends CI_Controller {
 		 $data['menu_active']='register';
          $this->template->__set('title', 'Register');
 		
-		 $this->template->publish('register',$data);
+		 $this->template->publish('register/register_jobseeker',$data);
       	 //$this->template->render();
 	}
-	function add_user()
-	{
-		$this->form_validation->set_rules('f_name', "First Name",'required');
-		$this->form_validation->set_rules('l_name', "Last Name",'required');
-		$this->form_validation->set_rules('email', "Email",'required|valid_email');
-		$this->form_validation->set_rules('password','Password','required|xss_clean|min_length[6]|max_length[50]');
-		$this->form_validation->set_rules('cpassword','Confirm Password','required|xss_clean|matches[password]');
-		$this->form_validation->set_rules('gender', "Gender",'required');
-		$this->form_validation->set_rules('dob_estd', "DOB",'required');
-		$this->form_validation->set_rules('company_type', "Company Type",'required');
-		$this->form_validation->set_rules('profile', "Profile",'required');
-		$this->form_validation->set_rules('benefits', "Benefits",'required');
-		$this->form_validation->set_rules('website', "Website","required|callback_valid_url");
-		$this->form_validation->set_rules('address', "Address",'required');
-		$this->form_validation->set_rules('marital_status', "Marital Status",'required');
-		$this->form_validation->set_rules('phone', "Phone",'required|regex_match[/^[0-9]{10}$/]');
-		$this->form_validation->set_rules('user_type', "User Type",'required');
-		//$this->form_validation->set_rules('image', "Image",'required');
-		$this->form_validation->set_rules('status', "Status",'required');
+
+	public function register_employeer() {
+		$this->template->set_template('register');
+		$data['menu_active']='register';
+        $this->template->__set('title', 'Register');
+		$this->template->publish('register/register_employeer',$data);
+   	}
+
+	function add_user($user){
+		if($user==1){
+			$this->form_validation->set_rules('l_name', "Last Name",'required|xss_clean');
+			//$this->form_validation->set_rules('email', "Email",'required|xss_clean|valid_email|callback_check_email_check');
+			$this->form_validation->set_rules('gender', "Gender",'required|xss_clean');
+			$this->form_validation->set_rules('marital_status', "Marital Status",'required|xss_clean');
+		}else {
+			$this->form_validation->set_rules('company_type', "Company Type",'required|xss_clean');
+			$this->form_validation->set_rules('profile', "Profile",'xss_clean');
+			$this->form_validation->set_rules('benefits', "Benefits",'xss_clean');
+			$this->form_validation->set_rules('website', "Website","xss_clean|callback_valid_url");
+		}
+			// $this->form_validation->set_rules('f_name', "First Name",'required|xss_clean');
+			// $this->form_validation->set_rules('email', "Email",'required|xss_clean|valid_email');
+			// $this->form_validation->set_rules('password','Password','required|xss_clean|min_length[6]|max_length[50]|callback_password_check');
+			// $this->form_validation->set_rules('dob_estd', "DOB",'required|xss_clean');
+			// $this->form_validation->set_rules('address', "Address",'required|xss_clean');
+			// $this->form_validation->set_rules('phone', "Phone",'required|xss_clean|regex_match[/^[0-9]{10}$/]');
+			if (empty($_FILES['image']['name'])) {
+				$this->form_validation->set_rules('required|image', "Image",'xss_clean');
+			}
 		
 		if($this->form_validation->run()==FALSE) {
-			$this->template->set_template('register');
-		 	$data['menu_active']='register';
-         	$this->template->__set('title', 'Register');
-		    $this->template->publish('register',$data);
+				$this->template->set_template('register');
+			 	$data['menu_active']='register';
+	         	$this->template->__set('title', 'Register');
+         	if($user==1){
+		    	$this->template->publish('register/register_jobseeker',$data);
+         	}else{
+         		$this->template->publish('register/register_employeer',$data);
+         	}
 		} else {
-			print_r($_FILES['image']['name']);
-
-				if ($_FILES['image']['name'] != '') {
-				                $uploaded_details = $this->upload_image('image');
-				                if (!$uploaded_details) {
-				                  
-				                }
-								else
-								{
-					
-				$this->load->library(array('Image_lib'));
-				$config['image_library'] = 'gd2';
-                $config['source_image'] = './uploads/user/'.$uploaded_details['file_name'];
-                $config['create_thumb'] = TRUE;
-                $config['thumb_marker'] = false;
-                $config['maintain_ratio'] = TRUE;
-                $config['width'] = $this->config->item('width');
-                $config['height'] = $this->config->item('height');
-               
-                $config['new_image'] = './uploads/user/';
-                $this->image_lib->initialize($config);
-                $this->image_lib->resize();
-				
-				}
+			if ($_FILES['image']['name'] != '') {
+                $uploaded_details = $this->upload_image('image');
+                if (!$uploaded_details) {
+                  
+                }
+				else {
+					$this->load->library(array('Image_lib'));
+					$config['image_library'] = 'gd2';
+	                $config['source_image'] = './uploads/user/'.$uploaded_details['file_name'];
+	                $config['create_thumb'] = TRUE;
+	                $config['thumb_marker'] = false;
+	                $config['maintain_ratio'] = TRUE;
+	                $config['width'] = $this->config->item('width');
+	                $config['height'] = $this->config->item('height');
+	                $config['new_image'] = './uploads/user/';
+	                $this->image_lib->initialize($config);
+             	}
             }
 
-			$this->Registration_model->register($uploaded_details['file_name']);
-			$this->template->set_template('home');
-			$data['menu_active']='register';
-	        $this->template->__set('title', 'Home');
-		 	$this->template->publish('home',$data);
+            $activation_code=$this->Registration_model->register($uploaded_details['file_name']);
+   			if($activation_code!='system_error') {
+			     $this->Registration_model->reg_confirmation_email($activation_code);
+			}
 
-			
-				// if ($_FILES['picture']['name'] != '') {
-				//                 $uploaded_details = $this->upload_image('picture');
-				//                 if (!$uploaded_details) {
-				                  
-				//                 }
-				// 				else
-				// 				{
-					
-				// $this->load->library(array('Image_lib'));
-				// $config['image_library'] = 'gd2';
-    //             $config['source_image'] = './user_upload/images/'.$uploaded_details['file_name'];
-    //             $config['create_thumb'] = TRUE;
-    //             $config['thumb_marker'] = false;
-    //             $config['maintain_ratio'] = TRUE;
-    //             $config['width'] = $this->config->item('width');
-    //             $config['height'] = $this->config->item('height');
-               
-    //             $config['new_image'] = './user_upload/images/';
-    //             $this->image_lib->initialize($config);
-    //             $this->image_lib->resize();
-				
-				// }
-    //         }
-			 //  $activation_code=$this->Registration_model->register($uploaded_details['file_name']);
-			 //  if($activation_code!='system_error')
-			 //  	{
-			 //     $this->Registration_model->reg_confirmation_email($activation_code);
-				// }
-            // redirect('register/success/');
-		
+			// $this->Registration_model->register($uploaded_details['file_name']);
+			// $this->template->set_template('home');
+			// $data['menu_active']='register';
+	  //       $this->template->__set('title', 'Home');
+		 // 	$this->template->publish('home',$data);
+
 		}
 	}	
-	
-	   
-	
-	function success()
-		{
-		$cms=$this->Cms_model->get_cms(35);
-	
-		$data['menu_active']=$id;
 		
-		$data['headtext']=$cms['headtext'];
-		$data['content']=$cms['content'];
+	function success() {
+			$cms=$this->Cms_model->get_cms(35);
+		
+			$data['menu_active']=$id;
+			
+			$data['headtext']=$cms['headtext'];
+			$data['content']=$cms['content'];
 
+			
+			$this->template->set_template('two');
+			
+	        $this->template->write('title', $cms['page_title']);
+			$this->template->write('meta_description', $cms['meta_description']);
+			$this->template->write('meta_key_word', $cms['meta_key_word']);
 		
-		$this->template->set_template('two');
+			
+			$this->template->write_view('content_left', 'cms/left',$data);
+			$this->template->write_view('content_right', 'cms/cms',$data);
+			
+			$this->template->render();
+	}
 		
-        $this->template->write('title', $cms['page_title']);
-		$this->template->write('meta_description', $cms['meta_description']);
-		$this->template->write('meta_key_word', $cms['meta_key_word']);
-	
-		
-		$this->template->write_view('content_left', 'cms/left',$data);
-		$this->template->write_view('content_right', 'cms/cms',$data);
-		
-		$this->template->render();
-		
-		
-		}
-		
-			function failed()
-		{$cms=$this->Cms_model->get_cms(37);
-		
-		$data['menu_active']=$id;
-		
-		$data['headtext']=$cms['headtext'];
-		$data['content']=$cms['content'];
-
-		
-		$this->template->set_template('two');
-		
-        $this->template->write('title', $cms['page_title']);
-		$this->template->write('meta_description', $cms['meta_description']);
-		$this->template->write('meta_key_word', $cms['meta_key_word']);
-	
-		
-		$this->template->write_view('content_left', 'cms/left',$data);
-		$this->template->write_view('content_right', 'cms/cms',$data);
-		
-		$this->template->render();
-		}
-		
-		
-			function successed()
-		{
-		$cms=$this->Cms_model->get_cms(36);
+	function failed() {
+		echo 'failed';exit;
+		$cms=$this->Cms_model->get_cms(37);
 		
 		$data['menu_active']=$id;
 		
@@ -199,92 +151,74 @@ class Register extends CI_Controller {
 		$this->template->write_view('content_right', 'cms/cms',$data);
 		
 		$this->template->render();
+	}
 		
+	function successed() {
+		echo "sucess";die;
+		$cms=$this->settings_model->get_cms_content(36);
+		$data['menu_active']=$id;
 		
+		$data['headtext']=$cms['headtext'];
+		$data['content']=$cms['content'];
+
+		$this->template->set_template('two');
+		
+        $this->template->write('title', $cms['page_title']);
+		$this->template->write('meta_description', $cms['meta_description']);
+		$this->template->write('meta_key_word', $cms['meta_key_word']);
+	
+		
+		$this->template->write_view('content_left', 'cms/left',$data);
+		$this->template->write_view('content_right', 'cms/cms',$data);
+		
+		$this->template->render();
+	}
+
+	function activation_process($activation_code,$key) {
+        if($this->Registration_model->activated($key,$activation_code)==true) {
+			redirect('register/successed/');					
+		} else {
+			redirect('register/failed/');
 		}
-	
-	
-
-	
-	function activation_process($activation_code)
-        {
-             if($this->Registration_model->activated($activation_code)==true)
-			 	{
-					 redirect('register/successed/');					
-				}
-			else
-				{
-					redirect('register/failed/');
-				}
-  }
-	   
-	   
-			
-			
-	   function check_email_check()
-	   		{
-				if($this->Registration_model->get_aleady_registered_email()==TRUE)
-					{
-						$this->form_validation->set_message('check_email_check', 'This Email is Already Registered,Please Choose Another One.');
-						return false;
-					}
-				  return true;
-			}			
+ 	}
 		
-	function username_check()
-	{
-          if(strlen($this->input->post('username'))<6 || strlen($this->input->post('username'))>16)
-					{
-						$this->form_validation->set_message('username_check', 'Username should be within 6-16');
-						return false;     	
-					}
-			else if($this->Registration_model->get_aleady_registered_email()==TRUE)
-					{
-						$this->form_validation->set_message('username_check', 'This username is Already Registered,Please Choose Another One.');
-						return false;
-					}
-				  return true;
-	       
-
+	function check_email_check() {
+		if($this->Registration_model->get_aleady_registered_email()==TRUE) {
+			$this->form_validation->set_message('check_email_check', 'This Email is Already Registered,Please Choose Another One.');
+			return false;
+		}
+			return true;
+	}			
+		
+	function username_check() {
+        if(strlen($this->input->post('username'))<6 || strlen($this->input->post('username'))>16) {
+			$this->form_validation->set_message('username_check', 'Username should be within 6-16');
+			return false;     	
+		}
+		else if($this->Registration_model->get_aleady_registered_email()==TRUE) {
+			$this->form_validation->set_message('username_check', 'This username is Already Registered,Please Choose Another One.');
+			return false;
+		}
+			return true;
 	}
 	
-		function password_check()
-	{
-          if($this->input->post('confirm_password')!=$this->input->post('password')) 
-				{
-				$this->form_validation->set_message('password_check', 'Confirm Password And Password Doesnot Match');
-				return false;
-				}
-			
-			 else if(strlen($this->input->post('password'))<6 || strlen($this->input->post('password'))>16)
-					{
-						$this->form_validation->set_message('password_check', 'Password should be within 6-16');
-						return false;     	
-					}
-			else if($this->input->post('password')==$this->input->post('user_name'))
-					{
-						$this->form_validation->set_message('password_check', 'Username And password Can Not Be Same.');
-						return false;  
-					}
-	  return true;        
-
+	function password_check(){
+        if($this->input->post('cpassword')!=$this->input->post('password')) {
+			$this->form_validation->set_message('password_check', 'Confirm Password And Password Doesnot Match');
+			return false;
+			}
+		else if(strlen($this->input->post('password'))<6 || strlen($this->input->post('password'))>16){
+			$this->form_validation->set_message('password_check', 'Password should be within 6-16');
+			return false;     	
+		}
+		else if($this->input->post('password')==$this->input->post('f_name')) {
+			$this->form_validation->set_message('password_check', 'Username And password Can Not Be Same.');
+			return false;  
+		}
+			return true;        
 	}
-	
-		function security_code_exist()
-	{
-	
-          if($this->input->post('security_code')!=$_SESSION['security_code']) 
-				{
-				$this->form_validation->set_message('security_code_exist', 'Security Code Doesnot Match');
-				return false;
-				}
-			
-	  return true;        
-
-	}
-	
-	 function upload_image($file) {
-
+		
+	function upload_image($file) {
         $config['upload_path'] = './uploads/user/';
         $config['allowed_types'] = 'gif|jpg|jpeg|png';
         $config['max_size'] = '9999999999999999999999999999999999999999';
@@ -305,16 +239,14 @@ class Register extends CI_Controller {
     }
 
     function valid_url($url){
-    $pattern = "|^http(s)?://[a-z0-9-]+(.[a-z0-9-]+)*(:[0-9]+)?(/.*)?$|i";
-    if (!preg_match($pattern, $url))
-    {
-        return FALSE;
-    }
-
-    return TRUE;
-}
+    	$pattern = "|^http(s)?://[a-z0-9-]+(.[a-z0-9-]+)*(:[0-9]+)?(/.*)?$|i";
+	    if (!preg_match($pattern, $url)){
+	        return FALSE;
+	    }
+			return TRUE;
+	}
 
 }
 
-/* End of file welcome.php */
-/* Location: ./application/controllers/welcome.php */
+/* End of file Register.php */
+/* Location: ./application/controllers/Register.php */

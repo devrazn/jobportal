@@ -62,32 +62,38 @@ class Helper_model extends CI_Model {
         $this->ckfinder->SetupCKEditor($this->ckeditor,$path); 
     }
 
-
-    public function send_email($mail_settings='', $receiver='') {
+    public function send_email($mail_settings='', $receiver='',$subject=NULL,$message=NULL) {
         $this->load->library('email',array('mailtype' => $mail_settings['mailtype'],
                                                 'protocol' => $mail_settings['protocol'],
                                                 //'smtp_host' => 'smtp.wlink.com.np',
                                                 'smtp_host' => $mail_settings['smtp_host'],
                                                 'smtp_port' => $mail_settings['smtp_port'],
-                                                'smtp_user' => $this->input->post('sender'),
-                                                'smtp_pass' => $this->input->post('password'),
+                                                'smtp_user' => $mail_settings['smtp_user'],
+                                                'smtp_pass' => $mail_settings['smtp_pass'],
                                                 'charset' => $mail_settings['charset'],
-                                                'newline' => "\r\n"));
-
-        $this->email->from($mail_settings['receive_email'], 'The JobPortal');
-        $this->email->to($this->input->post('receiver_email'));
-        $this->email->subject($this->input->post('subject'));
-        $this->email->message($this->input->post('content'));
+                                                'newline' => "\r\n")
+        );
+        if($message){
+            $this->email->from('enquiry@jobportal.com');
+            $this->email->to($this->input->post('email'));
+            $this->email->subject($subject);
+            $this->email->message($message);
+        }else{
+            $this->email->subject($this->input->post('subject'));
+            $this->email->message($this->input->post('content'));
+            $this->email->from($mail_settings['receive_email'], 'The JobPortal');
+            $this->email->to($this->input->post('receiver_email'));
+        }
 
         if($this->email->send()) {
             return true;
         } else {
+            show_error($this->email->print_debugger());
             $this->session->set_userdata('error_log_title', "Error while sending email");
             $this->session->set_userdata('error_log', $this->email->print_debugger());
             return false;
         }
     }
-
 
     function humanize_date($date) {
         $temp_date = date_create_from_format('Y-m-d', $date);

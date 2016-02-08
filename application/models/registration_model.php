@@ -4,8 +4,7 @@ class Registration_model extends CI_Model {
 
     function __construct() {
         parent::__construct();
-        //$this->load->model('Email_model');
-        //$this->load->helper('yurl');
+        $this->load->model('admin/settings_model');
     }
 
     function genRandomString($length = '') {
@@ -22,16 +21,14 @@ class Registration_model extends CI_Model {
     }
 
     function get_aleady_registered_email() {
-        $this->db->where('email', $this->input->post('reg_email'));
-        $query = $this->db->get('tbl_members');
+        $this->db->where('email', $this->input->post('email'));
+        $query = $this->db->get('tbl_users');
 
         if ($query->num_rows() > 0)
             return TRUE;
         else
             return NULL;
     }
-
-
 
     function incrypt($pwd) {
         $temp = "uno";
@@ -59,111 +56,62 @@ class Registration_model extends CI_Model {
             'phone' => $this->input->post('phone'),
             'user_type' => $this->input->post('user_type'),
             'newsletter_subscription' => $this->input->post('newsletter_subscription'),
-            'status' => $this->input->post('status'),
+            'status' => 0,
             'image'=>$image,
             'reg_date' => $this->Helper_model->get_local_time('time'),
             'activation_code' => $activation_code
         );
-         echo "<pre>";print_r($data);die;
-       
+      // echo "<pre>";print_r($data);die;
         $this->db->insert('tbl_users', $data);
-        //$user_id = $this->db->insert_id();
-
-    //$this->session->set_userdata(array(SESSION . 'image' => $image));
-
-//         $this->db->trans_complete();
-
-//         if ($this->db->trans_status() === FALSE) {
-//             return "system_error";
-//         } else {
-
-// if($this->input->post('uno_card')=='1')
-// {
-// $front_link="User Requested For Uno while registering.";
-// $back_link=site_url(ADMIN_PATH.'/member_new/edit_member/'.$user_id);	
-// $time=$this->Helper_model->get_local_time('time');
-// $changed_by=site_url(ADMIN_PATH.'/member_new/edit_member/'.$user_id);		
-// $this->Helper_model->notify("MEMBER REGISTERED",'upgrade',$front_link,$back_link,$time,$changed_by,"Uno upgrade Notification while registering");	
-// }			
-//             return $activation_code;
-//         }
+            return $activation_code;
     }
 
     function reg_confirmation_email($activation_code) {
+        $mail_setting = $this->settings_model->get_email_settings();
+        $message = $this->settings_model->get_email_template('REGISTRATION');
+        $subject = $message['subject'];
+        $emailbody = $message['content'];
 
-        $this->load->model('Email_model');
-        $headers = "From: " . $this->config->item('site_email') . "\r\n" .
-                "Reply-To: " . $this->config->item('site_email') . "\r\n" .
-                'X-Mailer: PHP/' . phpversion() . "\r\n" .
-                "MIME-Version: 1.0\r\n" .
-                "Content-Type: text/html; charset=utf-8\r\n" .
-                "Content-Transfer-Encoding: 8bit\r\n\r\n";
-
-        $template = $this->Email_model->get_email_template("REGISTRATION");
-
-        $subject = $template['TemplateSubject'];
-        $emailbody = $template['TemplateDesign'];
-
-        $confirm = "<a href='" . site_url('register/activation_process/' . uencode(yencode($activation_code, $this->config->item('encoder')))) . "'>" . site_url('register/activation_process/' . uencode(yencode($activation_code, $this->config->item('encoder')))) . "</a>";
-
+        //generate random key
+        $data['key'] = md5(uniqid());
+		$key = $data['key'];
+        $confirm = "<p><a href='".site_url()."register/activation_process/$key/$activation_code'>Click Here</a> to activate your account.</p>";
         $parseElement = array(
-		
-			"SITEURL" => base_url(),			
-           "SITEEMAIL" =>$this->config->item('site_email'),
-			"LOGO" => base_url('user_upload/images/'.$this->config->item('logo')),		
-		  "CURRENT_DATE" => $this->Helper_model->get_local_time('time'),
-            "CONFIRM" => $confirm,
             "SITENAME" => $this->config->item('site_name'),
-            "CURRENT_DATE" => $this->Helper_model->get_local_time('time'),
-            "EMAIL" => $this->input->post('reg_email'),
-            "FULLNAME" => $this->input->post('first_name').' '.$this->input->post('last_name'),
-            "PASSWORD" => $this->input->post('reg_password'));
-
-        $subject = $this->Email_model->parse_email($parseElement, $subject);
-        $emailbody = $this->Email_model->parse_email($parseElement, $emailbody);
-       //echo $emailbody; exit;
- $this->load->library('email');	
-$this->email->from($this->config->item('site_email'), $this->config->item('site_title'));
-$this->email->set_mailtype("html");
-$this->email->to($this->input->post('reg_email')); 
-$this->email->subject($subject);
-$this->email->message($emailbody);	
-$this->email->send();	   
-      //  @mail($this->input->post('reg_email'), $subject, $emailbody, $headers);
+            "SITENAME" => 'Job Portal',
+            "CONFIRM" => $confirm,
+            "EMAIL" => $this->input->post('email')
+        );
+        $subject = $this->parse_email($parseElement, $subject);
+        $emailbody = $this->parse_email($parseElement, $emailbody);
+        echo $emailbody;exit;
+        $this->Helper_model->send_email($mail_setting,NULL,$subject,$emailbody);
     }
 
-    function activated($activation_code) {
-
-
-        $this->db->where('activation_code', ydecode(udecode($activation_code), $this->config->item('encoder')));
-        $query = $this->db->get('tbl_members');
+    function activated($activation_code,$key) {
+        $this->db->where('activation_code',$activation_code);
+        $query = $this->db->get('tbl_users');
 
         if ($query->num_rows() > 0) {
-            $activation_code = ydecode(udecode($activation_code), $this->config->item('encoder'));
-            $sql = "select email,user_id FROM tbl_members WHERE activation_code='$activation_code'";
+            $sql = "select email,id FROM tbl_users WHERE activation_code='$activation_code'";
             $query = $this->db->query($sql);
             $d = $query->row_array();
-            $user_id = $d['user_id'];
+            $user_id = $d['id'];
 
             $data = array('status' => '1', 'activation_code' => $this->genRandomString('12'));
-            $this->db->where('user_id', $user_id);
-            $this->db->update('tbl_members', $data);
-
-            //print_r($this->db->last_query()); exit;
-
+            $this->db->where('id', $user_id);
+            $this->db->update('tbl_users', $data);
             return true;
         }
     }
 
     function check_email_forget($str) {
-
-        $sql = "SELECT * FROM tbl_members WHERE email='$str' ";
+        $sql = "SELECT * FROM tbl_users WHERE email='$str' ";
         $query = $this->db->query($sql);
         return $query->row_array();
     }
 
     function forget_password_reminder_email() {
-
         $information = $this->check_email_forget($this->input->post('email1'));
         $this->load->model('Email_model');
         $headers = "From: " . $this->config->item('site_email') . "\r\n" .
@@ -174,21 +122,15 @@ $this->email->send();
                 "Content-Transfer-Encoding: 8bit\r\n\r\n";
 
         $template = $this->Email_model->get_email_template("FORGOT_PWD");
-
         $subject = $template['TemplateSubject'];
         $emailbody = $template['TemplateDesign'];
-
-
         $email = $this->input->post('email1');
-        $sql = "SELECT email FROM tbl_members WHERE email='$email'  ";
-
+        
+        $sql = "SELECT email FROM tbl_users WHERE email='$email'  ";
         $query = $this->db->query($sql);
         $result = $query->row_array();
-        
         $email = $result['email'];
-
         $confirm = "<a href='" . site_url('forgot_password/change_process/' . uencode(yencode($email, $this->config->item('encoder')))) . "'>" . site_url('forgot_password/change_process/' . uencode(yencode($email, $this->config->item('encoder')))) . "</a>";
-
         $parseElement = array(
 		"SITEURL" => base_url(),			
             "SITENAME" => $this->config->item('site_name'),
@@ -196,29 +138,32 @@ $this->email->send();
 			"LOGO" => base_url('user_upload/images/'.$this->config->item('logo')),
             "CURRENT_DATE" => $this->Helper_model->get_local_time('time'),
             "EMAIL" => $this->input->post('reg_email'),
-		
             "LINK" => $confirm,
-
             "CURRENT_DATE" => $this->Helper_model->get_local_time('time'),
             "EMAIL" => $email
-            
         );
 
         $subject = $this->Email_model->parse_email($parseElement, $subject);
         $emailbody = $this->Email_model->parse_email($parseElement, $emailbody);
 		
- $this->load->library('email');	
-$this->email->from($this->config->item('site_email'), $this->config->item('site_title'));
-$this->email->set_mailtype("html");
-$this->email->to($email); 
-$this->email->subject($subject);
-$this->email->message($emailbody);	
-$this->email->send();	
-	
-         // echo $emailbody; exit;
-       // @mail($email, $subject, $emailbody, $headers);
+        $this->load->library('email');	
+        $this->email->from($this->config->item('site_email'), $this->config->item('site_title'));
+        $this->email->set_mailtype("html");
+        $this->email->to($email); 
+        $this->email->subject($subject);
+        $this->email->message($emailbody);	
+        $this->email->send();	
     }
 
+    //to parse the the email which is available in the
+    function parse_email($parseElement, $mail_body) {
+        foreach ($parseElement as $name => $value) {
+            $parserName = $name;
+            $parseValue = $value;
+            $mail_body = str_replace("[$parserName]", $parseValue, $mail_body);
+        }
+        return $mail_body;
+    }
 }
 
 ?>

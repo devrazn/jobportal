@@ -21,8 +21,6 @@
 
                 <script src="<?=base_url();?>assets/user/js/jquery-ui.min.js"></script> 
 
-
-
     </head>
 
     <body>
@@ -117,12 +115,17 @@
                             </ul>
                         </li>
                         <li><a href="login.php">Login</a></li>
-                        <li><a href="<?=base_url().'register'; ?>/">Register</a></li>
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">Register<b class="caret"></b></a>
+                            <ul class="dropdown-menu">
+                                <li><a href="<?=base_url().'register';?>">Register As JobSeeker</a></li>
+                                <li><a href="<?=base_url().'register/register_employeer';?>">Register As Employer</a></li>
+                            </ul>
+                        </li>
                         <li><a href="resume.html">Upload Resume</a></li>
                     </ul>
                 </div>
                 <div class="clearfix"> </div>
-      
         </nav>
 
 <div class="banner_1">
