@@ -3,16 +3,17 @@
 		<div class="col-md-3 grid_3">
 			<h4>Navigate</h4>
 			<ul class="f_list f_list1">
-				<li><a href="index.html">Home</a></li>
-				<li><a href="login.html">Sign In</a></li>
-				<li><a href="login.html">Join Now</a></li>
-				<li><a href="about.html">About</a></li>
+				<li><a href="<?=base_url()?>">Home</a></li>
+				<li><a href="<?=base_url()?>login"?>Sign In</a></li>
+				<li><a href="<?=base_url()?>register"?>Join Now</a></li>
+				<li><a href="<?=base_url()?>about_us">About</a></li>
+				<li><a href="<?=base_url()?>f_a_qs">FAQs</a></li>
 			</ul>
 			<ul class="f_list">
-				<li><a href="features.html">Features</a></li>
-				<li><a href="terms.html">Terms of use</a></li>
-				<li><a href="contact.html">Contact Us</a></li>
-				<li><a href="jobs.html">Post a Job</a></li>
+				<li><a href="<?=base_url()?>t_a_c">Terms of Use</a></li>
+				<li><a href="<?=base_url()?>how_it_works">How it Works</a></li>
+				<li><a href="<?=base_url()?>advertise">Advertise</a></li>
+				<li><a href="<?=base_url()?>contact_us">Contact Us</a></li>
 			</ul>
 			<div class="clearfix"> </div>
 		</div>
@@ -39,16 +40,22 @@
 		    </form>
 		</div>
 		<div class="clearfix"> </div>
-		<div class="copy">
-		<p>Copyright © 2015 Seeking . All Rights Reserved . Design by <a href="http://w3layouts.com/" target="_blank">W3layouts</a> </p>
-	</div>
 	</div>
 </div>
 
 </body>
 </html>
+
+
+<script src="<?=base_url();?>assets/user/js/jquery-ui.min.js"></script>
 <script type="text/javascript">
   $('#datepicker').datepicker({
-      dateFormat: 'yy-mm-dd'
+      dateFormat: 'yy-mm-dd',
+      changeYear: true,
+      yearRange: "1950:" + new Date('y')
 })
+</script>
+
+<script type="application/x-javascript"> 
+	addEventListener("load", function() { setTimeout(hideURLbar, 0); }, false); function hideURLbar(){ window.scrollTo(0,1); } 
 </script>

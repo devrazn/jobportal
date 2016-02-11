@@ -12,7 +12,7 @@ class Helper_model extends CI_Model {
                     'driver' => 'openssl',
                     'mode' => 'ctr'
             )
-            );   
+            );
     }
 
 
@@ -62,42 +62,47 @@ class Helper_model extends CI_Model {
         $this->ckfinder->SetupCKEditor($this->ckeditor,$path); 
     }
 
-    public function send_email($mail_settings='', $receiver='',$subject=NULL,$message=NULL) {
-        $this->load->library('email',array('mailtype' => $mail_settings['mailtype'],
+    public function send_email($mail_settings='',$mail_params=array()) {
+         $this->load->library('email',array('mailtype' => $mail_settings['mailtype'],
                                                 'protocol' => $mail_settings['protocol'],
+                                                'mailpath' => '/usr/sbin/sendmail',
                                                 //'smtp_host' => 'smtp.wlink.com.np',
                                                 'smtp_host' => $mail_settings['smtp_host'],
                                                 'smtp_port' => $mail_settings['smtp_port'],
                                                 'smtp_user' => $mail_settings['smtp_user'],
                                                 'smtp_pass' => $mail_settings['smtp_pass'],
                                                 'charset' => $mail_settings['charset'],
-                                                'newline' => "\r\n")
-        );
-        if($message){
-            $this->email->from('enquiry@jobportal.com');
-            $this->email->to($this->input->post('email'));
-            $this->email->subject($subject);
-            $this->email->message($message);
-        }else{
-            $this->email->subject($this->input->post('subject'));
-            $this->email->message($this->input->post('content'));
-            $this->email->from($mail_settings['receive_email'], 'The JobPortal');
-            $this->email->to($this->input->post('receiver_email'));
-        }
+                                                'newline' => "\r\n"));
+        $this->email->from($mail_settings['receive_email'], 'The JobPortal');
+        $this->email->to($mail_params['to']);
+        $this->email->subject($mail_params['subject']);
+        $this->email->message($mail_params['message']);
 
         if($this->email->send()) {
             return true;
         } else {
-            show_error($this->email->print_debugger());
-            $this->session->set_userdata('error_log_title', "Error while sending email");
-            $this->session->set_userdata('error_log', $this->email->print_debugger());
+            if($this->session->userdata('is_logged_in')){
+                $this->session->set_userdata('error_log_title', "Error while sending email");
+                $this->session->set_userdata('error_log', $this->email->print_debugger());
+            }
             return false;
         }
     }
 
+
     function humanize_date($date) {
         $temp_date = date_create_from_format('Y-m-d', $date);
         return(date_format($temp_date,  'jS M Y'));
+    }
+
+    function print_humanize_date($date) {
+        $temp_date = date_create_from_format('Y-m-d', $date);
+        echo date_format($temp_date,  'jS M Y');
+    }
+
+    function humanize_date_time($date_time){
+        $date = date_create($date_time);
+        return date_format($date, 'g:ia \o\n l jS F Y');
     }
 
 
@@ -157,6 +162,160 @@ class Helper_model extends CI_Model {
         $split = explode(":", $data);
 
         return $split;
+    }
+
+
+    function get_category() {
+        $this->db->order_by('parent_id', 'DESC');
+        $this->db->select('id, name, parent_id');
+        return $this->db->get('tbl_job_category')->result_array();
+    }
+
+
+    function bootstrap_menu($array,$parent_id = 0,$parents = array()) {
+        if($parent_id==0)
+        {
+            foreach ($array as $element) {
+                if (($element['parent_id'] != 0) && !in_array($element['parent_id'],$parents)) {
+                    $parents[] = $element['parent_id'];
+                }
+            }
+        }
+        $menu_html = '';
+        foreach($array as $element)
+        {
+            if($element['parent_id']==$parent_id)
+            {
+                if(in_array($element['id'], $parents))
+                {
+                    $menu_html .= '<li class="dropdown-submenu">';
+                    $menu_html .= '<a href="' . base_url() . 'admin/category/' .$element['id'].'" class="dropdown-toggle" data-toggle="" role="button" aria-expanded="true">'.$element['name'].' <span class="caret"></span></a>';
+                } else {
+                    $menu_html .= '<li>';
+                    $menu_html .= '<a href="' . base_url() . 'admin/category/' . $element['id'] . '">' . $element['name'] . '</a>';
+                }
+                if(in_array($element['id'],$parents))
+                {
+                    $menu_html .= '<ul class="dropdown-menu" role="menu">';
+                    $menu_html .= $this->bootstrap_menu($array, $element['id'], $parents);
+                    $menu_html .= '</ul>';
+                }
+                $menu_html .= '</li>';
+            }
+        }
+        return $menu_html;
+    }
+
+    function bootstrap_menu_user($array,$parent_id = 0,$parents = array()) {
+        if($parent_id==0)
+        {
+            foreach ($array as $element) {
+                if (($element['parent_id'] != 0) && !in_array($element['parent_id'],$parents)) {
+                    $parents[] = $element['parent_id'];
+                }
+            }
+        }
+        $menu_html = '';
+        foreach($array as $element)
+        {
+            if($element['parent_id']==$parent_id)
+            {
+                if(in_array($element['id'], $parents))
+                {
+                    $menu_html .= '<li class="dropdown-submenu">';
+                    $menu_html .= '<a href="' . base_url() . 'admin/category/' .$element['id'].'" class="dropdown-toggle" data-toggle="" role="button" aria-expanded="true">'.$element['name'].' <span class="caret"></span></a>';
+                } else {
+                    $menu_html .= '<li>';
+                    $menu_html .= '<a href="' . base_url() . 'admin/category/' . $element['id'] . '">' . $element['name'] . '</a>';
+                }
+                if(in_array($element['id'],$parents))
+                {
+                    $menu_html .= '<ul class="dropdown-menu" role="menu">';
+                    $menu_html .= $this->bootstrap_menu_user($array, $element['id'], $parents);
+                    $menu_html .= '</ul>';
+                }
+                $menu_html .= '</li>';
+            }
+        }
+        return $menu_html;
+    }
+
+
+    function multilevel_select($array,$parent_id = 0,$parents = array(), $level=0) {
+        static $i=0;
+        if($parent_id==0)
+        {
+            foreach ($array as $element) {
+                if (($element['parent_id'] != 0) && !in_array($element['parent_id'],$parents)) {
+                    $parents[] = $element['parent_id'];
+                }
+            }
+        }
+
+        $menu_html = '';
+        foreach($array as $element){
+            if($element['parent_id']==$parent_id && $level < 2){
+                $menu_html .= '<option';
+                if($level==0){
+                    $menu_html .= ' style="font-weight:bold;"';
+                } else {
+                    $menu_html .= ' style="font-style:italic;"';
+                }
+                $menu_html .= ' value="' . $element['id'] .'">';
+                for($j=0; $j<$i; $j++) {
+                    $menu_html .= '&mdash;';
+                }
+                $menu_html .= $element['name'].'</option>';
+                if(in_array($element['id'], $parents)){
+                    $i++;
+                    $menu_html .= $this->multilevel_select($array, $element['id'], $parents, $level+1);
+                }
+            }
+        }
+        $i--;
+        return $menu_html;
+    }
+
+
+    function humanize_url($url) {
+        return strtolower(str_replace(' ', '_', $url));
+    }
+
+
+    public function generate_captcha($refresh=false){
+        $this->load->helper('captcha');
+        $vals = array(
+            'img_path'      => './captcha/',
+            'img_url'       => base_url().'captcha',
+            'font_path'     => './assets/user/fonts/timesbd.ttf',
+            'img_width'     => 175,
+            'img_height'    => 45,
+            'expiration'    => 3600,
+            'word_length'   => 5,
+            'font_size'     => 24,
+            'img_id'        => 'Imageid',
+            'pool'          => '0123456789abcdefghijklmnopqrstuvwxyz',
+
+            // White background and border, black text and red grid
+            'colors'        => array(
+                    'background' => array(255, 255, 255),
+                    'border' => array(255, 255, 255),
+                    'text' => array(0, 0, 0),
+                    'grid' => array(255, 40, 40)
+                )
+            );
+
+        $cap = create_captcha($vals);
+        $this->session->set_userdata('captchaWord',$cap['word']);
+        return $cap;
+    }
+
+
+    public function count_admin_new_messages(){
+        $options = array('del_flag' => '0',
+                            'read_flag' => '0');
+        $this->db->where($options);
+        return ($this->db->count_all_results('tbl_user_messages'));
     }
 
 }

@@ -16,8 +16,10 @@ class Settings_model extends CI_Model {
 		} else {
 			return false;
 		}
-	}
 
+	}
+	
+	
 	public function update_password($password) {
 		$data = array(
 			'password' => $password
@@ -33,6 +35,7 @@ class Settings_model extends CI_Model {
 
 	}
 
+
 	public function get_site_settings() {
 		$query = $this->db->get('tbl_site_settings');
 		if($query->num_rows() == 1){
@@ -41,6 +44,7 @@ class Settings_model extends CI_Model {
 			return false;
 		}
 	}
+	
 
 	public function update_site_settings($image = '') {
 		if ($image == '')
@@ -70,6 +74,7 @@ class Settings_model extends CI_Model {
 		}
 
 	}
+
 
 	public function get_email_template($template_code){
 		$this->db->where('template_code', $template_code);

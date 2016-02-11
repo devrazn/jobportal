@@ -169,6 +169,7 @@ class Settings extends CI_Controller {
             $data['main'] = 'admin/cms';
             $data['title'] = 'Content Management';
             if(!(validation_errors())) {
+                //echo 1; exit;
                 $this->load->view('admin/admin', $data);
             } else {
                 /*$data['main'] = $this->input->post('cms_page');
@@ -176,6 +177,7 @@ class Settings extends CI_Controller {
                 //redirect(ADMIN_PATH . '/settings/cms/' . $this->input->post('cms_page'));
                 //$this->cms($this->input->post('cms_page'));
                 redirect(ADMIN_PATH . '/settings/cms/' . $this->input->post('cms_page'), 'refresh');
+                
             }
         } else {
             if($this->settings_model->update_cms($this->input->post('cms_page'))) {

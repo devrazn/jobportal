@@ -6,7 +6,6 @@ class Newsletter extends CI_Controller {
     {
         parent::__construct();
         $this->load->model('admin/newsletter_model');
-        $this->load->library('form_validation');
         $this->helper_model->validate_session();
 
     }
@@ -170,5 +169,41 @@ class Newsletter extends CI_Controller {
             return false;
         }
     }
+
+    function reg_confirmation_email($activation_code)
+        {
+            $config = array(
+                $config['protocol'] = 'sendmail',
+                $config['mailpath'] = '/usr/sbin/sendmail',
+                $config['smtp_host'] = "ssl://smtp.mail.yahoo.com;ssl://smtp.gmail.com",
+            $config['smtp_port'] = 465,
+          // 'protocol' => 'smtp',
+          //'smtp_host' => 'smtp.vianet.com.np',
+          // 'smtp_port' => 465,
+           'smtp_user' => 'neetupradhan96@gmail.com', // change it to yours
+          // 'smtp_pass' => 'xxx', // change it to yours
+          'mailtype' => 'html',
+          'charset' => 'utf-8',
+        );
+
+            $this->load->library('email', $config);
+              $this->email->set_newline("\r\n");
+              $this->email->from('enquiry@jobportal.com'); // change it to yours
+              $this->email->to($this->input->post('email'));// change it to yours
+              $this->email->subject('Resume from JobsBuddy for your Job posting');
+            $message = 'Thank You For Register';
+              $this->email->message($message);
+              
+
+              if($this->email->send())
+             {
+              echo 'Email sent.';
+             }
+             else
+            {
+             show_error($this->email->print_debugger());
+            }
+
+        }
 
 }

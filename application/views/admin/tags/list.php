@@ -1,31 +1,46 @@
 <script>
-    $(document).on('click', '.delete', function(event){
-        _this=$(this);
-        var id = $(this).attr('data');
-        event.preventDefault();
-        alertify.confirm("Are you sure you want to perform this operation?", function (e) {
-          if (e) {
-            jQuery.ajax({
-                    url: "<?=base_url().'admin/tags/delete_tags'; ?>/"+id,
-                    dataType: 'json',
-                    beforeSend: function(){_this.html("<img src='<?php echo base_url('images/ajax-loader.gif');?>' >")},
-                    success: function(data) {
-                       _this.closest('tr').remove();
-                        //alert( data['error_msg'] );
-                         var responseHTML = "<div role='alert' class='alert alert-success fade in' id='alert'>" + 
-                            "<button aria-label='Close' data-dismiss='alert' class='close' type='button'>" + 
-                            "<span aria-hidden='true'>×</span>" +
-                            "</button>" + 
-                            data['error_msg'] + 
-                            "</div>";
 
-                        $("#alert_parent").append(responseHTML);
-                        $('html, body').animate({
-                            scrollTop: $("body").offset().top
-                        }, 1000);
-                    }
-                }); 
-            }   
+// $("#Button1").on("click", function () {
+//     alertify.confirm("This is an alert dialog", function (e) {
+//         if (e) {
+//             // user clicked ok
+//         } else {
+//             // user clicked cancel
+//         }
+//     });
+// });
+
+    $(document).on('click', '.delete', function(event){
+        alertify.confirm("Are you sure you want to perform this operation?", function (e) {
+            if (e) {
+               
+                _this=$(this);
+        var id = $(this).attr('data');
+        
+        jQuery.ajax({
+            url: "<?=base_url().'admin/tags/delete_tags'; ?>/"+id,
+            beforeSend: function(){_this.html("<img src='<?php echo base_url('images/ajax-loader.gif');?>' >")},
+            success: function(data) {
+               _this.closest('tr').remove();                  
+            }
+        });    
+            } else {
+                return false;
+            }
+
+
+        // if( ! confirm("Are you sure to perform this operation?"))
+        //     return false;
+        // _this=$(this);
+        // var id = $(this).attr('data');
+        
+        // jQuery.ajax({
+        //     url: "<?=base_url().'admin/tags/delete_tags'; ?>/"+id,
+        //     beforeSend: function(){_this.html("<img src='<?php echo base_url('images/ajax-loader.gif');?>' >")},
+        //     success: function(data) {
+        //        _this.closest('tr').remove();                  
+        //     }
+        // }); 
         });              
     });
 

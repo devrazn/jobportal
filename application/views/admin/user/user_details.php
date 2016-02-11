@@ -38,7 +38,7 @@
                                 <dt>Gender</dt>
                                 <dd><?php if( strcasecmp($user_info['gender'], 'm') == 0 ) echo 'Male'; else echo 'Female';?></dd>
                                 <dt>Email</dt>
-                                <dd><a href='javascript:void(0)'data-toggle="modal" data-target="#myModal"><?=$user_info['email']?></a></dd>
+                                <dd><a href='javascript:void(0)' data-toggle="modal" data-target="#myModal"><?=$user_info['email']?></a></dd>
                                 <dt>Marital Status</dt>
                                 <dd><?php echo ($user_info['marital_status'])? 'Married' : 'Unmarried'?></dd>
                                 <dt>Address</dt>
@@ -78,18 +78,7 @@
                                                     </textarea>
                                                     <?=form_error('content')?>
                                                 </div>
-                                                           
-                                                <div id='sender_div' class="form-group">
-                                                    <label>Send From</label>
-                                                    <input name="sender" type="text" id="sender" class="form-control" size="50" placeholder="Enter sender email" value="<?=set_value('sender', $mail_settings['smtp_user']);?>">
-                                                    <?=form_error('sender')?>
-                                                </div>
                                                 
-                                                <div id='password_div' class="form-group">
-                                                    <label>Password</label>
-                                                    <input name="password" type="password" id='password' class="form-control" size="50" placeholder="Enter password for <?=set_value('sender', $mail_settings['smtp_user']);?>">
-                                                    <?=form_error('password')?>
-                                                </div>
                                                 <input name='receiver_email' type='hidden' value="<?=$user_info['email']?>">
                                                 <div id='action_email'>
                                                     <button id='#send_email' class="btn btn-success" type="submit">Send</button>
@@ -172,7 +161,7 @@
                     <?php 
                         }
                     ?>
-                        <form class='qualification_form' role="form" id="frm" method="post" action="">           
+                        <form class='qualification_form' role="form" id="frm" method="post" action=""> 
                             <div class="form-group">
                               <label>Status&nbsp;&nbsp;</label>
                               <label class="radio-inline">
@@ -360,14 +349,11 @@
                 scrollTop: $(this).closest('.col-lg-6').find('.panel-body').offset().top
             }, 1000);
         }
+        $(".img-rounded").html("<img src='<?php echo base_url('assets/ajax/images/ajax-loader_dark.gif');?>' >");
     });
 
+
     $(document).ready(function(){
-        $('#sender').on('input', function() {
-            $("#password").attr("placeholder", "Enter password for " + $('#sender').val());
-        });
-
-
         $('.experience_form').on('submit', function (e) {
             e.preventDefault();
             if(confirm("Are you sure to update status?")) {
@@ -530,12 +516,6 @@
                             if(data['content']) {
                                 $("#content_div").append(data['content']);
                             }
-                            if(data['password']) {
-                                $("#password_div").append(data['password']);
-                            }
-                            if(data['sender']) {
-                                $("#sender_div").append(data['sender']);
-                            }                            
 
                         } else if (data['error_title']=='email_error') {
 

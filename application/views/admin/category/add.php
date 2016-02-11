@@ -9,26 +9,24 @@
       <div class="panel-body">
         <div class="row">
           <div class="col-lg-6">
-            <form role="form" id="frm" method="post" action="<?=base_url().'admin/category/contact_us'?>">
+            <form role="form" id="frm" method="post" action="<?=base_url().'admin/category/add'?>">
               <div class="form-group">
                 <label>Name</label>
                 <input name="name" type='text' class="form-control" placeholder="Enter Category Name" value="<?=set_value('name');?>">
-                <span class="input-group-addon"><span class="glyphicon glyphicon-asterisk"></span></span>
                 <?=form_error('name')?>
               </div>
 
-              <!-- <div class="form-group">
-                                            <label>Selects</label>
-                                            <select name = "subCategory" class="form-control">
-                                                <option value="0">Select Parent Category</option>
-                                                <option>2</option>
-                                                 <optgroup label="Swedish Cars">
-                                                <option>3</option>
-                                                <option>4</option>
-                                              </optgroup>
-                                                <option>5</option>
-                                            </select>
-                                        </div> -->
+              <div class="form-group">
+                <label>Parent Category</label><p style="color:blue">Select only if you want to create a subcategory</p>
+                <select name = "parent_id" class="form-control">
+                  <option>Select Parent Category</option>
+                  <?php
+                  $category = $this->helper_model->get_category();
+                  $category_options = $this->helper_model->multilevel_select($category);
+                  echo $category_options;
+                ?>
+                </select>
+              </div>
               
               <div class="form-group">
                 <label>Status&nbsp;&nbsp;</label>

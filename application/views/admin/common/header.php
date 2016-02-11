@@ -38,6 +38,56 @@
     <link href="<?=base_url()?>assets/admin/css/alertify.css" rel="stylesheet">
     <link href="<?=base_url()?>assets/admin/css/default.css" rel="stylesheet">
 
+    <style type="text/css">
+        .dropdown-submenu {
+            position: relative;
+        }
+
+        .dropdown-submenu>.dropdown-menu {
+            top: 0;
+            left: 100%;
+            margin-top: -6px;
+            margin-left: -1px;
+            -webkit-border-radius: 0 6px 6px 6px;
+            -moz-border-radius: 0 6px 6px;
+            border-radius: 0 6px 6px 6px;
+        }
+
+        .dropdown-submenu:hover>.dropdown-menu {
+            display: block;
+        }
+
+        .dropdown-submenu>a:after {
+            display: block;
+            content: " ";
+            float: right;
+            width: 0;
+            height: 0;
+            border-color: transparent;
+            border-style: solid;
+            border-width: 5px 0 5px 5px;
+            border-left-color: #ccc;
+            margin-top: 5px;
+            margin-right: -10px;
+        }
+
+        .dropdown-submenu:hover>a:after {
+            border-left-color: #fff;
+        }
+
+        .dropdown-submenu.pull-left {
+            float: none;
+        }
+
+        .dropdown-submenu.pull-left>.dropdown-menu {
+            left: -100%;
+            margin-left: 10px;
+            -webkit-border-radius: 6px 0 6px 6px;
+            -moz-border-radius: 6px 0 6px 6px;
+            border-radius: 6px 0 6px 6px;
+        }
+    </style>
+
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
     <!--[if lt IE 9]>
@@ -86,10 +136,25 @@
             </div>
             <!-- /.navbar-header -->
 
+            <ul class="nav navbar-top-links navbar-left">
+                <li>
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">Job Categories <b class="caret"></b></a>
+                    <ul id="dropdown-menu" class="dropdown-menu">
+                        <?php
+                            //$top_menu = $this->helper_model->bootstrap_menu($menu_items);
+                             $menu_items = $this->helper_model->get_category();
+                             $top_menu = $this->helper_model->bootstrap_menu($menu_items);
+                             echo $top_menu;
+                        ?>
+                    </ul>
+                </li>
+            </ul>
+
             <ul class="nav navbar-top-links navbar-right">
                 <li class="dropdown pull-right">
                     <a class="dropdown-toggle" data-toggle="dropdown" href="#">
-                        <i class="fa fa-user fa-fw"></i>  <i class="fa fa-caret-down"></i>
+                        <i class="fa fa-user fa-fw"></i>
+                        <i class="fa fa-caret-down"></i>
                     </a>
                     <ul class="dropdown-menu dropdown-user">
                         <li><a href="#"><i class="fa fa-user fa-fw"></i> User Profile</a>
@@ -105,3 +170,12 @@
                 <!-- /.dropdown -->
             </ul>
             <!-- /.navbar-top-links -->
+
+<script type="text/javascript">
+    $(document).ready(function(){
+        //$(document).find('.dropdown-menu').removeClass('caret');
+        //$("#dropdown-menu>li>a>span.caret").removeClass("caret");
+        $("#dropdown-menu").find('.caret').removeClass("caret");
+        //$(this).removeClass('fa-plus').addClass('fa-minus');
+    });
+</script>            

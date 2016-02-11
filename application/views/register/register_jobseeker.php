@@ -64,7 +64,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
     	        <div class="form-group col-md-12">
     	            <label class="col-md-3 control-lable">Confirm Password</label>
     	            <div class="col-md-4">
-    	               <input type="password" name="cpassword" class="form-control" autocomplete="off" equalTo="#reg_password"  placeholder="Retype your Password"/>
+    	               <input type="password" name="cpassword" class="form-control" autocomplete="off" equalsTo="#reg_password"  placeholder="Retype your Password"/>
                      <?php echo form_error('cpassword');?>
                     </div>
     	        </div>
@@ -74,10 +74,10 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                     <label class="col-md-3 control-lable">Gender</label>
                         <div class="col-md-4">
                             <label class="radio-inline">
-                                <input type="radio" value="M" name="gender" <?php if(set_value('gender')==1) echo "checked";?> >Male
+                                <input type="radio" value="1" name="gender" <?php if(set_value('gender')=='1') echo "checked";?> >Male
                             </label>
                             <label class="radio-inline">
-                                <input type="radio" value="F" name="gender" <?php if(set_value('gender')==0) echo "checked";?> >Female
+                                <input type="radio" value="0" name="gender" <?php if(set_value('gender')=='0') echo "checked";?> >Female
                             </label>
                             <?= form_error('gender') ?>
                         </div>
@@ -114,78 +114,27 @@ defined('BASEPATH') OR exit('No direct script access allowed');
     	        <div class="form-group col-md-12">
     	            <label class="col-md-3 control-lable">Address</label>
     	            <div class="col-md-4">
-                        <textarea cols="39" rows="6" name="address" value="<?= set_value('address') ?>"> </textarea>
+                        <textarea cols="39" rows="6" name="address"><?= set_value('address') ?></textarea>
     	            <?= form_error('address') ?>
                     </div>
                 </div>
     	    </div>
 
-
-            <!-- <div class="form-group">
-                <div class="form-group col-md-12">
-                    <label class="col-md-3 control-lable">Company Type</label>
-                    <div class="col-md-4">
-                        <select name="company_type" class="form-control">
-                            <option value="">Select</option>
-                            <option value="Test" <?php echo set_select('company_type', 'Test'); ?>>Test</option>
-                            <option value="Test1" <?php echo set_select('company_type', 'Test1'); ?>>Test1</option>
-                        </select>
-                        <?= form_error('company_type') ?>
-                    </div>
-            </div> -->
-            <!-- <div class="form-group">
-                <div class="form-group col-md-12">
-                    <label class="col-md-3 control-lable">Profile</label>
-                    <div class="col-md-4">
-                        <textarea cols="39" rows="6" name="profile" value="<?= set_value('profile') ?>"> </textarea>
-                    <?= form_error('profile') ?>
-                    </div>
-                </div>
-            </div> -->
-            <!-- <div class="form-group">
-                <div class="form-group col-md-12">
-                    <label class="col-md-3 control-lable">Benefits</label>
-                    <div class="col-md-4">
-                        <textarea cols="39" rows="6" name="benefits" value="<?= set_value('benefits') ?>"> </textarea>
-                    <?= form_error('benefits') ?>
-                    </div>
-                </div>
-            </div> -->
-            <!-- <div class="form-group">
-                <div class="form-group col-md-12">
-                    <label class="col-md-3 control-lable">Website</label>
-                    <div class="col-md-4">
-                       <input type="text" name="website" class="form-control input-sm" value="<?= set_value('website') ?>"/>
-                    <?= form_error('website') ?>
-                    </div>
-                </div>
-            </div> -->
             <div class="form-group">
                 <div class="form-group col-md-12">
                     <label class="col-md-3 control-lable">Marital Status</label>
                         <div class="col-md-4">
                             <label class="radio-inline">
-                                <input type="radio" value="S" name="marital_status" <?php if(set_value('marital_status')==1) echo "checked";?>>Single
+                                <input type="radio" value="1" name="marital_status" <?php if(set_value('marital_status')=='1') echo "checked";?>>Unmarried
                             </label>
                             <label class="radio-inline">
-                                <input type="radio" value="M" name="marital_status" <?php if(set_value('marital_status')==0) echo "checked";?>>Marrried
+                                <input type="radio" value="0" name="marital_status" <?php if(set_value('marital_status')=='0') echo "checked";?>>Marrried
                             </label>
                         <?= form_error('marital_status') ?>
                         </div>
                 </div>
             </div>
-           <!--  <div class="form-group">
-                <div class="form-group col-md-12">
-                    <label class="col-md-3 control-lable">User Type</label>
-                    <div class="col-md-4">
-                        <select name="user_type" class="form-control">
-                            <option value="">Select</option>
-                            <option value="Job Seeker" <?php echo set_select('user_type', 'Job Seeker'); ?>>Job Seeker</option> 
-                            <option value="Employer" <?php echo set_select('user_type', 'Employer'); ?>>Employer</option>  
-                        </select>
-                        <?= form_error('user_type') ?>
-                    </div>
-            </div> -->
+           
             <div class="form-group">
                 <div class="form-group col-md-12">
                     <label class="col-md-3 control-lable">Newsletter Subscription</label>
@@ -197,20 +146,6 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                 </div>
             </div>
 
-            <!-- <div class="form-group">
-                <div class="form-group col-md-12">
-                    <label class="col-md-3 control-lable">Status</label>
-                        <div class="col-md-4">
-                            <label class="radio-inline">
-                                <input type="radio" value="1" name="status" <?php if(set_value('status')==1) echo "checked";?> >Active
-                            </label>
-                            <label class="radio-inline">
-                                <input type="radio" value="0" name="status" <?php if(set_value('status')==0) echo "checked";?> >Inactive
-                            </label>
-                            <?= form_error('status') ?>
-                        </div>
-                </div>
-            </div> -->
             <div class="form-group">
                 <div class="form-actions floatRight">
                     <input type="submit" value="Register" class="btn btn-primary btn-sm">

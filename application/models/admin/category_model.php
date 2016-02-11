@@ -9,14 +9,17 @@ class Category_model extends CI_Model {
 
 
     function add_category() {
+        //$url = $this->helper_model->humanize_url($this->input->post('name'));
         $data = array('name' => $this->input->post('name'),
-                      'status' => $this->input->post('status')
+                      'status' => $this->input->post('status'),
+                      'parent_id' => $this->input->post('parent_id'),
+                      'url' => $this->helper_model->humanize_url($this->input->post('name'))
         );
         $this->db->insert('tbl_job_category', $data);
     }
 
 
-    function category_list($per_page, $offset = '1') {
+    function category_list($per_page='', $offset = '1') {
         $this->db->where('del_flag', 0);
         $this->db->order_by('id', 'ASC');
 

@@ -1,17 +1,13 @@
 <?php
-
-class Registration_model extends CI_Model {
-
+class Registration_Model extends CI_Model {
     function __construct() {
         parent::__construct();
         $this->load->model('admin/settings_model');
     }
-
     function genRandomString($length = '') {
         if ($length == '') {
             $length = 20;
         }
-
         $characters = '12345CARTN6789ABCDEFGHIJKMNPQRSTUVWXYZ12345CARTN6789ABCDEFGHIJKMNPQRSTUVWXYZ12345CARTN6789ABCDEFGHIJKMNPQRSTUVWXYZ12345CARTN6789ABCDEFGHIJKMNPQRSTUVWXYZ12345CARTN6789ABCDEFGHIJKMNPQRSTUVWXYZ12345CARTN6789ABCDEFGHIJKMNPQRSTUVWXYZ12345CARTN6789ABCDEFGHIJKMPQRSTUVWXYZ12345CARTN6789ABCDEFGHIJKMNPQRSTUVWXYZ12345CARTN6789ABCDEFGHIJKMNPQRSTUVWXYZ12345CARTN6789ABCDEFGHIJKMNPQRSTUVWXYZ12345CARTN6789ABCDEFGHIJKMNPQRSTUVWXYZ12345CARTN6789ABCDEFGHIJKMPQRSTUVWXYZ12345CARTN6789ABCDEFGHIJKMNPQRSTUVWXYZ12345CARTN6789ABCDEFGHIJKMNPQRSTUVWXYZ12345CARTN6789ABCDEFGHIJKMNPQRSTUVWXYZ12345CARTN6789ABCDEFGHIJKMNPQRSTUVWXYZ12345CARTN6789ABCDEFGHIJKMPQRSTUVWXYZ12345CARTN6789ABCDEFGHIJKMNPQRSTUVWXYZ12345CARTN6789ABCDEFGHIJKMNPQRSTUVWXYZ12345CARTN6789ABCDEFGHIJKMNPQRSTUVWXYZ12345CARTN6789ABCDEFGHIJKMNPQRSTUVWXYZ12345CARTN6789ABCDEFGHIJKMNPQRSTUVWXYZ12345CARTN6789ABCDEFGHIJKMNPQRSTUVWXYZ12345CARTN6789ABCDEFGHIJKMNPQRSTUVWXYZ12345CARTN6789ABCDEFGHIJKMNPQRSTUVWXYZ12345CARTN6789ABCDEFGHIJKMNPQRSTUVWXYZ';
         $string = '';
         for ($p = 0; $p < $length; $p++) {
@@ -19,23 +15,19 @@ class Registration_model extends CI_Model {
         }
         return $string;
     }
-
     function get_aleady_registered_email() {
         $this->db->where('email', $this->input->post('email'));
         $query = $this->db->get('tbl_users');
-
         if ($query->num_rows() > 0)
             return TRUE;
         else
             return NULL;
     }
-
     function incrypt($pwd) {
         $temp = "uno";
         $a = md5(sha1($temp . $pwd));
         return $a;
     }
-
     function register($image) {
         $activation_code = $this->genRandomString('12');
         $pwd = $this->incrypt($this->input->post('password'));
@@ -58,23 +50,21 @@ class Registration_model extends CI_Model {
             'newsletter_subscription' => $this->input->post('newsletter_subscription'),
             'status' => 0,
             'image'=>$image,
-            'reg_date' => $this->Helper_model->get_local_time('time'),
+            'reg_date' => $this->helper_model->get_local_time('time'),
             'activation_code' => $activation_code
         );
       // echo "<pre>";print_r($data);die;
         $this->db->insert('tbl_users', $data);
             return $activation_code;
     }
-
     function reg_confirmation_email($activation_code) {
         $mail_setting = $this->settings_model->get_email_settings();
         $message = $this->settings_model->get_email_template('REGISTRATION');
         $subject = $message['subject'];
         $emailbody = $message['content'];
-
         //generate random key
         $data['key'] = md5(uniqid());
-		$key = $data['key'];
+        $key = $data['key'];
         $confirm = "<p><a href='".site_url()."register/activation_process/$key/$activation_code'>Click Here</a> to activate your account.</p>";
         $parseElement = array(
             "SITENAME" => $this->config->item('site_name'),
@@ -85,32 +75,27 @@ class Registration_model extends CI_Model {
         $subject = $this->parse_email($parseElement, $subject);
         $emailbody = $this->parse_email($parseElement, $emailbody);
         echo $emailbody;exit;
-        $this->Helper_model->send_email($mail_setting,NULL,$subject,$emailbody);
+        $this->helper_model->send_email($mail_setting,NULL,$subject,$emailbody);
     }
-
     function activated($activation_code,$key) {
         $this->db->where('activation_code',$activation_code);
         $query = $this->db->get('tbl_users');
-
         if ($query->num_rows() > 0) {
             $sql = "select email,id FROM tbl_users WHERE activation_code='$activation_code'";
             $query = $this->db->query($sql);
             $d = $query->row_array();
             $user_id = $d['id'];
-
             $data = array('status' => '1', 'activation_code' => $this->genRandomString('12'));
             $this->db->where('id', $user_id);
             $this->db->update('tbl_users', $data);
             return true;
         }
     }
-
     function check_email_forget($str) {
         $sql = "SELECT * FROM tbl_users WHERE email='$str' ";
         $query = $this->db->query($sql);
         return $query->row_array();
     }
-
     function forget_password_reminder_email() {
         $information = $this->check_email_forget($this->input->post('email1'));
         $this->load->model('Email_model');
@@ -120,7 +105,6 @@ class Registration_model extends CI_Model {
                 "MIME-Version: 1.0\r\n" .
                 "Content-Type: text/html; charset=utf-8\r\n" .
                 "Content-Transfer-Encoding: 8bit\r\n\r\n";
-
         $template = $this->Email_model->get_email_template("FORGOT_PWD");
         $subject = $template['TemplateSubject'];
         $emailbody = $template['TemplateDesign'];
@@ -132,29 +116,27 @@ class Registration_model extends CI_Model {
         $email = $result['email'];
         $confirm = "<a href='" . site_url('forgot_password/change_process/' . uencode(yencode($email, $this->config->item('encoder')))) . "'>" . site_url('forgot_password/change_process/' . uencode(yencode($email, $this->config->item('encoder')))) . "</a>";
         $parseElement = array(
-		"SITEURL" => base_url(),			
+        "SITEURL" => base_url(),            
             "SITENAME" => $this->config->item('site_name'),
-			"SITEEMAIL" =>$this->config->item('site_email'),
-			"LOGO" => base_url('user_upload/images/'.$this->config->item('logo')),
-            "CURRENT_DATE" => $this->Helper_model->get_local_time('time'),
+            "SITEEMAIL" =>$this->config->item('site_email'),
+            "LOGO" => base_url('user_upload/images/'.$this->config->item('logo')),
+            "CURRENT_DATE" => $this->helper_model->get_local_time('time'),
             "EMAIL" => $this->input->post('reg_email'),
             "LINK" => $confirm,
-            "CURRENT_DATE" => $this->Helper_model->get_local_time('time'),
+            "CURRENT_DATE" => $this->helper_model->get_local_time('time'),
             "EMAIL" => $email
         );
-
         $subject = $this->Email_model->parse_email($parseElement, $subject);
         $emailbody = $this->Email_model->parse_email($parseElement, $emailbody);
-		
-        $this->load->library('email');	
+        
+        $this->load->library('email');  
         $this->email->from($this->config->item('site_email'), $this->config->item('site_title'));
         $this->email->set_mailtype("html");
         $this->email->to($email); 
         $this->email->subject($subject);
-        $this->email->message($emailbody);	
-        $this->email->send();	
+        $this->email->message($emailbody);  
+        $this->email->send();   
     }
-
     //to parse the the email which is available in the
     function parse_email($parseElement, $mail_body) {
         foreach ($parseElement as $name => $value) {
@@ -165,5 +147,4 @@ class Registration_model extends CI_Model {
         return $mail_body;
     }
 }
-
 ?>

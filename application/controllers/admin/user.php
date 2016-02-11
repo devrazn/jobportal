@@ -44,6 +44,7 @@ class User extends CI_Controller {
         $this->form_validation->set_rules('profile', 'Profile', 'required|xss_clean');
         $this->form_validation->set_rules('benefits', 'Benefits', 'required|xss_clean');
         $this->form_validation->set_rules('status', 'Status', 'required|xss_clean');
+        //$this->form_validation->set_rules('feature_in_slider', 'Feature in slider', 'required|xss_clean');
         
         if ($this->form_validation->run() == FALSE) {
             $data['info'] = $this->user_model->get_user($id);
@@ -58,8 +59,18 @@ class User extends CI_Controller {
         }
     }
 
+
     function change_status($status = '', $id = '') {
         if($this->user_model->change_status($status, $id)){
+            echo 'success';
+        } else {
+            echo 'failure';
+        }
+    }
+
+
+    function update_employer() {
+        if($this->user_model->update_employer()){
             echo 'success';
         } else {
             echo 'failure';
@@ -77,7 +88,7 @@ class User extends CI_Controller {
 
         if($data['user_info']['user_type']=='0') {
             //echo json_encode($data['user_info']['user_type']); exit;
-           // echo json_encode($data['user_info']['user_type']); exit;
+            //echo json_encode($data['user_info']['user_type']); exit;
             $data['title'] = 'User Details';
             $data['qualification'] = $this->user_model->get_qualification($id);
             $data['experience'] = $this->user_model->get_experience($id);
@@ -103,9 +114,7 @@ class User extends CI_Controller {
 
 
     public function send_email() {
-        $this->form_validation->set_rules('sender', 'Sender Email', 'required|xss_clean|valid_email');
         $this->form_validation->set_rules('receiver_email', 'Receiver', 'required|xss_clean|valid_email|callback_validate_receiver');
-        $this->form_validation->set_rules('password', 'Sender Email\'s Password', 'required|xss_clean');
         $this->form_validation->set_rules('subject', 'Subject', 'required|xss_clean');
         $this->form_validation->set_rules('content', 'Content', 'required|xss_clean');
 
@@ -115,14 +124,18 @@ class User extends CI_Controller {
                 'error_description' => "<p style='color:red'>Please fill all the required fields correctly.</p>",
                 'subject' => form_error('subject'),
                 'content' => form_error('content'),
-                'sender' => form_error('sender'),
-                'password' => form_error('password'),
+                'receiver_email' => form_error('receiver_email'),
+
             ));
         } else {
             $this->load->model('admin/settings_model');
-            $data['mail_settings']=$this->settings_model->get_email_settings();
-            
-            if($this->helper_model->send_email($data['mail_settings'])) {
+            $mail_settings = $this->settings_model->get_email_settings();
+            $mail_params = array(
+                        'to' => $this->input->post('receiver_email'),
+                        'subject' => $this->input->post('subject'),
+                        'message' => $this->input->post('content'),
+                );
+            if($this->helper_model->send_email($mail_settings, $mail_params)) {
                 echo json_encode(array(
                     'error_msg' => 'Email Sent Successfully.',
                     'error_title' => 'success'

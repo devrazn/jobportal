@@ -6,34 +6,16 @@ if (!defined('BASEPATH'))
 class Register extends CI_Controller {
 
     function __construct() {
-		parent::__construct();
-			// if($this->config->item('site_status')=='offline')
-			// {
-			// 	redirect('/site_offline/');
-			// 	exit;
-			// }
-			
-			//  if($this->session->userdata(SESSION.'user_id'))
-            //                      {
-             //                            redirect(site_url(''));      
-            //                      }
-		
-		$this->load->model('Registration_model');
-		$this->load->model('Helper_model');
-		$this->load->library('form_validation');
-		//$this->form_validation->set_error_delimiters('<p class="error_class_register">', '</p>');
+		parent::__construct();		
+		$this->load->model('registration_model');
 	}
 
     public function index() {
-			//$this->load->view('register');
-	
-		 $this->template->set_template('register');
-		 //echo 1;exit;
-		 $data['menu_active']='register';
-         $this->template->__set('title', 'Register');
-		
-		 $this->template->publish('register/register_jobseeker',$data);
-      	 //$this->template->render();
+		$this->template->set_template('register');
+		$data['menu_active']='register';
+		$this->template->__set('title', 'Register');
+
+		$this->template->publish('register/register_jobseeker',$data);
 	}
 
 	public function register_employeer() {
@@ -45,22 +27,27 @@ class Register extends CI_Controller {
 
 	function add_user($user){
 		if($user==1){
+			$dob_estd = "Date of Birth";
+			$f_name = "First Name";
 			$this->form_validation->set_rules('l_name', "Last Name",'required|xss_clean');
-			//$this->form_validation->set_rules('email', "Email",'required|xss_clean|valid_email|callback_check_email_check');
+			$this->form_validation->set_rules('email', "Email",'required|xss_clean|valid_email|callback_check_email_check');
 			$this->form_validation->set_rules('gender', "Gender",'required|xss_clean');
 			$this->form_validation->set_rules('marital_status', "Marital Status",'required|xss_clean');
 		}else {
-			$this->form_validation->set_rules('company_type', "Company Type",'required|xss_clean');
-			$this->form_validation->set_rules('profile', "Profile",'xss_clean');
-			$this->form_validation->set_rules('benefits', "Benefits",'xss_clean');
-			$this->form_validation->set_rules('website', "Website","xss_clean|callback_valid_url");
+			$dob_estd = "Date of Establishment";
+			$f_name = "Company Name";
+			$this->form_validation->set_rules('company_type', "Company Type",'required|xss_clean|trim');
+			$this->form_validation->set_rules('profile', "Profile",'xss_clean|trim');
+			$this->form_validation->set_rules('benefits', "Benefits",'xss_clean|trim');
+			$this->form_validation->set_rules('website', "Website","xss_clean|callback_valid_url|trim");
 		}
-			// $this->form_validation->set_rules('f_name', "First Name",'required|xss_clean');
-			// $this->form_validation->set_rules('email', "Email",'required|xss_clean|valid_email');
-			// $this->form_validation->set_rules('password','Password','required|xss_clean|min_length[6]|max_length[50]|callback_password_check');
-			// $this->form_validation->set_rules('dob_estd', "DOB",'required|xss_clean');
-			// $this->form_validation->set_rules('address', "Address",'required|xss_clean');
-			// $this->form_validation->set_rules('phone', "Phone",'required|xss_clean|regex_match[/^[0-9]{10}$/]');
+			$this->form_validation->set_rules('f_name', $f_name,'required|xss_clean|trim');
+			$this->form_validation->set_rules('email', "Email",'required|xss_clean|trim|valid_email|is_unique[tbl_users.email]');
+			$this->form_validation->set_rules('password','Password','required|xss_clean|min_length[6]|max_length[50]');
+			$this->form_validation->set_rules('cpassword','Confirm Password','required|xss_clean|matches[password]');
+			$this->form_validation->set_rules('dob_estd', $dob_estd,'trim|required|xss_clean');
+			$this->form_validation->set_rules('address', "Address",'trim|required|xss_clean');
+			$this->form_validation->set_rules('phone', "Phone",'trim|required|xss_clean|regex_match[/^[0-9]{10}$/]');
 			if (empty($_FILES['image']['name'])) {
 				$this->form_validation->set_rules('required|image', "Image",'xss_clean');
 			}
@@ -81,7 +68,7 @@ class Register extends CI_Controller {
                   
                 }
 				else {
-					$this->load->library(array('Image_lib'));
+					$this->load->library("image_lib");
 					$config['image_library'] = 'gd2';
 	                $config['source_image'] = './uploads/user/'.$uploaded_details['file_name'];
 	                $config['create_thumb'] = TRUE;
@@ -94,12 +81,12 @@ class Register extends CI_Controller {
              	}
             }
 
-            $activation_code=$this->Registration_model->register($uploaded_details['file_name']);
+            $activation_code=$this->registration_model->register($uploaded_details['file_name']);
    			if($activation_code!='system_error') {
-			     $this->Registration_model->reg_confirmation_email($activation_code);
+			     $this->registration_model->reg_confirmation_email($activation_code);
 			}
 
-			// $this->Registration_model->register($uploaded_details['file_name']);
+			// $this->registration_model->register($uploaded_details['file_name']);
 			// $this->template->set_template('home');
 			// $data['menu_active']='register';
 	  //       $this->template->__set('title', 'Home');
@@ -175,7 +162,7 @@ class Register extends CI_Controller {
 	}
 
 	function activation_process($activation_code,$key) {
-        if($this->Registration_model->activated($key,$activation_code)==true) {
+        if($this->registration_model->activated($key,$activation_code)==true) {
 			redirect('register/successed/');					
 		} else {
 			redirect('register/failed/');
@@ -183,7 +170,7 @@ class Register extends CI_Controller {
  	}
 		
 	function check_email_check() {
-		if($this->Registration_model->get_aleady_registered_email()==TRUE) {
+		if($this->registration_model->get_aleady_registered_email()==TRUE) {
 			$this->form_validation->set_message('check_email_check', 'This Email is Already Registered,Please Choose Another One.');
 			return false;
 		}
@@ -195,7 +182,7 @@ class Register extends CI_Controller {
 			$this->form_validation->set_message('username_check', 'Username should be within 6-16');
 			return false;     	
 		}
-		else if($this->Registration_model->get_aleady_registered_email()==TRUE) {
+		else if($this->registration_model->get_aleady_registered_email()==TRUE) {
 			$this->form_validation->set_message('username_check', 'This username is Already Registered,Please Choose Another One.');
 			return false;
 		}

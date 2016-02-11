@@ -42,6 +42,22 @@
                 </ul>
                 <!-- /.nav-second-level -->
             </li>
+
+            <li>
+                <a href="<?=base_url().'admin/user';?>"><i class="fa fa-edit fa-fw"></i>User Management</a>
+            </li>
+
+            <li>
+                <a href="<?=base_url().'admin/messages';?>">
+                    <i class="fa fa-envelope fa-fw"></i>
+                    User Messages <?php 
+                                    $new_msg = $this->helper_model->count_admin_new_messages();
+                                    if($new_msg>0)
+                                        echo "<b>(" . $new_msg . ")</b>";
+                                ?>
+                </a>
+            </li>
+
             <li>
                 <a href="<?=base_url().'admin/category';?>"><i class="fa fa-table fa-fw"></i>Job Category Management</a>
             </li>
@@ -53,9 +69,7 @@
             <li>
                 <a href="<?=base_url().'admin/tags';?>"><i class="fa fa-table fa-fw"></i>Tags Management</a>
             </li>
-            <li>
-                <a href="<?=base_url().'admin/user';?>"><i class="fa fa-edit fa-fw"></i>User Management</a>
-            <li>                
+                
             <li>
                 <a href="forms.html"><i class="fa fa-edit fa-fw"></i> Forms</a>
             </li>

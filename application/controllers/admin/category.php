@@ -12,7 +12,7 @@ class Category extends CI_Controller {
     }
 
     public function index() {
-                $data['main'] = 'admin/category/list';
+        $data['main'] = 'admin/category/list';
         $data['title'] = 'Categories';
         $this->load->view('admin/admin', $data);
         //$this->cms_category();
@@ -56,11 +56,35 @@ class Category extends CI_Controller {
 
 
     function add() {
-        $this->form_validation->set_rules('name', 'Name', 'required|xss_clean');
-        $this->form_validation->set_rules('status', 'Status', 'required|xss_clean');
+        //$category = $this->helper_model->get_category();
+        //echo json_encode($category); exit;
+        //$data['category_list'] = $this->category_model->category_list();
+        $this->form_validation->set_rules('name', 'Name', 'trim|required|xss_clean');
+        $this->form_validation->set_rules('parent_id', 'Parent Category', 'trim|xss_clean');
+        $this->form_validation->set_rules('status', 'Status', 'trim|required|xss_clean');
+        //$this->form_validation->set_rules('parent', 'Parent Category', 'required')
+
+       /* $refs = array();
+        $list = array();
+
+        $sql = "SELECT id, parent_id, name FROM items ORDER BY name";
+        $result = mysqli_query($sql);
+        while($data = @mysql_fetch_assoc($result)) {
+            $thisref = &$refs[ $data['id'] ];
+
+            $thisref['parent_id'] = $data['parent_id'];
+            $thisref['name'] = $data['name'];
+
+            if ($data['parent_id'] == 0) {
+                $list[ $data['id'] ] = &$thisref;
+            } else {
+                $refs[ $data['parent_id'] ]['children'][ $data['id'] ] = &$thisref;
+            }
+        }*/
+
+        //echo $list; exit;
 
         if ($this->form_validation->run() == FALSE) {
-
             $data['main'] = 'admin/category/add';
             $data['title'] = 'Add Category';
             $this->load->view('admin/admin', $data);

@@ -93,17 +93,6 @@
                                                     <?=form_error('content')?>
                                                 </div>
                                                            
-                                                <div id='sender_div' class="form-group">
-                                                    <label>Send From</label>
-                                                    <input name="sender" type="text" id="sender" class="form-control" size="50" placeholder="Enter sender email" value="<?=set_value('sender', $mail_settings['smtp_user']);?>">
-                                                    <?=form_error('sender')?>
-                                                </div>
-                                                
-                                                <div id='password_div' class="form-group">
-                                                    <label>Password</label>
-                                                    <input name="password" type="password" id='password' class="form-control" size="50" placeholder="Enter password for <?=set_value('sender', $mail_settings['smtp_user']);?>">
-                                                    <?=form_error('password')?>
-                                                </div>
                                                 <input name='receiver_email' type='hidden' value="<?=$user_info['email']?>">
                                                 <div id='action_email'>
                                                     <button id='#send_email' class="btn btn-success" type="submit">Send</button>
@@ -123,7 +112,17 @@
                         </div>
                         <!-- /.panel-body -->
 
-                        <form class='ajax_form col-lg-6' role="form" id="frm" method="post" action="">           
+                        <form class='col-lg-6' role="form" id="employer_form" method="post" action="">
+                            <div class="form-group">
+                                <label>Feature on the homepage slider&nbsp;&nbsp;</label>
+                                <label class="radio-inline">
+                                    <input type="radio" value="1" name="feature_in_slider" <?php if(set_value('feature_in_slider',$user_info['feature_in_slider'])==1){echo "checked";}?> >Yes
+                                </label>
+                                <label class="radio-inline">
+                                    <input type="radio" value="0" name="feature_in_slider" <?php if(set_value('feature_in_slider',$user_info['feature_in_slider'])==0) {echo "checked";}?> >No
+                                </label>
+                                <?=form_error('feature_in_slider')?>
+                            </div>
                             <div class="form-group">
                               <label>Status&nbsp;&nbsp;</label>
                               <label class="radio-inline">
@@ -140,8 +139,9 @@
                               </label>
                               <?=form_error('status')?>
                             </div>
+                            <input type='hidden' name='id' value="<?=$user_info['id']?>" >
                             <div id='action_status_user'>
-                                <a id='change_status_user' class='btn btn-success' type='submit'>Update Status</a>
+                                <button id='change_status_user' class='btn btn-success' type='submit'>Update Status</button>
                                 <button class='btn btn-warning' type='reset'>Reset</button>
                             </div>
                         </form>
@@ -295,62 +295,7 @@
         // instance, using default configuration.
         CKEDITOR.replace('content');
     });
-    
 
-    $(document).on('click', '#change_status_user', function(){
-        _this=$(this);
-        var status =  $("[name='status']:checked").val();
-
-        if(confirm("Are you sure to update status?")) {
-            var id = <?=$user_info['id']?>;
-            var divHTML =  $('#action_status_user').html();
-        
-            jQuery.ajax({
-                url: "<?=base_url().'admin/user/change_status'; ?>/" + status + '/' + id,
-                beforeSend: function(){
-                   $('#action_status_user').html("<img src='<?php echo base_url('assets/ajax/images/ajax-loader_dark.gif');?>' >");
-                },
-                success: function(data) {
-                    $('#action_status_user').html(divHTML);
-                    if(data == 'success'){
-                        //alert('Status Updated Successfully');
-                        var responseHTML = "<div role='alert' class='alert alert-success fade in' id='alert'>" + 
-                            "<button aria-label='Close' data-dismiss='alert' class='close' type='button'>" + 
-                            "<span aria-hidden='true'>×</span>" +
-                            "</button>" + 
-                            "Experience Status Updated Successfully" + 
-                            "</div>";
-
-                        $('.alert').remove();
-                        $("#alert_parent").append(responseHTML);
-                        $('html, body').animate({
-                            scrollTop: $("body").offset().top
-                        }, 1000);
-                    } else {
-                        var responseHTML = "<div role='alert' class='alert alert-warning fade in' id='alert'>" + 
-                            "<button aria-label='Close' data-dismiss='alert' class='close' type='button'>" + 
-                            "<span aria-hidden='true'>×</span>" +
-                            "</button>" + 
-                            "An Unknown Error Occured. Please Try Again Later" + 
-                            "</div>";
-
-                        $('.alert').remove();
-                        $("#alert_parent").append(responseHTML);
-                        $('html, body').animate({
-                            scrollTop: $("body").offset().top
-                        }, 1000);
-                    }
-                },
-
-                error: function(data) {
-                    $('#action_status_user').html(divHTML);
-                    alert("An unknown error occured. Please try again later");
-                }
-            });
-        } else {
-            return false
-        }    
-    });
 
     $(document).on('click', '.fa', function(){
         if($(this).hasClass('fa-minus')){
@@ -370,6 +315,62 @@
     });
 
     $(document).ready(function(){
+        $('#employer_form').on('submit', function (e) {
+            e.preventDefault();
+            if(confirm("Are you sure to update this employer?")) {
+                var divHTML =  $('#action_status_user').html();
+                var values = $(this).serializeArray();
+
+                $.ajax({
+                    type: 'post',
+                    url: "<?=base_url().'admin/user/update_employer'; ?>",
+                    data: values,
+                    beforeSend: function(){
+                        $('#action_status_user').html("<img src='<?php echo base_url('assets/ajax/images/ajax-loader_dark.gif');?>' >");
+                    },
+
+                    success: function(data) {
+                        $('#action_status_user').html(divHTML);
+                        if(data == 'success'){
+                            //alert('Status Updated Successfully');
+                            var responseHTML = "<div role='alert' class='alert alert-success fade in' id='alert'>" + 
+                                "<button aria-label='Close' data-dismiss='alert' class='close' type='button'>" + 
+                                "<span aria-hidden='true'>×</span>" +
+                                "</button>" + 
+                                "Employer Info Updated Successfully" + 
+                                "</div>";
+
+                            $('.alert').remove();
+                            $("#alert_parent").append(responseHTML);
+                            $('html, body').animate({
+                                scrollTop: $("body").offset().top
+                            }, 1000);
+                        } else {
+                            var responseHTML = "<div role='alert' class='alert alert-warning fade in' id='alert'>" + 
+                                "<button aria-label='Close' data-dismiss='alert' class='close' type='button'>" + 
+                                "<span aria-hidden='true'>×</span>" +
+                                "</button>" + 
+                                "An Unknown Error Occured. Please Try Again Later" + 
+                                "</div>";
+
+                            $('.alert').remove();
+                            $("#alert_parent").append(responseHTML);
+                            $('html, body').animate({
+                                scrollTop: $("body").offset().top
+                            }, 1000);
+                        }
+                    },
+
+                    error: function(data) {
+                        $('#action_status_user').html(divHTML);
+                        alert("An unknown error occured. Please try again later");
+                    }
+                });
+            } else {
+                return false
+            }    
+        });
+
         $('#sender').on('input', function() {
             $("#password").attr("placeholder", "Enter password for " + $('#sender').val());
         });
@@ -411,7 +412,7 @@
                             "<button aria-label='Close' data-dismiss='alert' class='close' type='button'>" + 
                             "<span aria-hidden='true'>×</span>" +
                             "</button>" + 
-                            "An Unknown Error Occured. Please Try Again Later" + 
+                            "An Unknown Error Occured. Please Try Again Laterrrrrr" + 
                             "</div>";
 
                             $("#alert_parent").append(responseHTML);
@@ -423,7 +424,7 @@
 
                     error: function(data) {
                         _thisButtons.html(divHTML);
-                        alert("An unknown error occured. Please try again later");
+                        alert("An unknown error occured. Please trrry again later");
                     }
                 });
             } else {
@@ -477,16 +478,9 @@
                             }
                             if(data['content']) {
                                 $("#content_div").append(data['content']);
-                            }
-                            if(data['password']) {
-                                $("#password_div").append(data['password']);
-                            }
-                            if(data['sender']) {
-                                $("#sender_div").append(data['sender']);
-                            }                            
+                            }                           
 
                         } else if (data['error_title']=='email_error') {
-
                             var responseHTML = "<div role='alert' class='alert alert-danger fade in' id='alert'>" + 
                             "<button aria-label='Close' data-dismiss='alert' class='close' type='button'>" + 
                             "<span aria-hidden='true'>×</span>" +

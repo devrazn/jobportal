@@ -13,21 +13,6 @@ class User_model extends CI_Model {
         return $query->result_array();
     }
 
-    function update_user($id) {
-        $data = array('email' => $this->input->post('email'),
-                      'f_name' => $this->input->post('f_name'),
-                      'l_name' => $this->input->post('l_name'),
-                      'address' => $this->input->post('address'),
-                      'dob_estd' => $this->input->post('dob_estd'),
-                      'company_type' => $this->input->post('company_type'),
-                      'profile' => $this->input->post('profile'),
-                      'benefits' => $this->input->post('benefits'),
-                      'status' => $this->input->post('status')
-        );
-        $this->db->where('id', $id);
-        $this->db->update('tbl_users', $data);
-    }
-
     function get_user($id) {
         $options = array('id' => $id,
                           'del_flag' => '0');
@@ -38,6 +23,14 @@ class User_model extends CI_Model {
     function change_status($status, $id) {
         $sql ="Update tbl_users SET status='$status' where id='$id'";
         return($this->db->query($sql));
+    }
+
+    function update_employer() {
+      $data = array('status' => $this->input->post('status'),
+                    'feature_in_slider' => $this->input->post('feature_in_slider')
+        );
+      $this->db->where('id', $this->input->post('id'));
+      return $this->db->update('tbl_users', $data);
     }
 
 
@@ -108,12 +101,5 @@ class User_model extends CI_Model {
       $this->db->where('id', $this->input->post('id'));
       return($this->db->update('tbl_jobs', $data));
     }
-
-
-    /*function update_application_procedure() {
-      $data = array('application_procedure' => $this->input->post('application_procedure')
-        );
-      $this->db->where('id', $this->input->post('id'));
-      return($this->db->update('tbl_jobs', $data));
-    }*/
+    
 }

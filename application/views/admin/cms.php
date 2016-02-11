@@ -6,22 +6,21 @@
       </div>
       <div class="panel-body">
         <div class="row">
+
             <form role="form" id="frm" method="post" name="frm" action="<?=site_url(ADMIN_PATH.'/settings/cms')?>">
               <?php if(validation_errors()) echo "<div class = 'error' style='color:red'><b>Please enter the required fields</b></div>"; ?>
 
               <div class="col-lg-6">
-
               <div class="form-group">
                 <label>Select CMS Page</label>
                 <select class="form-control" name="cms_page" onChange="doSubmitForm(this.form)">
-                  <?php 
-                    foreach ($select_info as $select_key) {
+                  <?php
+                    foreach ($select_info as $select_key):
                   ?>
-                    <option value='<?=$select_key["title"]?>' <?php if($info['title']==$select_key['title']){echo "selected";}?>><?=$select_key['head_text']?></option>
-                  <?
-                    }
-                  ?>
-
+                    <option value="<?=$select_key['title']?>" <?php if($info['title']==$select_key['title']){echo "selected";}?>><?=$select_key['head_text']?></option>
+                  <?php
+                    endforeach;
+                    ?>
                 </select>
               </div>
 
@@ -49,7 +48,7 @@
                 <?=form_error('meta_description')?>
               </div>
 
-            </div>
+            </div> 
             <!-- col-lg-6 -->
 
             <div class='col-lg-6'>
@@ -80,8 +79,9 @@
               <button class="btn btn-success" type="submit">Submit</button>
               <button class="btn btn-warning" type="reset">Reset</button>
 
-              </div>
+            </div>
           <!-- col-lg-6 -->
+
               
             </form>
         </div>

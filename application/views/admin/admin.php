@@ -30,6 +30,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                                 <i class="fa fa-dashboard"></i> Admin
                                     <?php if($this->uri->segment(1)==''){
                                         echo ' / Dashboard';
+
                                     }?>
                                     <?php if($this->uri->segment(2)!='' && !(is_numeric($this->uri->segment(2)))) echo '/ '.$this->helper_model->humanize_admin($this->uri->segment(2));?>
                                     <?php if($this->uri->segment(3)!='' && !(is_numeric($this->uri->segment(3)))) echo '/ '.$this->helper_model->humanize_admin($this->uri->segment(3));?>

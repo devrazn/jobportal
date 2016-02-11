@@ -23,29 +23,25 @@ defined('BASEPATH') OR exit('No direct script access allowed');
         <div class="form-container">
             <h2>Register Form</h2>
             <form role="form" id="frmRegister" method="post" action="<?=base_url().'register/add_user/2'?>" enctype="multipart/form-data">
-                <div class="form-group">
-                    <div class="form-group col-md-12">
-                        <label class="col-md-3 control-lable">Company Name</label>
-                        <div class="col-md-4">
-                            <input type="text" name="f_name" class="form-control"  placeholder="Enter Company Name" value="<?= set_value('f_name') ?>"/>
-                         <?= form_error('f_name') ?>
-                        </div>
+                <div class="form-group col-md-12">
+                    <label class="col-md-3 control-lable">Company Name</label>
+                    <div class="col-md-4">
+                        <input type="text" name="f_name" class="form-control"  placeholder="Enter Company Name" value="<?= set_value('f_name') ?>"/>
+                     <?= form_error('f_name') ?>
                     </div>
                 </div>
-                <div class="form-group">
-                    <div class="form-group col-md-12">
-                        <label class="col-md-3 control-lable">Email</label>
-                        <div class="col-md-4">
-                           <input type="text" name="email" class="form-control" placeholder="Enter Email" value="<?= set_value('email') ?>"/>
-                         <?= form_error('email') ?>
-                        </div>
+                <div class="form-group col-md-12">
+                    <label class="col-md-3 control-lable">Email</label>
+                    <div class="col-md-4">
+                       <input type="text" name="email" class="form-control" placeholder="Enter Email" value="<?= set_value('email') ?>"/>
+                     <?= form_error('email') ?>
                     </div>
                 </div>
                 <div class="form-group">
                     <div class="form-group col-md-12">
                         <label class="col-md-3 control-lable">Password</label>
                         <div class="col-md-4">
-                           <input type="password" name="password" id="reg_password" class="form-control" placeholder="Enter Password" value=""/>
+                           <input type="password" name="password" id="reg_password" autocomplete="off" class="form-control" placeholder="Enter Password"/>
                          <?= form_error('password') ?>
                         </div>
                     </div>
@@ -54,7 +50,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                     <div class="form-group col-md-12">
                         <label class="col-md-3 control-lable">Confirm Password</label>
                         <div class="col-md-4">
-                           <input type="password" name="cpassword" class="form-control" autocomplete="off" equalTo="#reg_password"  placeholder="Retype your Password"/>
+                           <input type="password" name="cpassword" class="form-control" autocomplete="off" equalsTo="#reg_password"  placeholder="Retype your Password"/>
                          <?php echo form_error('cpassword');?>
                         </div>
                     </div>
@@ -90,7 +86,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
         	        <div class="form-group col-md-12">
         	            <label class="col-md-3 control-lable">Address</label>
         	            <div class="col-md-4">
-                            <textarea cols="39" rows="6" name="address" value="<?= set_value('address') ?>"> </textarea>
+                            <textarea cols="39" rows="6" name="address"><?= set_value('address') ?> </textarea>
         	            <?= form_error('address') ?>
                         </div>
                     </div>
@@ -106,12 +102,13 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                             </select>
                             <?= form_error('company_type') ?>
                         </div>
+                    </div>
                 </div>
                 <div class="form-group">
                     <div class="form-group col-md-12">
                         <label class="col-md-3 control-lable">Profile</label>
                         <div class="col-md-4">
-                            <textarea cols="39" rows="6" name="profile" value="<?= set_value('profile') ?>"> </textarea>
+                            <textarea cols="39" rows="6" name="profile"> <?= set_value('profile') ?> </textarea>
                         <?= form_error('profile') ?>
                         </div>
                     </div>
@@ -120,7 +117,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                     <div class="form-group col-md-12">
                         <label class="col-md-3 control-lable">Benefits</label>
                         <div class="col-md-4">
-                            <textarea cols="39" rows="6" name="benefits" value="<?= set_value('benefits') ?>"> </textarea>
+                            <textarea cols="39" class="form-control" rows="6" name="benefits"> <?= set_value('benefits') ?> </textarea>
                         <?= form_error('benefits') ?>
                         </div>
                     </div>
@@ -153,6 +150,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
         </div>
     </div>
 </div>
+
 
 <?php
     $this->load->view('common/footer');
