@@ -23,14 +23,10 @@ class Registration_Model extends CI_Model {
         else
             return NULL;
     }
-    function incrypt($pwd) {
-        $temp = "uno";
-        $a = md5(sha1($temp . $pwd));
-        return $a;
-    }
+
     function register($image) {
         $activation_code = $this->genRandomString('12');
-        $pwd = $this->incrypt($this->input->post('password'));
+        $pwd = $this->helper_model->encrypt_me($this->input->post('password'));
         $data = array(
             'f_name' => $this->input->post('f_name'),
             'l_name' => $this->input->post('l_name'),

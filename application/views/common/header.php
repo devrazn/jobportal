@@ -128,7 +128,13 @@
                         <li><a href="<?=base_url().'register/register_employeer';?>">Register As Employer</a></li>
                     </ul>
                 </li>
-		        <li><a href="<?=base_url().'login'?>">Login</a></li>
+                <?php if($this->session->userdata('is_Login')){?>
+                		<li><a  href="<?=base_url().'login_user/logout'?> ">Logout</a></li>
+                	<?php }else{?>
+		        		<li><a href="<?=base_url().'login'?>">Login</a></li>
+                	<?php	
+                	}
+                ?>
 		        <li><a href="resume.html">Upload Resume</a></li>
 	        </ul>
 	    </div>
