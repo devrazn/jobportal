@@ -29,7 +29,7 @@
 		        <span class="icon-bar"></span>
 		        <span class="icon-bar"></span>
 	        </button>
-	        <a class="navbar-brand" href="<?=base_url()?>"><img src="<?=base_url();?>uploads/admin/images/logo.png" alt=""/></a>
+	        <a class="navbar-brand" href="<?=base_url()?>"><img src="<?=base_url();?>images/Untitled.png" alt=""/></a>
 	    </div>
 	    <!--/.navbar-header-->
 	    <div class="navbar-collapse collapse" id="bs-example-navbar-collapse-1" style="height: 1px;">
