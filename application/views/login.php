@@ -8,14 +8,14 @@
                         <div class="textbox-wrap">
                             <div class="input-group">
                                 <span class="input-group-addon "><i class="fa fa-user"></i></span>
-                                <input type="text" name="email" class="form-control"  placeholder="Enter Email" value="<?= set_value('email') ?>"/>
+                                <input type="text" name="email" class="form-control"  placeholder="Enter Email" value="<?php if(isset($_COOKIE['user_email'])) echo $_COOKIE['user_email']; ?>"/>
                         		<?= form_error('email') ?>
                             </div>
                         </div>
                         <div class="textbox-wrap">
                             <div class="input-group">
                                 <span class="input-group-addon "><i class="fa fa-key"></i></span>
-                                <input type="password" name="password" class="form-control"  placeholder="Enter Password" value="<?= set_value('password') ?>"/>
+                                <input type="password" name="password" class="form-control"  placeholder="Enter Password" value="<?php if(isset($_COOKIE['user_pw'])) echo $_COOKIE['user_pw']; ?>"/>
                         		<?= form_error('password') ?>
                             </div>
                         </div>
@@ -24,7 +24,7 @@
 				 				<label class="checkbox1"><input type="checkbox" name="remember_me" checked=""><i> </i>Remember Me</label>
 				         	</div>
 				 		  	<div class="login-para">
-				 				<p><a href="#"> Forgot Password? </a></p>
+				 				<p><a href="<?=base_url();?>login_user/forgot_pass"> Forgot Password? </a></p>
 				 		 	</div>
 					     	<div class="clearfix"> </div>
 			        	</div>

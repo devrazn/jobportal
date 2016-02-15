@@ -63,7 +63,7 @@ class Helper_model extends CI_Model {
     }
 
     public function send_email($mail_settings='',$mail_params=array()) {
-         $this->load->library('email',array('mailtype' => $mail_settings['mailtype'],
+        $this->load->library('email',array('mailtype' => $mail_settings['mailtype'],
                                                 'protocol' => $mail_settings['protocol'],
                                                 'mailpath' => '/usr/sbin/sendmail',
                                                 //'smtp_host' => 'smtp.wlink.com.np',
@@ -316,6 +316,18 @@ class Helper_model extends CI_Model {
                             'read_flag' => '0');
         $this->db->where($options);
         return ($this->db->count_all_results('tbl_user_messages'));
+    }
+
+     function genRandomString($length = '') {
+        if ($length == '') {
+            $length = 20;
+        }
+        $characters = '12345CARTN6789ABCDEFGHIJKMNPQRSTUVWXYZ12345CARTN6789ABCDEFGHIJKMNPQRSTUVWXYZ12345CARTN6789ABCDEFGHIJKMNPQRSTUVWXYZ12345CARTN6789ABCDEFGHIJKMNPQRSTUVWXYZ12345CARTN6789ABCDEFGHIJKMNPQRSTUVWXYZ12345CARTN6789ABCDEFGHIJKMNPQRSTUVWXYZ12345CARTN6789ABCDEFGHIJKMPQRSTUVWXYZ12345CARTN6789ABCDEFGHIJKMNPQRSTUVWXYZ12345CARTN6789ABCDEFGHIJKMNPQRSTUVWXYZ12345CARTN6789ABCDEFGHIJKMNPQRSTUVWXYZ12345CARTN6789ABCDEFGHIJKMNPQRSTUVWXYZ12345CARTN6789ABCDEFGHIJKMPQRSTUVWXYZ12345CARTN6789ABCDEFGHIJKMNPQRSTUVWXYZ12345CARTN6789ABCDEFGHIJKMNPQRSTUVWXYZ12345CARTN6789ABCDEFGHIJKMNPQRSTUVWXYZ12345CARTN6789ABCDEFGHIJKMNPQRSTUVWXYZ12345CARTN6789ABCDEFGHIJKMPQRSTUVWXYZ12345CARTN6789ABCDEFGHIJKMNPQRSTUVWXYZ12345CARTN6789ABCDEFGHIJKMNPQRSTUVWXYZ12345CARTN6789ABCDEFGHIJKMNPQRSTUVWXYZ12345CARTN6789ABCDEFGHIJKMNPQRSTUVWXYZ12345CARTN6789ABCDEFGHIJKMNPQRSTUVWXYZ12345CARTN6789ABCDEFGHIJKMNPQRSTUVWXYZ12345CARTN6789ABCDEFGHIJKMNPQRSTUVWXYZ12345CARTN6789ABCDEFGHIJKMNPQRSTUVWXYZ12345CARTN6789ABCDEFGHIJKMNPQRSTUVWXYZ';
+        $string = '';
+        for ($p = 0; $p < $length; $p++) {
+            $string .= $characters[mt_rand(0, strlen($characters))];
+        }
+        return $string;
     }
 
 }
