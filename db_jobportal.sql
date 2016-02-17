@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: Feb 11, 2016 at 11:01 PM
+-- Generation Time: Feb 18, 2016 at 02:17 AM
 -- Server version: 5.6.16
 -- PHP Version: 5.5.11
 
@@ -246,16 +246,20 @@ CREATE TABLE IF NOT EXISTS `tbl_jobs` (
   `title` varchar(255) NOT NULL,
   `position` varchar(255) NOT NULL,
   `openings` int(11) NOT NULL,
-  `city` varchar(255) NOT NULL,
+  `location` varchar(255) NOT NULL,
+  `lat` varchar(255) NOT NULL,
+  `lon` varchar(255) NOT NULL,
   `qualification` text NOT NULL,
   `experience` varchar(255) NOT NULL,
+  `salary` varchar(20) DEFAULT NULL,
   `category_id` int(11) NOT NULL,
   `job_description` longtext NOT NULL,
   `requirements` longtext NOT NULL,
   `facilities` longtext NOT NULL,
+  `additional_info` longtext,
   `published_date` date NOT NULL,
   `deadline_date` date NOT NULL,
-  `application_procedure` longtext NOT NULL,
+  `application_procedure` varchar(255) NOT NULL COMMENT '0: Apply in Writing\r\n1: Apply via Employer''s email\r\n2: Apply via JobPortal',
   `del_flag` tinyint(11) NOT NULL DEFAULT '0',
   `status` varchar(255) NOT NULL,
   PRIMARY KEY (`id`)
@@ -265,9 +269,9 @@ CREATE TABLE IF NOT EXISTS `tbl_jobs` (
 -- Dumping data for table `tbl_jobs`
 --
 
-INSERT INTO `tbl_jobs` (`id`, `user_id`, `title`, `position`, `openings`, `city`, `qualification`, `experience`, `category_id`, `job_description`, `requirements`, `facilities`, `published_date`, `deadline_date`, `application_procedure`, `del_flag`, `status`) VALUES
-(1, 3, 'PHP Developers', 'Jr. Programmer', 2, 'Kathmandu', 'BE Computer or related field', '1', 2, 'Must be able to work in a team of 5-6 developers', 'Must Possess the following skills & knowledge.\r\n Knowledge of any MVC frameworks Laravel or Yii preferred. ', 'Annual Medical Insurance worth Rs.5000', '2015-11-06', '2015-11-12', '1', 0, '1'),
-(2, 3, 'Javascript Developer', 'Sr. Programmer', 1, 'Lalitpur', 'Your skills matter more to us than ur qualification', '2', 15, 'Must be able to develop highly interactive webpages using js, jquery or other front end scripting tools.', 'Sound knowledge of using front end scripting tools such as js, css etc', '', '2015-11-03', '2016-11-08', '2', 0, '1');
+INSERT INTO `tbl_jobs` (`id`, `user_id`, `title`, `position`, `openings`, `location`, `lat`, `lon`, `qualification`, `experience`, `salary`, `category_id`, `job_description`, `requirements`, `facilities`, `additional_info`, `published_date`, `deadline_date`, `application_procedure`, `del_flag`, `status`) VALUES
+(1, 3, 'PHP Developers', 'Jr. Programmer', 2, 'Kathmandu', '', '', 'BE Computer or related field', '1 Months', NULL, 2, 'Must be able to work in a team of 5-6 developers', 'Must Possess the following skills & knowledge.\r\n Knowledge of any MVC frameworks Laravel or Yii preferred. ', 'Annual Medical Insurance worth Rs.5000', NULL, '2015-11-06', '2015-11-12', '0, 1, 2', 0, '1'),
+(2, 3, 'Javascript Developer', 'Sr. Programmer', 1, 'Lalitpur', '27.70378886189014', '85.32323308260948', 'Your skills matter more to us than ur qualification', '2 Yrs', NULL, 15, 'Must be able to develop highly interactive webpages using js, jquery or other front end scripting tools.', 'Sound knowledge of using front end scripting tools such as js, css etc', '', NULL, '2015-11-03', '2016-11-09', '0,1,2', 0, '1');
 
 -- --------------------------------------------------------
 
@@ -547,7 +551,7 @@ CREATE TABLE IF NOT EXISTS `tbl_users` (
   `del_flag` tinyint(4) DEFAULT '0',
   `status` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=11 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=12 ;
 
 --
 -- Dumping data for table `tbl_users`
@@ -556,29 +560,50 @@ CREATE TABLE IF NOT EXISTS `tbl_users` (
 INSERT INTO `tbl_users` (`id`, `email`, `password`, `f_name`, `l_name`, `gender`, `dob_estd`, `address`, `company_type`, `profile`, `benefits`, `website`, `marital_status`, `phone`, `user_type`, `newsletter_subscription`, `feature_in_slider`, `pw_reset_key`, `reg_date`, `activation_code`, `image`, `del_flag`, `status`) VALUES
 (1, 'neetupradhan96@gmail.com', '12345', 'Neetu', 'Pradhan', 'F', '2000-12-06', 'Sanepa', NULL, 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor ', 'qaz', 'aa', '0', '9800000000', '0', 1, 0, 'aa', NULL, NULL, 'test2.jpg', 0, '1'),
 (2, 'acharya.rajanpkr@gmail.com', '111111', 'Rajan', 'Acharya', 'M', '2000-12-12', 'Kathmandu', NULL, 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor ', 'asd', 'asd', '0', '9800000000', '0', 1, 0, 'aa', NULL, NULL, 'test.jpg', 0, '0'),
-(3, 'info@dits.com', '111111', 'Dreamworks IT Solution', '', '', '2003-01-02', 'Lalitpur', NULL, 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor ', '', '', '0', '01-5555555', '1', 0, 1, '', NULL, NULL, 'test3.jpg', 0, '1'),
+(3, 'info@dits.com', '111111', 'Dreamworks IT Solution', '', '', '2003-01-02', 'Bhaktapur Road, Kathmandu 44600, Nepal', NULL, 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor ', '', '', '0', '01-5555555', '1', 0, 1, '', NULL, NULL, 'test3.jpg', 0, '1'),
 (5, 'acharya.rajanpkr@gmail.com', '901d64eee92c85ce1e7b0f1031e38bf0', 'Rajan', 'Acharya', 'M', '2016-02-17', ' ktm', NULL, NULL, NULL, NULL, 'S', '9800000000', NULL, 1, 0, NULL, '2016-02-12', 'IYDJBNIF3A42', NULL, 0, '0'),
 (6, 'acharya.rajanpkr@gmail3.com', '901d64eee92c85ce1e7b0f1031e38bf0', 'Rajan', 'Acharya', '1', '2016-02-10', 'pkr', NULL, NULL, NULL, NULL, '1', '9000000000', NULL, 0, 0, NULL, '2016-02-12', 'PKK5HZJNJA66', 'happy-new-year-2016-images-and-quotes-110.jpg', 0, NULL),
 (7, 'acharya.rajanpkr@gmail4.com', '901d64eee92c85ce1e7b0f1031e38bf0', 'Rajan', 'Acharya', '1', '2016-02-10', 'pkr', NULL, NULL, NULL, NULL, '1', '9000000000', NULL, 0, 0, NULL, '2016-02-12', '3J55ZCEVFQ8C', NULL, 0, '0'),
 (8, 'acharya.rajanpkr5@gmail.com', '901d64eee92c85ce1e7b0f1031e38bf0', 'Rajan', 'Acharya', '1', '2016-02-16', 'fgdsf', NULL, NULL, NULL, NULL, '1', '9000000000', NULL, 1, 0, NULL, '2016-02-12', 'PZ9A7GWI1MA2', NULL, 0, '0'),
 (9, 'acharya.rajanpkr6@gmail.com', '901d64eee92c85ce1e7b0f1031e38bf0', 'Rajan', 'Acharya', '1', '2016-02-09', 'ktm', NULL, NULL, NULL, NULL, '1', '9000000000', NULL, 1, 0, NULL, '2016-02-12', 'KAJPWEGAKYIM', 'happy-new-year-2016-images-and-quotes-111.jpg', 0, '1'),
-(10, 'acharya.rajanpkr7@gmail.com', '901d64eee92c85ce1e7b0f1031e38bf0', 'abc', NULL, NULL, '2016-02-16', 'pkr', 'Test', 'cxvxc', 'xcvx', 'http://www.fb.com', NULL, '9000000000', NULL, 0, 0, NULL, '2016-02-12', 'B3W7IACDQ1GC', 'happy-new-year-2016-images-and-quotes-112.jpg', 0, '0');
+(10, 'acharya.rajanpkr7@gmail.com', '901d64eee92c85ce1e7b0f1031e38bf0', 'abc', NULL, NULL, '2016-02-16', 'pkr', 'Test', 'cxvxc', 'xcvx', 'http://www.fb.com', NULL, '9000000000', NULL, 0, 0, NULL, '2016-02-12', 'B3W7IACDQ1GC', 'happy-new-year-2016-images-and-quotes-112.jpg', 0, '0'),
+(11, 'rajanacharyapkr@gmail.com', 'cfba8361d65f5c34bf5a37bb314eef47b3cc91a1b7d4a4332dfe5df92af6a4f2fe5db0383664acc04a984efa9f8d28fd974d3679233ecbaa7d86c162616c0e2fMRVWpY5kPppT9TPHOMTN1L4k1pvKjA==', 'Rajan', 'Acharya', '1', '2016-02-08', 'ktm', NULL, NULL, NULL, NULL, '1', '9800000000', NULL, 1, 0, NULL, '2016-02-14', 'Y2ZVINEAT3ZN', '360spider-7681.jpg', 0, '1');
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `tbl_user_jobs`
+-- Table structure for table `tbl_user_map_jobs`
 --
 
-CREATE TABLE IF NOT EXISTS `tbl_user_jobs` (
+CREATE TABLE IF NOT EXISTS `tbl_user_map_jobs` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `user_id` int(11) NOT NULL,
   `job_id` int(11) NOT NULL,
   `applied_date` date NOT NULL,
   `del_flag` tinyint(255) NOT NULL DEFAULT '0',
-  `status` varchar(255) NOT NULL,
+  `status` varchar(255) NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=15 ;
+
+--
+-- Dumping data for table `tbl_user_map_jobs`
+--
+
+INSERT INTO `tbl_user_map_jobs` (`id`, `user_id`, `job_id`, `applied_date`, `del_flag`, `status`) VALUES
+(1, 1, 2, '2016-02-18', 0, '1'),
+(2, 1, 2, '2016-02-18', 0, '1'),
+(3, 1, 2, '2016-02-18', 0, '1'),
+(4, 1, 2, '2016-02-18', 0, '1'),
+(5, 1, 2, '2016-02-18', 0, '1'),
+(6, 1, 2, '2016-02-18', 0, '1'),
+(7, 1, 2, '2016-02-18', 0, '1'),
+(8, 1, 2, '2016-02-18', 0, '1'),
+(9, 1, 2, '2016-02-18', 0, '1'),
+(10, 1, 2, '2016-02-18', 0, '1'),
+(11, 1, 2, '2016-02-18', 0, '1'),
+(12, 1, 2, '2016-02-18', 0, '1'),
+(13, 1, 2, '2016-02-18', 0, '1'),
+(14, 1, 2, '2016-02-18', 0, '1');
 
 -- --------------------------------------------------------
 
@@ -597,7 +622,7 @@ CREATE TABLE IF NOT EXISTS `tbl_user_messages` (
   `status` tinyint(4) NOT NULL,
   `del_flag` tinyint(4) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=15 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=17 ;
 
 --
 -- Dumping data for table `tbl_user_messages`
@@ -607,10 +632,12 @@ INSERT INTO `tbl_user_messages` (`id`, `name`, `email`, `subject`, `message`, `r
 (8, 'Rajan Acharya', 'acharya.rajanpkr@gmail.com', 'Hi', 'Hello', '2016-02-10 01:40:21', 1, 0, 1),
 (9, 'Rajan Acharya', 'admin@admin.com', 'Hi', 'Hello 2', '2016-02-10 01:51:48', 1, 0, 1),
 (10, 'Rajan Acharya', 'admin@admin.com', 'Hi', 'Hello 3', '2016-02-10 02:07:17', 1, 0, 1),
-(11, 'Rajan Acharya', 'acharya.rajanpkr@gmail.com', 'Hi', 'Hello', '2016-02-10 18:15:00', 0, 0, 0),
-(12, 'Rajan Acharya', 'acharya.rajanpkr@gmail.com', 'Hi', 'Hello', '2016-02-10 18:21:27', 0, 0, 0),
+(11, 'Rajan Acharya', 'acharya.rajanpkr@gmail.com', 'Hi', 'Hello', '2016-02-10 18:15:00', 1, 0, 1),
+(12, 'Rajan Acharya', 'acharya.rajanpkr@gmail.com', 'Hi', 'Hello', '2016-02-10 18:21:27', 1, 0, 0),
 (13, 'Rajan Acharya', 'acharya.rajanpkr@gmail.com', 'Hi', 'Hello.', '2016-02-10 19:17:06', 1, 0, 0),
-(14, 'Rajan Acharya', 'acharya.rajanpkr@gmail.com', 'Hi', 'Hello', '2016-02-12 01:17:49', 0, 0, 0);
+(14, 'Rajan Acharya', 'acharya.rajanpkr@gmail.com', 'Hi', 'Hello', '2016-02-12 01:17:49', 1, 0, 0),
+(15, 'Rajan Acharya', 'acharya.rajanpkr@gmail.com', 'Hi', 'Hello', '2016-02-18 00:26:04', 0, 0, 0),
+(16, 'Rajan Acharya', 'acaharya.rajanpkr@gmail.com', 'Hi', 'Hello.', '2016-02-18 00:26:54', 0, 0, 0);
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;

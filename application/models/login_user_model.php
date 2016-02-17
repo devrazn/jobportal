@@ -133,6 +133,13 @@ class Login_User_Model extends CI_Model {
         return $mail_body;
     }
 
+
+    public function get_user_id() {
+    	$this->db->select('id');
+		$this->db->where('email', $this->input->post('email');
+		return $this->db->get('tbl_users')->row_array();
+	}
+
 }
 
 ?>

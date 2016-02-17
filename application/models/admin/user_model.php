@@ -95,8 +95,11 @@ class User_model extends CI_Model {
 
 
     function update_job_status_and_procedure() {
+      //$checkboxData = implode(",", $_POST['various']);
+      $application_procedure = implode(",", $this->input->post('application_procedure'));
+      //echo $application_procedure; exit;
       $data = array('status' => $this->input->post('status'),
-          'application_procedure' => $this->input->post('application_procedure')
+          'application_procedure' => $application_procedure
         );
       $this->db->where('id', $this->input->post('id'));
       return($this->db->update('tbl_jobs', $data));

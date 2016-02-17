@@ -117,13 +117,18 @@ class Helper_model extends CI_Model {
     
 
     function calculate_age_day_signed($date) {
-        $date1 = date_create($date);
+        /*$date1 = date_create($date);
         $date2 = new DateTime("now");
         if($date2 > $date1) {
             return (0-(DateTime::createFromFormat('Y-m-d', $date)->diff(new DateTime('now'))->d));
         } else {
             return (DateTime::createFromFormat('Y-m-d', $date)->diff(new DateTime('now'))->d);
-        }
+        }*/
+
+        $datetime1 = new DateTime($date);
+        $datetime2 = new DateTime('now');
+        $interval = $datetime2->diff($datetime1);
+        return $interval->format('%R%a');
     }
 
     function get_local_time($time = "none") {

@@ -6,10 +6,6 @@ defined('BASEPATH') OR exit('No direct script access allowed');
     $this->load->view('common/header');
 ?>
 
-<?php
-    $this->load->view('common/alert');
-?>
-
     <div class="container">
    <div class="single">
 

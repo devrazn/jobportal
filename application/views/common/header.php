@@ -156,7 +156,7 @@
 			</div>
   		</div> 
 	</div>	
-<div class="col-lg-12">
+<div class="col-lg-12" id="alert_parent">
 	<?php
 	    $this->load->view('common/alert');
 	?>

@@ -64,11 +64,11 @@ $route['advertise'] = "home/footer_contents/advertise";
 $route['how_it_works'] = "home/footer_contents/how_it_works";
 $route['contact_us'] = "home/contact_us";
 $route['login'] = "login_user";
+$route['jobs/(:any)'] = "home/job_details/$1";
 
 /*
 *to call any function call inside login_user controller create a route as below.
 *Because, otherwise all the calls will be directed to login controller for admin.
-*Code optimization can be done later.
 
 to call function without parameter
 $route['login/my_demo_function'] = "login/demo_function";

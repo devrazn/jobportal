@@ -4,6 +4,7 @@ if (!defined('BASEPATH'))
     exit('No direct script access allowed');
 
 class Home extends CI_Controller {
+	var $data;
 
     function __construct() {
 		parent::__construct();
@@ -13,17 +14,17 @@ class Home extends CI_Controller {
 		$config["template"] = "template";
 		$config["ttl"]      = 0;
 		$this->template->initialize($config);
+		$this->data['sidebar_jobs'] = $this->home_model->get_latest_jobs();
+		$this->data["sidebar_categories"] = $this->home_model->get_job_categories();
 	}
 	
 	
 	public function landing() {
-		$data['sidebar_jobs'] = $this->home_model->get_latest_jobs();
-		$data["sidebar_categories"] = $this->home_model->get_job_categories();
-		$data["content_jobs"] = $this->home_model->get_jobs();
+		$this->data["content_jobs"] = $this->home_model->get_jobs();
 		//echo '<pre>',print_r($data2,1),'</pre>'; exit;
-		$data["sliders"] = $this->home_model->get_slider();
+		$this->data["sliders"] = $this->home_model->get_slider();
 		$this->template->__set('title', 'Home');
-		$this->template->partial->view("home_layout", $data, $overwrite=FALSE);
+		$this->template->partial->view("home_layout", $this->data, $overwrite=FALSE);
 		$this->template->publish('home_layout');	
     }
 
@@ -88,6 +89,29 @@ class Home extends CI_Controller {
     		return true;
     	}
     }
+
+
+    public function job_details($id){
+    	$this->data["job_details"] = $this->home_model->get_job_details($id);
+    	$this->data["page"] = 'job_details';
+    	//echo '<pre>',print_r($data,1),'</pre>'; exit;
+		$this->template->partial->view("default_layout", $this->data, $overwrite=FALSE);
+		$this->template->publish('default_layout');
+    	
+    }
+
+
+    public function job_apply(){
+    	if(!$this->session->userdata('is_Login')) {
+    		$insert_status = $this->home_model->apply_job();
+			echo "success";
+    	} else {
+    		echo 'failure';
+    	}
+
+    	
+    }
+
 
 }
 

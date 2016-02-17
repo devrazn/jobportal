@@ -82,4 +82,32 @@ class Home_model extends CI_Model {
             return $this->db->query($query);
 	}
 
+
+	public function get_job_details($id) {
+		$this->db->select('t1.*, t1.id AS job_id');
+		$this->db->select('t2.name AS category_name');
+		$this->db->select('t3.*');
+		$this->db->from('tbl_jobs t1');
+		$this->db->join('tbl_job_category t2', 't1.category_id = t2.id');
+		$this->db->join('tbl_users t3', 't1.user_id = t3.id');
+		$this->db->where('t1.id', $id);
+		//$query = ->get_compiled_select();
+		//$query = $this->db->get()->result_array();
+		//echo $query; exit; 
+		return  $this->db->get()->row_array();
+    }
+
+
+    function apply_job(){
+    	$date = new DateTime('now');
+    	$date_to_insert = $date->format('Y-m-d');
+    	$data = array(
+                    'user_id'  => $this->session->userdata('user_id'),
+                    'job_id'  => $this->input->post('job_id'),
+                    'applied_date'  => $date_to_insert
+                );
+    	$this->db->insert('tbl_user_map_jobs', $data);
+             //$this->db->query($query);
+    }
+
 }

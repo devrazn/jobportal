@@ -39,7 +39,7 @@
                                 <dt>Type</dt>
                                 <dd><?=$user_info['company_type']?></dd>
                                 <dt>Email</dt>
-                                <dd><a href='javascript:void(0)'data-toggle="modal" data-target="#myModal"><?=$user_info['email']?></a></dd>
+                                <dd><a href='javascript:void(0)' data-toggle="modal" data-target="#myModal"><?=$user_info['email']?></a></dd>
                                 <dt>Address</dt>
                                 <dd><?=$user_info['address']?></dd>
                                 <dt>Phone</dt>
@@ -199,7 +199,7 @@
                                                         ?>
                                                     </dd>
                                                     <dt>Location</dt>
-                                                    <dd><?=$row['city']?></dd>
+                                                    <dd><?=$row['location']?></dd>
                                                     <dt>Qualification</dt>
                                                     <dd><?=$row['qualification']?></dd>
                                                     <dt>Experience</dt>
@@ -233,18 +233,19 @@
 
                         <form class='job_form' role="form" id="frm" method="post" action="">
                             <div class="form-group">
-                              <label>Application Procedure&nbsp;&nbsp;</label>
-                              <label class="radio-inline">
-                                  <input type="radio" value="0" name="application_procedure" <?php if(set_value('application_procedure',$row['application_procedure'])==0){echo "checked";}?> >Apply Manually
-                              </label>
-                              <label class="radio-inline">
-                                  <input type="radio" value="1" name="application_procedure" <?php if(set_value('application_procedure',$row['application_procedure'])==1) {echo "checked";}?> >Apply via company's email
-                              </label>
-                              <label class="radio-inline">
-                                  <input type="radio" value="2" name="application_procedure" <?php if(set_value('application_procedure',$row['application_procedure'])==2) {echo "checked";}?> >Apply via JobPortal
-                              </label>
-                              <?=form_error('application_procedure')?>
+                            <?php $checkboxValues = explode(",", $row["application_procedure"]); ?>
+                                <label>Application Procedure &nbsp;&nbsp;</label>
+                                <label class="checkbox-inline">
+                                    <input type="checkbox" name="application_procedure[]" value="0" <?php if(in_array("0", $checkboxValues)) echo 'checked';?> >Apply in Writing
+                                </label>
+                                <label class="checkbox-inline">
+                                    <input type="checkbox" name="application_procedure[]" value="1" <?php if(in_array("1", $checkboxValues)) echo 'checked';?> >Apply via Company's Email &lt<?=$user_info['email']?>&gt
+                                </label>
+                                <label class="checkbox-inline">
+                                    <input type="checkbox" name="application_procedure[]" value="2" <?php if(in_array("2", $checkboxValues)) echo 'checked';?> >Apply via JobPortal
+                                </label>
                             </div>
+
                             <div class="form-group">
                               <label>Status&nbsp;&nbsp;</label>
                               <label class="radio-inline">
@@ -412,7 +413,7 @@
                             "<button aria-label='Close' data-dismiss='alert' class='close' type='button'>" + 
                             "<span aria-hidden='true'>×</span>" +
                             "</button>" + 
-                            "An Unknown Error Occured. Please Try Again Laterrrrrr" + 
+                            "An Unknown Error Occured. Please Try Again Later." + 
                             "</div>";
 
                             $("#alert_parent").append(responseHTML);
@@ -424,7 +425,7 @@
 
                     error: function(data) {
                         _thisButtons.html(divHTML);
-                        alert("An unknown error occured. Please trrry again later");
+                        alert("An unknown error occured. Please try again later.");
                     }
                 });
             } else {

@@ -27,9 +27,11 @@ class Login_User extends CI_Controller {
 		$this->form_validation->set_rules('email', "Email",'required|xss_clean|valid_email|callback_validate_credentials');
 		$this->form_validation->set_rules('password', "Password",'required|xss_clean');
 		if($this->form_validation->run()){
+			//$id = $this->login_user_model->get_user_id();
 			$data = array(
 				'email' => $this->input->post('email'),
-				'is_Login' => 1
+				'is_Login' => 1,
+				'user_id' => $this->login_user_model->get_user_id()
 				);
 			$this->session->set_userdata($data);
 
