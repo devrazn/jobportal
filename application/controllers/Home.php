@@ -45,11 +45,13 @@ class Home extends CI_Controller {
 
 
     public function contact_us(){
-    	$this->form_validation->set_rules('name', 'Name', 'required|xss_clean|trim');
-        $this->form_validation->set_rules('email', 'Email', 'required|trim|xss_clean|valid_email');
         $this->form_validation->set_rules('subject', 'Subject', 'required|trim|xss_clean');
         $this->form_validation->set_rules('message', 'Message', 'required|xss_clean|trim');
-        $this->form_validation->set_rules('captcha', 'Captcha', 'required|xss_clean|trim|callback_validate_captcha');
+        if(!$this->helper_model->validate_user_session()) {
+            $this->form_validation->set_rules('captcha', 'Captcha', 'required|xss_clean|trim|callback_validate_captcha');
+            $this->form_validation->set_rules('name', 'Name', 'required|xss_clean|trim');
+            $this->form_validation->set_rules('email', 'Email', 'required|trim|xss_clean|valid_email');
+        }
 
 		if($this->form_validation->run() == FALSE){
 	    	$data["captcha"] = $this->helper_model->generate_captcha();
@@ -92,6 +94,7 @@ class Home extends CI_Controller {
 
 
     public function job_details($id){
+        $this->session->set_userdata('referred_from', current_url());
     	$this->data["job_details"] = $this->home_model->get_job_details($id);
     	$this->data["page"] = 'job_details';
     	//echo '<pre>',print_r($data,1),'</pre>'; exit;
@@ -102,7 +105,7 @@ class Home extends CI_Controller {
 
 
     public function job_apply(){
-    	if(!$this->session->userdata('is_Login')) {
+    	if($this->session->userdata('is_Login')) {
     		$insert_status = $this->home_model->apply_job();
 			echo "success";
     	} else {

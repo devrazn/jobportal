@@ -86,14 +86,14 @@ class User extends CI_Controller {
 
         //$this->helper_model->editor();
 
-        if($data['user_info']['user_type']=='0') {
+        if($data['user_info']['user_type']==0) {
             //echo json_encode($data['user_info']['user_type']); exit;
             //echo json_encode($data['user_info']['user_type']); exit;
             $data['title'] = 'User Details';
             $data['qualification'] = $this->user_model->get_qualification($id);
             $data['experience'] = $this->user_model->get_experience($id);
             $data['main'] = 'admin/user/user_details';
-        } else if ($data['user_info']['user_type']=='1') {
+        } else if ($data['user_info']['user_type']==1) {
             //echo json_encode($data['user_info']['user_type']) . " else if"; exit;
             $data['title'] = 'Employer Details';
             $data['jobs'] = $this->user_model->get_jobs($id);

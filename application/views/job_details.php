@@ -139,13 +139,19 @@ endif;
         <li>
         Apply via JobPortal:
             <ul><?php
-                    if(!$this->session->userdata('is_Login')) {
+                    if(!$this->helper_model->validate_user_session()) {
                         echo "<p>Please <a onClick='apply()' href='" . base_url() . "login'> login </a>to apply.</p>";
                     } else {
+                        if(!$this->helper_model->check_job_app_status($job_details['job_id'])) {
                 ?>
                 <p id="apply_button">
                     <a id="job_apply" href="javascript:void(0)" class="btn btn-default pull-left">Apply Now</a><br>
                 </p>
+                <?php
+                    } else {
+                        echo "<p style='color:red'>You've applied for this job.</p>";
+                    }
+                ?>
                 <?php
                     }
                 ?>

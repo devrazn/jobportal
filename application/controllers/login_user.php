@@ -26,12 +26,20 @@ class Login_User extends CI_Controller {
 	public function login_process(){
 		$this->form_validation->set_rules('email', "Email",'required|xss_clean|valid_email|callback_validate_credentials');
 		$this->form_validation->set_rules('password', "Password",'required|xss_clean');
-		if($this->form_validation->run()){
+		if($this->form_validation->run()) {
 			//$id = $this->login_user_model->get_user_id();
+			$user_details = $this->login_user_model->get_user_details();
+			if($user_details['user_type'] == 0){
+				$name = $user_details["f_name"] . " " . $user_details["l_name"];
+			} else {
+				$name = $user_details["f_name"];
+			}
 			$data = array(
-				'email' => $this->input->post('email'),
+				'user_email' => $this->input->post('email'),
+				'user_pw' => $this->helper_model->encrypt_me($this->input->post('password')),
+				'name' => $name,
 				'is_Login' => 1,
-				'user_id' => $this->login_user_model->get_user_id()
+				'user_id' => $user_details["id"],
 				);
 			$this->session->set_userdata($data);
 
@@ -52,12 +60,19 @@ class Login_User extends CI_Controller {
 				$this->input->set_cookie($cookie);
 
 			}else{
-
 				delete_cookie('user_email');
 				delete_cookie('user_pw');
 			}
-			redirect('home/landing');
-		}else{
+
+			if($this->session->userdata('referred_from')) {
+				$url=$this->session->userdata('referred_from');
+				$this->session->set_userdata('referred_from', NULL);
+				//echo $this->session->userdata('referred_from'); exit;
+				redirect($url);
+			} else {
+				redirect(base_url());
+			}
+		} else {
 			$this->index();
 		}
 	}
@@ -72,8 +87,23 @@ class Login_User extends CI_Controller {
 	}
 
 	public function logout() {
+		$data = array(
+				'user_email' => NULL,
+				'user_pw' => NULL,
+				'is_Login' => NULL,
+				'user_id' => NULL
+				);
+		$this->session->set_userdata($data);
 		$this->session->sess_destroy();
-		redirect('login');
+		if($this->session->userdata('referred_from')) {
+			$url=$this->session->userdata('referred_from');
+			$this->session->set_userdata('referred_from', NULL);
+			//echo $this->session->userdata('referred_from'); exit;
+			redirect($url);
+		} else {
+			redirect(base_url() . 'login');
+		}
+		
 	}
 
 	public function forgot_pass(){

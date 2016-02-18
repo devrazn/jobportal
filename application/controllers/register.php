@@ -165,7 +165,7 @@ class Register extends CI_Controller {
         if($this->registration_model->activated($key,$activation_code)==true) {
 			redirect('register/successed/');					
 		} else {
-			redirect('register/failed/');
+			echo "Invalid Credentials"; exit;
 		}
  	}
 		

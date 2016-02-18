@@ -12,14 +12,14 @@
       <!-- /.panel-heading -->
       <div class="panel-body">
           <div class="dataTable_wrapper">
-            <table class="table table-striped table-hover" id="dataTables-example">
+            <table class="table table-striped table-hover" id="message-dataTables">
               <thead>
                 <tr>
                   <th>Subject</th>
                   <th>Name</th>
                   <th>From</th>
                   <th>Received On</th>
-                  <th>Action</th>
+                  <th>Delete</th>
                 </tr>
               </thead>
               <tbody>
@@ -29,7 +29,16 @@
                 ?>
                 <tr <?php if($message['read_flag']==0) echo "style='font-weight:bold'"?> > 
                   <td><a href="<?=site_url(ADMIN_PATH.'/messages/details/'.$message['id'])?>"><?=$message['subject']?></a></td>
+                  <?php if($this->helper_model->is_user_registered($message['email'])) {
+                  ?>
+                  <td><a href="<?=site_url(ADMIN_PATH.'/user/details/'.$message['user_id'])?>"><?=$message['name']?></a></td>
+                  <?php
+                    } else {
+                  ?>
                   <td><a href="<?=site_url(ADMIN_PATH.'/messages/details/'.$message['id'])?>"><?=$message['name']?></a></td>
+                  <?php
+                    }
+                  ?>
                   <td><a href="<?=site_url(ADMIN_PATH.'/messages/details/'.$message['id'])?>"><?=$message['email']?></a></td>
                   <td><a href="<?=site_url(ADMIN_PATH.'/messages/details/'.$message['id'])?>">
                   <?=$this->helper_model->humanize_date_time($message['received_date_time'])?>
@@ -78,9 +87,11 @@ function doConfirm() {
 
 <script>
     $(document).ready(function() {
-        $('#dataTables-example').dataTable({
+        $('#message-dataTables').dataTable({
                 responsive: true,
-                sPaginationType: "full_numbers"
+                sPaginationType: "full_numbers",
+                "aaSorting": []
+                //"order": [[ 3, "desc" ]]
         });
     });
 </script>

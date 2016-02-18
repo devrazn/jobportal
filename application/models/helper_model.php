@@ -11,7 +11,7 @@ class Helper_model extends CI_Model {
                     'cipher' => 'aes-256',
                     'driver' => 'openssl',
                     'mode' => 'ctr'
-            )
+                )
             );
     }
 
@@ -62,7 +62,7 @@ class Helper_model extends CI_Model {
         $this->ckfinder->SetupCKEditor($this->ckeditor,$path); 
     }
 
-    public function send_email($mail_settings='',$mail_params=array()) {
+    public function send_email($mail_settings='', $mail_params=array()) {
         $this->load->library('email',array('mailtype' => $mail_settings['mailtype'],
                                                 'protocol' => $mail_settings['protocol'],
                                                 'mailpath' => '/usr/sbin/sendmail',
@@ -333,6 +333,63 @@ class Helper_model extends CI_Model {
             $string .= $characters[mt_rand(0, strlen($characters))];
         }
         return $string;
+    }
+
+
+    public function validate_user_session(){
+        if($this->session->userdata('user_email') && $this->session->userdata('user_pw')) {
+            $options = array(
+                            'email' => $this->session->userdata('user_email'),
+                            );
+            $this->db->where($options);
+            $this->db->select("password");
+            $db_pw = $this->db->get('tbl_users')->row_array();
+            if($this->decrypt_me($this->session->userdata('user_pw')) == $this->decrypt_me($db_pw["password"])){
+                return true;
+            } else{
+                /*$data = array(
+                'user_email' => NULL,
+                'user_pw' => NULL,
+                'is_Login' => NULL,
+                'user_id' => NULL
+                );
+                $this->session->set_userdata($data);*/
+                //$this->session->sess_destroy();
+                return false;
+            }
+        } else {
+            //$this->session->sess_destroy();
+            return false;
+        }
+    }
+
+
+    public function check_job_app_status($job_id){
+        $options = array(
+                    'user_id' => $this->session->userdata('user_id'), 
+                    'job_id' => $job_id
+                    );
+        $this->db->where($options);
+        $this->db->from('tbl_user_map_jobs');
+        if($this->db->count_all_results() > 0){
+            return true;
+        } else{
+            return false;
+        }
+
+    }
+
+    public function is_user_registered($email){
+        $options = array(
+                    'email' => $email
+                    );
+        $this->db->where($options);
+        $this->db->from('tbl_users');
+        if($this->db->count_all_results() > 0){
+            return true;
+        } else{
+            return false;
+        }
     }
 
 }

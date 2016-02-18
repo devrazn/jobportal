@@ -43,6 +43,7 @@ class Registration_Model extends CI_Model {
         $this->db->insert('tbl_users', $data);
             return $activation_code;
     }
+    
     function reg_confirmation_email($activation_code) {
         $mail_setting = $this->settings_model->get_email_settings();
         $message = $this->settings_model->get_email_template('REGISTRATION');
@@ -63,6 +64,7 @@ class Registration_Model extends CI_Model {
         echo $emailbody;exit;
         $this->helper_model->send_email($mail_setting,NULL,$subject,$emailbody);
     }
+
     function activated($activation_code,$key) {
         $this->db->where('activation_code',$activation_code);
         $query = $this->db->get('tbl_users');
@@ -71,17 +73,19 @@ class Registration_Model extends CI_Model {
             $query = $this->db->query($sql);
             $d = $query->row_array();
             $user_id = $d['id'];
-            $data = array('status' => '1', 'activation_code' => $this->genRandomString('12'));
+            $data = array('status' => '1', 'activation_code' => $this->helper_model->genRandomString('12'));
             $this->db->where('id', $user_id);
             $this->db->update('tbl_users', $data);
             return true;
         }
     }
+
     function check_email_forget($str) {
         $sql = "SELECT * FROM tbl_users WHERE email='$str' ";
         $query = $this->db->query($sql);
         return $query->row_array();
     }
+
     function forget_password_reminder_email() {
         $information = $this->check_email_forget($this->input->post('email1'));
         $this->load->model('Email_model');
@@ -123,6 +127,7 @@ class Registration_Model extends CI_Model {
         $this->email->message($emailbody);  
         $this->email->send();   
     }
+
     //to parse the the email which is available in the
     function parse_email($parseElement, $mail_body) {
         foreach ($parseElement as $name => $value) {

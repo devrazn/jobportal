@@ -71,12 +71,22 @@ class Home_model extends CI_Model {
 	public function insert_contact_message(){
 		$date = new DateTime('now');
 		$date_to_insert = $date->format('Y-m-d H:i:s');
+		if($this->helper_model->validate_user_session()) {
+			$name = $this->session->userdata("name");
+			$email = $this->session->userdata("user_email");
+			$user_id = $this->session->userdata("user_id");
+		} else {
+			$name = $this->input->post('name');
+			$email = $this->input->post('email');
+			$user_id = NULL;
+		}
 		$data_to_db = array(
-                    'name'  => $this->input->post('name'),
-                    'email'  => $this->input->post('email'),
+                    'name'  => $name,
+                    'email'  => $email,
                     'subject'  => $this->input->post('subject'),
                     'message'  => $this->input->post('message'),
                     'received_date_time'  => $date_to_insert,
+                    'user_id'  => $user_id
                 );
             $query = $this->db->insert_string('tbl_user_messages', $data_to_db);
             return $this->db->query($query);
@@ -100,7 +110,7 @@ class Home_model extends CI_Model {
 
     function apply_job(){
     	$date = new DateTime('now');
-    	$date_to_insert = $date->format('Y-m-d');
+    	$date_to_insert = $date->format('Y-m-d h:i:s');
     	$data = array(
                     'user_id'  => $this->session->userdata('user_id'),
                     'job_id'  => $this->input->post('job_id'),

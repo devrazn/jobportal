@@ -192,7 +192,7 @@
                                                             } else if($age_day==-1){
                                                                 echo ' (Yesterday)';
                                                             } else if($age_day>1) {
-                                                                echo " (After " . $age_day . ' Days)';
+                                                                echo " (After " . abs($age_day) . ' Days)';
                                                             } else if($age_day<-1) {
                                                                 echo '(' . abs($age_day) . ' Days ago)';
                                                             }
@@ -204,8 +204,17 @@
                                                     <dd><?=$row['qualification']?></dd>
                                                     <dt>Experience</dt>
                                                     <dd><?php 
-                                                            echo $row['experience']. ' Yr';
+                                                            echo $row['experience'];
                                                             if($row['experience']>1) echo 's';
+                                                        ?>
+                                                    </dd>
+                                                    <dt>Salary</dt>
+                                                    <dd><?php 
+                                                            if($row['salary']>0) {
+                                                                echo $row['salary'];
+                                                            } else {
+                                                                echo "Undisclosed";
+                                                            }
                                                         ?>
                                                     </dd>
                                                 </dl>
@@ -239,7 +248,7 @@
                                     <input type="checkbox" name="application_procedure[]" value="0" <?php if(in_array("0", $checkboxValues)) echo 'checked';?> >Apply in Writing
                                 </label>
                                 <label class="checkbox-inline">
-                                    <input type="checkbox" name="application_procedure[]" value="1" <?php if(in_array("1", $checkboxValues)) echo 'checked';?> >Apply via Company's Email &lt<?=$user_info['email']?>&gt
+                                    <input type="checkbox" name="application_procedure[]" value="1" <?php if(in_array("1", $checkboxValues)) echo 'checked';?> >Apply via Company's Email
                                 </label>
                                 <label class="checkbox-inline">
                                     <input type="checkbox" name="application_procedure[]" value="2" <?php if(in_array("2", $checkboxValues)) echo 'checked';?> >Apply via JobPortal

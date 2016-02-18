@@ -65,14 +65,13 @@ class Login_User_Model extends CI_Model {
 			
         $confirm = "<p><a href='".site_url()."login_user/validate_pw_reset_credentials/$code/$email'>Click Here</a></p>";
         $parseElement = array(
-            "SITENAME" => $this->config->item('site_name'),
-            "SITENAME" => 'Job Portal',
+            "SITENAME" => 'JobPortal',
             "LINK" => $confirm,
             "EMAIL" => $this->input->post('email')
         );
         $subject = $this->parse_email($parseElement, $subject);
 	    $message = $this->parse_email($parseElement, $emailbody);
-	    echo $message;die;
+	    echo $message; die;
 	    $sendTo = $this->input->post('email');
         $data = array(
 					'subject' => $subject,
@@ -134,10 +133,8 @@ class Login_User_Model extends CI_Model {
     }
 
 
-    public function get_user_id() {
-    	$this->db->select('id');
-		$this->db->where('email', $this->input->post('email');
-		return $this->db->get('tbl_users')->row_array();
+    public function get_user_details() {
+    	return $this->db->get_where('tbl_users', array('email' => $this->input->post('email')))->row_array();
 	}
 
 }

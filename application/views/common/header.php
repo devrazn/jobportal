@@ -121,6 +121,7 @@
 			            <li><a href="jobs.html">Defence Jobs</a></li>
 		            </ul>
 		        </li>
+		        <?php if(!$this->helper_model->validate_user_session()):?>
 		        <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">Register<b class="caret"></b></a>
                     <ul class="dropdown-menu">
@@ -128,14 +129,17 @@
                         <li><a href="<?=base_url().'register/register_employeer';?>">Register As Employer</a></li>
                     </ul>
                 </li>
-                <?php if($this->session->userdata('is_Login')){?>
+                <?php
+                	endif;
+                ?>
+                <?php if($this->helper_model->validate_user_session()){?>
+                		<li><a href="resume.html">Upload Resume</a></li>
                 		<li><a  href="<?=base_url().'login_user/logout'?> ">Logout</a></li>
                 	<?php }else{?>
 		        		<li><a href="<?=base_url().'login'?>">Login</a></li>
                 	<?php	
                 	}
                 ?>
-		        <li><a href="resume.html">Upload Resume</a></li>
 	        </ul>
 	    </div>
 	    <div class="clearfix"> </div>

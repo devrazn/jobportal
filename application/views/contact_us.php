@@ -65,12 +65,15 @@ defined('BASEPATH') OR exit('No direct script access allowed');
            </address>
            <div class="map_canvas" id="map_canvas">
                 <!--Map Here-->
-         </div>
+         </div><br>
           </div>
           <div class="col-sm-6">
 	   	   <address class="addr">
             <h3>Contact Form</h3>
            <form method="post" id="contact_form" action="<?=base_url().'contact_us'?>">
+            <?php
+              if(!$this->helper_model->validate_user_session()):
+            ?>
              <div class="form-group">
                   <label>Name</label>
                   <input name="name" type='text' class="form-control" placeholder="Enter your full name" value="<?=set_value('name')?>">
@@ -82,6 +85,9 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                   <input name="email" type='email' class="form-control" placeholder="Enter your email" value="<?=set_value('email')?>">
                   <?=form_error('email')?>
                 </div>
+                <?php
+                 endif;
+                ?>
 
                 <div class="form-group">
                   <label>Subject</label>
@@ -95,14 +101,20 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                 <?=form_error('message')?>
               </div>
 
-            <div class="form-group">
+              <?php
+                    if(!$this->helper_model->validate_user_session()):
+                      ?>
+              <div class="form-group">
                 <label>Captcha</label><br>
                 <img id="image_captcha" src="<?=base_url().'captcha/'.$captcha['filename']?>" alt="captcha here">
 
-            <label>Can't read the letters shown? Click <a id="captcha_refresh" href="javascript:void(0)">here</a> to refresh</label>
+                <label>Can't read the letters shown? Click <a id="captcha_refresh" href="javascript:void(0)">here</a> to refresh</label>
                 <input name="captcha" type='text' size="20" class="form-control" placeholder="Enter characters seen above" value="">
                 <?=form_error('captcha').'<br>'?>
-            </div>
+              </div>
+              <?php 
+                endif;
+              ?>
 
             <div class="form-group form-submit1 form_but1 pull-right">
                <input name="submit" type="submit" id="submit" value="Submit"><br>
