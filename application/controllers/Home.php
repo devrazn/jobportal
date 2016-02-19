@@ -17,9 +17,15 @@ class Home extends CI_Controller {
 		$this->data['sidebar_jobs'] = $this->home_model->get_latest_jobs();
 		$this->data["sidebar_categories"] = $this->home_model->get_job_categories();
 	}
+
+
+    public function index() {
+        $this->landing();
+    }
 	
 	
 	public function landing() {
+        $this->session->set_userdata('referred_from', current_url());
 		$this->data["content_jobs"] = $this->home_model->get_jobs();
 		//echo '<pre>',print_r($data2,1),'</pre>'; exit;
 		$this->data["sliders"] = $this->home_model->get_slider();
@@ -29,13 +35,36 @@ class Home extends CI_Controller {
     }
 
 
-    public function search(){
-        $this->form_validation->set_rules('search', 'Search', 'required|xss_clean')
+    public function search() {
+        $data = array(
+            'search' => $this->input->get('search')
+        );
+        $this->form_validation->set_data($data);
+        $this->form_validation->set_rules('search', 'Search', 'required|xss_clean');
+        if($this->form_validation->run() == false) {
+            if($this->session->userdata('referred_from')) {
+                redirect($this->session->userdata('referred_from'));
+            } else {
+                redirect(base_url());
+            }
+            
+        } else {
+            //echo 3; exit;
+            $this->data["search_results"] = $this->home_model->get_search_result();
+            $data2 = $this->data["search_results"];
+            //echo '<pre>',print_r($data2,1),'</pre>'; exit;
+            $this->data["page"] = 'search';
+            $this->template->__set('title', $this->input->get('search'));
+            $this->template->partial->view("default_layout", $this->data, $overwrite=FALSE);
+            $this->template->publish('default_layout');
+
+        }
 
     }
 
     
     public function footer_contents($title){
+        $this->session->set_userdata('referred_from', current_url());
 		$data["cms_contents"] = $this->home_model->get_footer_contents($title);
 		$this->template->partial->view("cms", $data, $overwrite=FALSE);
 		$this->template->publish('cms');
@@ -43,6 +72,7 @@ class Home extends CI_Controller {
 
 
     public function contact_us(){
+        $this->session->set_userdata('referred_from', current_url());
         $this->form_validation->set_rules('subject', 'Subject', 'required|trim|xss_clean');
         $this->form_validation->set_rules('message', 'Message', 'required|xss_clean|trim');
         if(!$this->helper_model->validate_user_session()) {
@@ -103,6 +133,7 @@ class Home extends CI_Controller {
 
 
     public function employer_details($id){
+        $this->session->set_userdata('referred_from', current_url());
         $this->data["employer_details"] = $this->home_model->get_employer_details($id);
         $this->data["employer_jobs"] = $this->home_model->get_employer_jobs($id);
         $this->data["page"] = 'employer_details';

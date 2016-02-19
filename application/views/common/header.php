@@ -207,11 +207,12 @@
 			<div id="search_wrapper1">
 		   		<div class="clearfix" id="search_form">
 		    		<h1>Start your job search</h1>
-		    		<p>
-		    			<form method="GET" action="search">
-				 		<input type="text" name="search" value="" placeholder=" " class="text">
+		    		
+		    			<form method="GET" action="<?=base_url().'search'?>">
+				 			<input type="text" name="search" value="<?=set_value('search');?>" placeholder="Enter keywords to search..." class="text" required="true">
+				 			<?=form_error('search')?>
 				 		<label class="btn2 btn-2 btn2-1b"><input type="submit" value="Find Jobs"></label>
-					</p>
+				 		</form>
            		</div>
 			</div>
   		</div> 

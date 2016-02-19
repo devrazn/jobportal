@@ -141,10 +141,58 @@ class Home_model extends CI_Model {
     					'status' => '1',
     				);
 		$this->db->where($options);
+		$this->db->order_by('deadline_date DESC');
 		//$query = ->get_compiled_select();
 		//$query = $this->db->get()->result_array();
 		//echo $query; exit; 
 		return  $this->db->get("tbl_jobs")->result_array();
+    }
+
+
+    public function get_search_result(){
+    	$keyword = $this->input->get('search');
+    	$where_options = array(
+    						't1.del_flag' => '0',
+    						't1.status' => '1',
+    						't3.del_flag' => '0',
+    						't3.status' => '1'
+    						);
+    	$like_options = array(
+    						'title' => $keyword,
+    						'position' => $keyword,
+    						'qualification' => $keyword,
+    						'job_description' => $keyword,
+    						'requirements' => $keyword,
+    						'facilities' => $keyword,
+    						'additional_info' => $keyword,
+    						't3.f_name' => $keyword,
+    						't2.name' => $keyword,
+    						't3.address' => $keyword,
+    						't1.location' => $keyword,
+    						't3.company_type' => $keyword
+    						);
+
+    	$this->db->select('t1.*, t1.id AS job_id');
+    	$this->db->select('t2.*');
+    	$this->db->select('t3.*, t3.id AS user_id');
+    	$this->db->from("tbl_jobs t1");
+    	$this->db->join('tbl_job_category t2', 't1.category_id = t2.id');
+    	$this->db->join('tbl_users t3', 't1.user_id = t3.id');
+    	$this->db->or_like($like_options);
+    	$this->db->where($where_options);
+    	return $this->db->get()->result_array();
+
+    	/*$this->db->or_like($like_options);
+    	$this->db->where($where_options);
+    	return $this->db->get('tbl_jobs')->result_array();
+
+    	$this->db->select('t1.*, t1.id AS job_id');
+		$this->db->select('t2.name AS category_name');
+		$this->db->select('t3.*');
+		$this->db->from('tbl_jobs t1');
+		$this->db->join('tbl_job_category t2', 't1.category_id = t2.id');
+		$this->db->join('tbl_users t3', 't1.user_id = t3.id');
+		$this->db->where('t1.id', $id);*/
     }
 
 }

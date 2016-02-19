@@ -66,6 +66,7 @@ $route['contact_us'] = "home/contact_us";
 $route['login'] = "login_user";
 $route['jobs/(:any)'] = "home/job_details/$1";
 $route['employer/(:any)'] = "home/employer_details/$1";
+$route['search'] = "home/search";
 
 /*
 *to call any function call inside login_user controller create a route as below.
@@ -81,3 +82,4 @@ $route['login/my_demo_function/(:any)/(:any)'] = "login/my_demo_function/$1/$2";
 
 
 //$route['login/validate_admin_pw_reset_credentials/(:any)/(:any)'] = "login/validate_admin_pw_reset_credentials/$1/$2";
+

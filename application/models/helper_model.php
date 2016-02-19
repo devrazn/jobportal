@@ -114,6 +114,25 @@ class Helper_model extends CI_Model {
     function calculate_age_day($date) {
         return(DateTime::createFromFormat('Y-m-d', $date)->diff(new DateTime('now'))->d);
     }
+
+
+    function calculate_age_with_unit($date) {
+        $datetime1 = new DateTime($date);
+        $datetime2 = new DateTime('now');
+        $interval = $datetime2->diff($datetime1);
+        $diff = $interval->format('%R%a');
+        if($diff==0){
+            return 'Today';
+        } elseif ($diff==-1) {
+            return 'Yesterday';
+        } elseif ($diff==+1){
+            return 'Tomorrow';
+        } elseif ($diff<-1){
+            return abs($diff).' Days Ago';
+        } else {
+            return 'After '. abs($diff) . 'Days';
+        }
+    }
     
 
     function calculate_age_day_signed($date) {
