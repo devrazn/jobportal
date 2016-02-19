@@ -64,14 +64,14 @@ class Login_User extends CI_Controller {
 				delete_cookie('user_pw');
 			}
 
-			if($this->session->userdata('referred_from')) {
+			/*if($this->session->userdata('referred_from')) {
 				$url=$this->session->userdata('referred_from');
 				$this->session->set_userdata('referred_from', NULL);
 				//echo $this->session->userdata('referred_from'); exit;
 				redirect($url);
-			} else {
+			} else {*/
 				redirect(base_url());
-			}
+			//}
 		} else {
 			$this->index();
 		}
@@ -95,14 +95,14 @@ class Login_User extends CI_Controller {
 				);
 		$this->session->set_userdata($data);
 		$this->session->sess_destroy();
-		if($this->session->userdata('referred_from')) {
+		/*if($this->session->userdata('referred_from')) {
 			$url=$this->session->userdata('referred_from');
 			$this->session->set_userdata('referred_from', NULL);
 			//echo $this->session->userdata('referred_from'); exit;
 			redirect($url);
-		} else {
+		} else {*/
 			redirect(base_url() . 'login');
-		}
+		//}
 		
 	}
 

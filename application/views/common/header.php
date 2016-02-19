@@ -1,7 +1,7 @@
 <!DOCTYPE HTML>
 <html>
 <head>
-<title>Seeking an Job Portal Category Flat Bootstarp Resposive Website Template | Home :: w3layouts</title>
+<title>JobPortal - Hire or Get Hired</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="keywords" content="" />
@@ -14,9 +14,65 @@
 <!--jQuery UI CSS for DatePicker-->
 <link href="<?=base_url();?>assets/user/css/jquery-ui.css" rel="stylesheet">
 
+<style type="text/css">
+        .dropdown-submenu {
+            position: relative;
+        }
+
+        .dropdown-submenu>.dropdown-menu {
+            top: 0;
+            left: 100%;
+            margin-top: -6px;
+            margin-left: -1px;
+            -webkit-border-radius: 0 6px 6px 6px;
+            -moz-border-radius: 0 6px 6px;
+            border-radius: 0 6px 6px 6px;
+        }
+
+        .dropdown-submenu:hover>.dropdown-menu {
+            display: block;
+        }
+
+        .dropdown-submenu>a:after {
+            display: block;
+            content: " ";
+            float: right;
+            width: 0;
+            height: 0;
+            border-color: transparent;
+            border-style: solid;
+            border-width: 5px 0 5px 5px;
+            border-left-color: #ccc;
+            margin-top: 5px;
+            margin-right: -10px;
+        }
+
+        .dropdown-submenu:hover>a:after {
+            border-left-color: #fff;
+        }
+
+        .dropdown-submenu.pull-left {
+            float: none;
+        }
+
+        .dropdown-submenu.pull-left>.dropdown-menu {
+            left: -100%;
+            margin-left: 10px;
+            -webkit-border-radius: 6px 0 6px 6px;
+            -moz-border-radius: 6px 0 6px 6px;
+            border-radius: 6px 0 6px 6px;
+        }
+    </style>
+
 <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
 <script src="<?=base_url();?>assets/user/js/jquery.min.js"></script>
 <script src="<?=base_url();?>assets/user/js/bootstrap.min.js"></script>
+
+<script type="text/javascript">
+    $(document).ready(function(){
+        $("#dropdown-menu").find('.caret').removeClass("caret");
+    });
+</script>
 
 </head>
 <body>
@@ -152,8 +208,8 @@
 		   		<div class="clearfix" id="search_form">
 		    		<h1>Start your job search</h1>
 		    		<p>
-				 		<input type="text" onblur="if (this.value == '') {this.value = 'Enter Keyword(s)';}" onfocus="this.value = '';" value="Enter Keyword(s)" placeholder=" " class="text">
-				 		<input type="text" onblur="if (this.value == '') {this.value = 'Location';}" onfocus="this.value = '';" value="Location" placeholder=" " class="text">
+		    			<form method="GET" action="search">
+				 		<input type="text" name="search" value="" placeholder=" " class="text">
 				 		<label class="btn2 btn-2 btn2-1b"><input type="submit" value="Find Jobs"></label>
 					</p>
            		</div>

@@ -120,4 +120,31 @@ class Home_model extends CI_Model {
              //$this->db->query($query);
     }
 
+
+    public function get_employer_details($id){
+    	$options =  array(
+    					'id' => $id, 
+    					'user_type' => '1'
+    				);
+		$this->db->where($options);
+		//$query = ->get_compiled_select();
+		//$query = $this->db->get()->result_array();
+		//echo $query; exit; 
+		return  $this->db->get("tbl_users")->row_array();
+    }
+
+
+    public function get_employer_jobs($id){
+    	$options =  array(
+    					'user_id' => $id, 
+    					'del_flag' => '0',
+    					'status' => '1',
+    				);
+		$this->db->where($options);
+		//$query = ->get_compiled_select();
+		//$query = $this->db->get()->result_array();
+		//echo $query; exit; 
+		return  $this->db->get("tbl_jobs")->result_array();
+    }
+
 }

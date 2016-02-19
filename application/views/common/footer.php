@@ -4,8 +4,8 @@
 			<h4>Navigate</h4>
 			<ul class="f_list f_list1">
 				<li><a href="<?=base_url()?>">Home</a></li>
-				<li><a href="<?=base_url()?>login"?>Sign In</a></li>
-				<li><a href="<?=base_url()?>register"?>Join Now</a></li>
+				<li><a href="<?=base_url()?>login">Sign In</a></li>
+				<li><a href="<?=base_url()?>register">Join Now</a></li>
 				<li><a href="<?=base_url()?>about_us">About</a></li>
 				<li><a href="<?=base_url()?>f_a_qs">FAQs</a></li>
 			</ul>

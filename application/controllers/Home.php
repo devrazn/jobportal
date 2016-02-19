@@ -30,10 +30,8 @@ class Home extends CI_Controller {
 
 
     public function search(){
-    	//$this->template->set_template('default_layout');
-    	$this->template->__set('title', 'Search');
-    	$this->template->__set('page', 'search');
-    	$this->template->publish('default_layout');
+        $this->form_validation->set_rules('search', 'Search', 'required|xss_clean')
+
     }
 
     
@@ -104,15 +102,24 @@ class Home extends CI_Controller {
     }
 
 
+    public function employer_details($id){
+        $this->data["employer_details"] = $this->home_model->get_employer_details($id);
+        $this->data["employer_jobs"] = $this->home_model->get_employer_jobs($id);
+        $this->data["page"] = 'employer_details';
+        //echo '<pre>',print_r($this->data2,1),'</pre>'; exit;
+        $this->template->partial->view("default_layout", $this->data, $overwrite=FALSE);
+        $this->template->publish('default_layout');
+        
+    }
+
+
     public function job_apply(){
     	if($this->session->userdata('is_Login')) {
-    		$insert_status = $this->home_model->apply_job();
+    		$this->home_model->apply_job();
 			echo "success";
     	} else {
     		echo 'failure';
     	}
-
-    	
     }
 
 

@@ -43,21 +43,24 @@
                                 ?>
                 </dd>
                 <dt>Deadline</dt>
-                <dd>
+                <?php 
+                    $deadline_day = $this->helper_model->calculate_age_day_signed($job_details['deadline_date']);
+                ?>
+                <dd <?php if($deadline_day<0) echo "style='color:red'"?> >
                     <?=$this->helper_model->humanize_date($job_details['deadline_date'])?>&nbsp;&nbsp;&nbsp;
                     
                     <?php
-                        $age_day = $this->helper_model->calculate_age_day_signed($job_details['deadline_date']);
-                        if($age_day==0){
+                        $deadline_day = $this->helper_model->calculate_age_day_signed($job_details['deadline_date']);
+                        if($deadline_day==0){
                             echo ' (Today)';
-                        } else if($age_day == 1) {
+                        } else if($deadline_day == 1) {
                             echo ' (Tomorrow)';
-                        } else if($age_day==-1){
+                        } else if($deadline_day==-1){
                             echo ' (Yesterday)';
-                        } else if($age_day>1) {
-                            echo " (After " . abs($age_day) . ' Days)';
-                        } else if($age_day<-1) {
-                            echo '(' . abs($age_day) . ' Days ago)';
+                        } else if($deadline_day>1) {
+                            echo " (After " . abs($deadline_day) . ' Days)';
+                        } else if($deadline_day<-1) {
+                            echo '(' . abs($deadline_day) . ' Days ago) (Expired)';
                         }
                     ?>
                 </dd>
@@ -105,6 +108,9 @@ endif;
 
     <div class="well">
         <h4>Application Procedure (Apply in any one of the following ways)</h4>
+        <?php
+            if($deadline_day>=0) {
+        ?>
         <?php $checkboxValues = explode(",", $job_details["application_procedure"]); ?>
         <?php if(in_array("0", $checkboxValues)): ?>
         <li>
@@ -160,9 +166,17 @@ endif;
         <?php
             endif;
         ?>
+        <?php
+            } else {
+                echo "<p style='color:red'>Job Application Date Expired.</p>";
+            }
+        ?>
 
     </div>
 </div>
+<?php
+    if($deadline_day>=0):
+?>
 <script type="text/javascript">
     $(document).ready(function(){
         $("#apply_button").on('click', function(e) {
@@ -231,3 +245,6 @@ endif;
         })
     })
 </script>
+<?php
+    endif;
+?>
