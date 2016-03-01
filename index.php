@@ -290,6 +290,12 @@ switch (ENVIRONMENT)
 
 	define('VIEWPATH', $view_folder);
 
+	// include FB SDK auto load file
+	require_once __DIR__ . '/api/sns/autoload.php';
+
+	// include twitter file
+	include_once("api/twitter/twitteroauth.php");
+
 /*
  * --------------------------------------------------------------------
  * LOAD THE BOOTSTRAP FILE
@@ -298,3 +304,6 @@ switch (ENVIRONMENT)
  * And away we go...
  */
 require_once BASEPATH.'core/CodeIgniter.php';
+
+
+

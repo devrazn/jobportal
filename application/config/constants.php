@@ -86,3 +86,13 @@ define('EXIT__AUTO_MAX', 125); // highest automatically-assigned error code
 
 define('ADMIN_PATH','admin');
 
+//twitter
+define('CONSUMER_KEY', 'E5DKWtAgMV8q00JDxgpCEASZU');
+define('CONSUMER_SECRET', '9eAD2vSGjQwUsP0xRcjZLFYHtRi5OxLYxkmJB4TxUz7Rh13YM4');
+define('OAUTH_CALLBACK', 'http://www.jobportal.com/api_login/twitter_call_back');
+
+//gmail
+define('CLIENT_ID', '470418843768-623ntud9a7dvtmomh9kghhfltlasofq5.apps.googleusercontent.com');
+define('CLIENT_SECRET', 'a4oz6EqGMAmMa4MlwR2I0djP');
+define('REDIRECT_URI', 'http://www.jobportal.com/api_login/gmail_call_back');
+define('SIMPLE_API_KEY', 'AIzaSyBUDQnbVFohillZIfRMAjQxW5DfRM0y6pQ');

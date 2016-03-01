@@ -188,7 +188,7 @@
                 <?php
                 	endif;
                 ?>
-                <?php if($this->helper_model->validate_user_session()){?>
+                <?php if($this->helper_model->validate_user_session() || isset($_SESSION['tw_status'])){?>
                 		<li><a href="resume.html">Upload Resume</a></li>
                 		<li><a  href="<?=base_url().'login_user/logout'?> ">Logout</a></li>
                 	<?php }else{?>

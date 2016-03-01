@@ -15,5 +15,14 @@
 	},
 	"require-dev": {
 		"mikey179/vfsStream": "1.1.*"
-	}
+	},
+
+	"require": {
+  		"google/apiclient": "1.0.*@beta"
+	},
+
+	"require": {
+        "j7mbo/twitter-api-php": "dev-master"
+    }
+  
 }
