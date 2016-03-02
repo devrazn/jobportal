@@ -43,7 +43,7 @@
 								'default_graph_version' => 'v2.2',
 								]);
 								$helper = $fb->getRedirectLoginHelper();
-								$loginUrl = $helper->getLoginUrl('https://jobportal.com/login_user/fb-callback.php');
+								$loginUrl = $helper->getLoginUrl('http://www.jobportal.com/api_login/fb_callback');
 						?>		
 							<a class="tw" href="<?=base_url().'api_login/twitter';?>" target=""> <i class="fa fa-twitter tw2"> </i><span>Twitter</span>
 							<div class="clearfix"> </div></a>
