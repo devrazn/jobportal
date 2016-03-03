@@ -177,6 +177,18 @@
 			            <li><a href="jobs.html">Defence Jobs</a></li>
 		            </ul>
 		        </li>
+              	<li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">Account<b class="caret"></b></a>
+                    <ul class="dropdown-menu">
+                        <?php if($this->helper_model->validate_user_session()){?>
+                        <li><a href="<?=base_url().'user_profile';?>">Change Password</a></li>
+                        <li><a href="<?=base_url().'register/register_employeer';?>">Profile</a></li>
+                        <?php } else{?>
+                        		 <li><a href="<?=base_url().'register';?>">Register As JobSeeker</a></li>
+                        		<li><a href="<?=base_url().'register/register_employeer';?>">Login</a></li>
+                        	<?php }?>
+                    </ul>
+                </li>
 		        <?php if(!$this->helper_model->validate_user_session()):?>
 		        <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">Register<b class="caret"></b></a>
@@ -185,6 +197,7 @@
                         <li><a href="<?=base_url().'register/register_employeer';?>">Register As Employer</a></li>
                     </ul>
                 </li>
+ 
                 <?php
                 	endif;
                 ?>
