@@ -49,9 +49,16 @@ class User_Profile extends CI_Controller {
         }
     }
 
-
-	
-	
-
-
+    public function jobseeker_details($id){
+        $data["sidebar_jobs"] = $this->home_model->get_latest_jobs();
+        $data["sidebar_categories"] = $this->home_model->get_job_categories();
+        $data["jobseeker_details"] = $this->user_profile_model->get_jobseeker_details($id);
+        $data["qualification"] = $this->user_profile_model->get_jobseeker_qualification($id);
+        $data["experience"] = $this->user_profile_model->get_jobseeker_experience($id);
+        //echo "<pre>";print_r($data["qualification"]);die;
+        $data["page"] = "jobseeker_details";
+        $this->template->__set('title', 'Details');
+        $this->template->partial->view("default_layout", $data, $overwrite=FALSE);
+        $this->template->publish('default_layout');
+    }
 }

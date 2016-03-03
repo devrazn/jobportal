@@ -180,9 +180,10 @@
               	<li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">Account<b class="caret"></b></a>
                     <ul class="dropdown-menu">
-                        <?php if($this->helper_model->validate_user_session()){?>
+                    <?php  $id = $this->session->userdata('user_id'); 
+                        if($this->helper_model->validate_user_session()){?>
                         <li><a href="<?=base_url().'user_profile';?>">Change Password</a></li>
-                        <li><a href="<?=base_url().'register/register_employeer';?>">Profile</a></li>
+                        <li><a href="<?=base_url().'user_profile/jobseeker_details/'.$id;?>">Profile</a></li>
                         <?php } else{?>
                         		 <li><a href="<?=base_url().'register';?>">Register As JobSeeker</a></li>
                         		<li><a href="<?=base_url().'register/register_employeer';?>">Login</a></li>
