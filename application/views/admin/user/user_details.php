@@ -73,7 +73,7 @@
                                                 </div>
 
                                                 <div id='content_div' class="form-group">
-                                                    <label>Content</label>
+                                                    <label>Message</label>
                                                     <textarea id="content" name="content" rows="10" cols="80">
                                                     </textarea>
                                                     <?=form_error('content')?>
@@ -98,25 +98,32 @@
                         </div>
                         <!-- /.panel-body -->
 
-                        <form class='ajax_form col-lg-6' role="form" id="frm" method="post" action="">           
+                        <form class='ajax_form col-lg-6' role="form" id="user_form" method="post" action="">           
                             <div class="form-group">
-                              <label>Status&nbsp;&nbsp;</label>
+                              <label>Verification Status&nbsp;&nbsp;</label>
                               <label class="radio-inline">
-                                  <input type="radio" value="1" name="status" <?php if(set_value('status',$user_info['status'])==1){echo "checked";}?> >Active
+                                  <input type="radio" value="0" name="verification_status" <?php if(set_value('verification_status',$user_info['verification_status'])==0){echo "checked";}?> >Unverified
                               </label>
                               <label class="radio-inline">
-                                  <input type="radio" value="0" name="status" <?php if(set_value('status',$user_info['status'])==0) {echo "checked";}?> >Unverified
+                                  <input type="radio" value="1" name="verification_status" <?php if(set_value('verification_status',$user_info['verification_status'])==1) {echo "checked";}?> >Verified
+                              </label>
+                                <?=form_error('verification_status')?>
+                            </div>
+                            <div class="form-group">
+                              <label>Account Status&nbsp;&nbsp;</label>
+                              <label class="radio-inline">
+                                  <input type="radio" value="1" name="account_status" <?php if(set_value('account_status',$user_info['account_status'])==1) {echo "checked";}?> >Active
                               </label>
                               <label class="radio-inline">
-                                  <input type="radio" value="2" name="status" <?php if(set_value('status',$user_info['status'])==2) {echo "checked";}?> >Suspended
+                                  <input type="radio" value="2" name="account_status" <?php if(set_value('account_status',$user_info['account_status'])==2) {echo "checked";}?> >Suspended
                               </label>
                               <label class="radio-inline">
-                                  <input type="radio" value="3" name="status" <?php if(set_value('status',$user_info['status'])==3) {echo "checked";}?> >Blocked
+                                  <input type="radio" value="3" name="account_status" <?php if(set_value('account_status',$user_info['account_status'])==3) {echo "checked";}?> >Blocked
                               </label>
-                              <?=form_error('status')?>
+                            <?=form_error('account_status')?>
                             </div>
                             <div id='action_status_user'>
-                                <a id='change_status_user' class='btn btn-success' type='submit'>Update Status</a>
+                                <button id='change_status_user' class='btn btn-success' type='submit'>Update Status</button>
                                 <button class='btn btn-warning' type='reset'>Reset</button>
                             </div>
                         </form>
@@ -227,7 +234,7 @@
                         }
                     ?>
 
-                    <form class='experience_form' role="form" id="frm" method="post" action="">           
+                    <form class='experience_form' role="form" id="user_form" method="post" action="">           
                             <div class="form-group">
                               <label>Status&nbsp;&nbsp;</label>
                               <label class="radio-inline">
@@ -283,7 +290,7 @@
         _this=$(this);
         var status =  $("[name='status']:checked").val();
 
-        if(confirm("Are you sure to update status?")) {
+        if(confirm("Are you sure to update user status?")) {
             var id = <?=$user_info['id']?>;
             var divHTML =  $('#action_status_user').html();
         
@@ -354,6 +361,62 @@
 
 
     $(document).ready(function(){
+        $('#user_form').on('submit', function (e) {
+            e.preventDefault();
+            if(confirm("Are you sure to update this user?")) {
+                var divHTML =  $('#action_status_user').html();
+                var values = $(this).serializeArray();
+
+                $.ajax({
+                    type: 'post',
+                    url: "<?=base_url().'admin/user/update_employer'; ?>",
+                    data: values,
+                    beforeSend: function(){
+                        $('#action_status_user').html("<img src='<?php echo base_url('assets/ajax/images/ajax-loader_dark.gif');?>' >");
+                    },
+
+                    success: function(data) {
+                        $('#action_status_user').html(divHTML);
+                        if(data == 'success'){
+                            //alert('Status Updated Successfully');
+                            var responseHTML = "<div role='alert' class='alert alert-success fade in' id='alert'>" + 
+                                "<button aria-label='Close' data-dismiss='alert' class='close' type='button'>" + 
+                                "<span aria-hidden='true'>×</span>" +
+                                "</button>" + 
+                                "Employer Info Updated Successfully" + 
+                                "</div>";
+
+                            $('.alert').remove();
+                            $("#alert_parent").append(responseHTML);
+                            $('html, body').animate({
+                                scrollTop: $("body").offset().top
+                            }, 1000);
+                        } else {
+                            var responseHTML = "<div role='alert' class='alert alert-warning fade in' id='alert'>" + 
+                                "<button aria-label='Close' data-dismiss='alert' class='close' type='button'>" + 
+                                "<span aria-hidden='true'>×</span>" +
+                                "</button>" + 
+                                "An Unknown Error Occured. Please Try Again Later" + 
+                                "</div>";
+
+                            $('.alert').remove();
+                            $("#alert_parent").append(responseHTML);
+                            $('html, body').animate({
+                                scrollTop: $("body").offset().top
+                            }, 1000);
+                        }
+                    },
+
+                    error: function(data) {
+                        $('#action_status_user').html(divHTML);
+                        alert("An unknown error occured. Please try again later");
+                    }
+                });
+            } else {
+                return false
+            }    
+        });
+
         $('.experience_form').on('submit', function (e) {
             e.preventDefault();
             if(confirm("Are you sure to update status?")) {

@@ -5,7 +5,7 @@
 	   	  	<?php
 	   	  		foreach($sidebar_jobs as $menu_item):
 	   	  	?>
-	   	  		<li><a href="#"><?php echo $menu_item["title"]; ?></a></li>
+	   	  		<li><a href="<?=base_url().'jobs/'.$menu_item["id"]?>"><?php echo $menu_item["title"]; ?></a></li>
 	   	  		<?php
 	   	  			endforeach;
 	   	  		?>

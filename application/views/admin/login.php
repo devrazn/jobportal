@@ -42,7 +42,7 @@
                         <h3 class="panel-title">Please Sign In</h3>
                     </div>
                     <div class="panel-body">
-                        <form role="form" method="post" action="<?=base_url();?>login/admin_login_validation">
+                        <form role="form" method="post" action="<?=base_url();?>login_admin/admin_login_validation">
                             
                             <fieldset>
                                 <div class="form-group">
@@ -60,7 +60,7 @@
                                 </div>
                                 <!-- Change this to a button or input when using this as a form -->
                                 <input type="submit" class="btn btn-lg btn-success btn-block" value="Login">
-                                <span class="pull-right"><a href="<?=base_url();?>login/admin_forgot_pass">Forgot Password?</a></span>
+                                <span class="pull-right"><a href="<?=base_url();?>login_admin/admin_forgot_pass">Forgot Password?</a></span>
                             </fieldset>
                         </form>
                     </div>

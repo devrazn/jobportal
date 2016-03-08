@@ -21,12 +21,12 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 <div class="container">
     <div class="single">  
         <div class="form-container">
-            <h2>Register Form</h2>
+            <h2>Register as Employer</h2>
             <form role="form" id="frmRegister" method="post" action="<?=base_url().'register/add_user/2'?>" enctype="multipart/form-data">
                 <div class="form-group col-md-12">
-                    <label class="col-md-3 control-lable">Company Name</label>
+                    <label class="col-md-3 control-lable">Company/Organization Name</label>
                     <div class="col-md-4">
-                        <input type="text" name="f_name" class="form-control"  placeholder="Enter Company Name" value="<?= set_value('f_name') ?>"/>
+                        <input type="text" name="f_name" class="form-control"  placeholder="Enter Full Name of the Company/Organization" value="<?= set_value('f_name') ?>"/>
                      <?= form_error('f_name') ?>
                     </div>
                 </div>
@@ -57,7 +57,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                 </div>
                 <div class="form-group">
                     <div class="form-group col-md-12">
-                        <label class="col-md-3 control-lable">Logo</label>
+                        <label class="col-md-3 control-lable">Company/Organization Logo</label>
                         <div class="col-md-4">
                            <input type="file" name="image" value="<?= set_value('image') ?>" accept="gif|GIF|png|PNG|jpg|JPG|jpeg|JPEG">
                         <?= form_error('image') ?>
@@ -68,20 +68,31 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                     <div class="form-group col-md-12">
                         <label class="col-md-3 control-lable">Phone</label>
                         <div class="col-md-4">
-                           <input type="text" name="phone" class="form-control input-sm" value="<?= set_value('phone') ?>"/>
+                           <input type="tel" name="phone" class="form-control input-sm" placeholder="Enter Phone no." value="<?= set_value('phone') ?>"/>
                         <?= form_error('phone') ?>
                         </div>
                     </div>
                 </div>
-        	    <div class="form-group">
+
+                <div class="form-group">
                     <div class="form-group col-md-12">
-                        <label class="col-md-3 control-lable">Established Date</label>
+                        <label class="col-md-3 control-lable">Established Year</label>
                         <div class="col-md-4">
-                            <input type="text" name="dob_estd" id="datepicker" class="form-control input-sm" value="<?= set_value('dob_estd')?>"/>
-                        <?= form_error('dob_estd') ?>
+                            <select name="dob_estd" class="form-control">
+                                <option value="">Select Year</option>
+                                <?php 
+                                    for($i=date("Y"); $i>=1900; $i--):
+                                ?>
+                                <option value="<?=$i?>" <?php if(set_value('dob_estd')==$i) echo "selected"; ?>><?=$i?></option>
+                                <?php
+                                    endfor;
+                                ?>
+                            </select>
+                            <?= form_error('dob_estd') ?>
                         </div>
                     </div>
                 </div>
+
         	    <div class="form-group">
         	        <div class="form-group col-md-12">
         	            <label class="col-md-3 control-lable">Address</label>
@@ -91,37 +102,8 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                         </div>
                     </div>
         	    </div>
-                <div class="form-group">
-                    <div class="form-group col-md-12">
-                        <label class="col-md-3 control-lable">Company Type</label>
-                        <div class="col-md-4">
-                            <select name="company_type" class="form-control">
-                                <option value="">Select</option>
-                                <option value="Test" <?php echo set_select('company_type', 'Test'); ?>>Test</option>
-                                <option value="Test1" <?php echo set_select('company_type', 'Test1'); ?>>Test1</option>
-                            </select>
-                            <?= form_error('company_type') ?>
-                        </div>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <div class="form-group col-md-12">
-                        <label class="col-md-3 control-lable">Profile</label>
-                        <div class="col-md-4">
-                            <textarea cols="39" rows="6" name="profile"> <?= set_value('profile') ?> </textarea>
-                        <?= form_error('profile') ?>
-                        </div>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <div class="form-group col-md-12">
-                        <label class="col-md-3 control-lable">Benefits</label>
-                        <div class="col-md-4">
-                            <textarea cols="39" class="form-control" rows="6" name="benefits"> <?= set_value('benefits') ?> </textarea>
-                        <?= form_error('benefits') ?>
-                        </div>
-                    </div>
-                </div>
+                
+                
                 <div class="form-group">
                     <div class="form-group col-md-12">
                         <label class="col-md-3 control-lable">Website</label>

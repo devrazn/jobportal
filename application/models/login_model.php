@@ -21,19 +21,6 @@ class Login_model extends CI_Model {
 	}
 
 
-
-	public function is_key_valid($key) {
-		$this->db->where('key', $key);
-		$query = $this->db->get('temp_users');
-
-		if($query->num_rows() == 1){
-			return true;
-		} else {
-			return false;
-		}
-	}
-
-
 	public function add_user($key) {
 		$this->db->where('key', $key);
 		$temp_user = $this->db->get('temp_users');
@@ -72,14 +59,14 @@ class Login_model extends CI_Model {
 
 	public function is_admin_key_valid($data) {
 
-		$this->db->where('pw_reset_key', $data['key']);
+		$this->db->where('pw_reset_key', $data['admin_key']);
 
 		$query = $this->db->get('tbl_admin');
 
 		if ($query->num_rows() > 0) {
 			//echo "got the key"; exit;
 			foreach ($query->result_array() as $row) {
-		   		if($data['email'] == sha1(md5($row['email']))) {
+		   		if($data['admin_hash_email'] === sha1(md5($row['email']))) {
 		   			//echo 'got both the key & email'; exit;
 		   			return $row['email'];
 		   			break;
@@ -94,15 +81,13 @@ class Login_model extends CI_Model {
 	}
 
 
-	public function set_admin_pw_reset_key($key){
-		$data1 = array(
+	public function update_pw_reset_key($key){
+		$data = array(
 			'pw_reset_key' => $key
 			);
 
 		$this->db->where('email', $this->input->post('email'));
-
-		$query = $this->db->update('tbl_admin', $data1);
-		if($query){
+		if($this->db->update('tbl_admin', $data)){
 			return true;
 		} else {
 			return false;
@@ -110,16 +95,16 @@ class Login_model extends CI_Model {
 	}
 
 
-	public function update_pw($update_data){
+	public function update_pw($email, $password){
 
-		$data1 = array(
-			'pw_reset_key' => $update_data['key'],
-			'password' => $update_data['password']
+		$data = array(
+			'pw_reset_key' => $this->helper_model->genRandomString("42"),
+			'password' => $password
 			);
 
-		$this->db->where('email', $this->session->userdata('email'));
+		$this->db->where('email', $this->session->userdata('admin_email'));
 
-		if($this->db->update('tbl_admin', $data1)){
+		if($this->db->update('tbl_admin', $data)){
 			return true;
 		} else {
 			return false;

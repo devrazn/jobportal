@@ -8,7 +8,7 @@
                         <div class="textbox-wrap">
                             <div class="input-group">
                                 <span class="input-group-addon "><i class="fa fa-user"></i></span>
-                                <input type="text" name="email" id="email" class="form-control"  placeholder="Enter Email" value="<?php if(isset($_COOKIE['user_email'])) echo $_COOKIE['user_email']; ?>"/>
+                                <input type="text" name="email" id="email" class="form-control"  placeholder="Enter Email" value="<?php if(set_value('email')) echo set_value('email'); else if(isset($_COOKIE['user_email'])) echo $_COOKIE['user_email']; ?>"/>
                         		<?= form_error('email') ?>
                             </div>
                         </div>

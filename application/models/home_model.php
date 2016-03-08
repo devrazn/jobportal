@@ -34,7 +34,8 @@ class Home_model extends CI_Model {
 				AND t1.status=1
 				AND t1.del_flag=0
 				AND t3.del_flag=0 
-				AND t3.status=1 
+				AND t3.verification_status=2 
+				AND t3.account_status=1 
 			ORDER BY t1.published_date ASC
 			LIMIT 10";
 		$result = $this->db->query($query);
@@ -44,8 +45,9 @@ class Home_model extends CI_Model {
 
 	public function get_slider(){
 		$query = "SELECT * FROM tbl_users
-			WHERE status=1
-				AND user_type=1
+			WHERE verification_status=2
+				AND user_type=2
+				AND account_status=1
 				AND del_flag=0
 				AND feature_in_slider=1
 			LIMIT 10";
@@ -75,11 +77,21 @@ class Home_model extends CI_Model {
 			$name = $this->session->userdata("name");
 			$email = $this->session->userdata("user_email");
 			$user_id = $this->session->userdata("user_id");
+		} elseif ($this->helper_model->is_user_registered($this->input->post('email'))) {
+			$this->db->where('email', $this->input->post('email'));
+			$user_details = $this->db->get('tbl_users')->row_array();
+			$email = $this->input->post('email');
+			$name = $user_details['f_name'];
+			if($user_details['user_type']==2){
+				$name .= " " . $user_details['l_name'];
+			}
+			$user_id = $user_details['id'];
 		} else {
 			$name = $this->input->post('name');
 			$email = $this->input->post('email');
 			$user_id = NULL;
 		}
+		//echo $user_id; exit;
 		$data_to_db = array(
                     'name'  => $name,
                     'email'  => $email,
@@ -124,7 +136,7 @@ class Home_model extends CI_Model {
     public function get_employer_details($id){
     	$options =  array(
     					'id' => $id, 
-    					'user_type' => '1'
+    					'user_type' => '2'
     				);
 		$this->db->where($options);
 		//$query = ->get_compiled_select();

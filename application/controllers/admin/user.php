@@ -8,7 +8,9 @@ class User extends CI_Controller {
         $this->load->model('admin/user_model');
         $this->load->library('form_validation');
         $this->load->model('admin/category_model');
-        $this->helper_model->validate_session();
+        if(!$this->helper_model->validate_admin_session()){
+          redirect(base_url() . 'admin');
+        }
 
     }
 
@@ -43,7 +45,8 @@ class User extends CI_Controller {
         $this->form_validation->set_rules('company_type', 'Company Type', 'required|xss_clean');
         $this->form_validation->set_rules('profile', 'Profile', 'required|xss_clean');
         $this->form_validation->set_rules('benefits', 'Benefits', 'required|xss_clean');
-        $this->form_validation->set_rules('status', 'Status', 'required|xss_clean');
+        $this->form_validation->set_rules('verification_status', 'Status', 'required|xss_clean|trim|integer|greater_than[-1]|less_than[3]');
+        $this->form_validation->set_rules('account_status', 'Status', 'required|xss_clean|trim|integer|greater_than[-1]|less_than[4]');
         //$this->form_validation->set_rules('feature_in_slider', 'Feature in slider', 'required|xss_clean');
         
         if ($this->form_validation->run() == FALSE) {
@@ -60,8 +63,8 @@ class User extends CI_Controller {
     }
 
 
-    function change_status($status = '', $id = '') {
-        if($this->user_model->change_status($status, $id)){
+    function update_jobseeker_status() {
+        if($this->user_model->update_jobseeker_status()){
             echo 'success';
         } else {
             echo 'failure';
@@ -69,8 +72,8 @@ class User extends CI_Controller {
     }
 
 
-    function update_employer() {
-        if($this->user_model->update_employer()){
+    function update_employer_status() {
+        if($this->user_model->update_employer_status()){
             echo 'success';
         } else {
             echo 'failure';
@@ -86,14 +89,14 @@ class User extends CI_Controller {
 
         //$this->helper_model->editor();
 
-        if($data['user_info']['user_type']==0) {
+        if($data['user_info']['user_type']==1) {
             //echo json_encode($data['user_info']['user_type']); exit;
             //echo json_encode($data['user_info']['user_type']); exit;
             $data['title'] = 'User Details';
             $data['qualification'] = $this->user_model->get_qualification($id);
             $data['experience'] = $this->user_model->get_experience($id);
             $data['main'] = 'admin/user/user_details';
-        } else if ($data['user_info']['user_type']==1) {
+        } else if ($data['user_info']['user_type']==2) {
             //echo json_encode($data['user_info']['user_type']) . " else if"; exit;
             $data['title'] = 'Employer Details';
             $data['jobs'] = $this->user_model->get_jobs($id);

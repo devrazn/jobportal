@@ -1,7 +1,7 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-ini_set('include_path', 'D:\xampp\htdocs\jobportal\api\gmail\vendor\google\apiclient\src');
+ini_set('include_path', 'C:\xampp\htdocs\jobportal\api\gmail\vendor\google\apiclient\src');
 require_once ('api/gmail/vendor/autoload.php');
 require_once 'Google/Client.php';
 require_once 'Google/Service/Oauth2.php';

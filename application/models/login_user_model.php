@@ -9,7 +9,7 @@ class Login_User_Model extends CI_Model {
     }
 
     public function can_log_in() {
-		$this->db->where(array('email' => $this->input->post('email'),'status' => 1));
+		$this->db->where('email', $this->input->post('email'));
 		$query = $this->db->get('tbl_users');
 		//print_r($this->db->last_query()); exit;
 
@@ -38,72 +38,76 @@ class Login_User_Model extends CI_Model {
     
 	}
 
-	public function update_pw($update_data){
-		$data1 = array(
-			'activation_code' => $update_data['key'],
-			'password' => $update_data['password']
-			);
 
-		$this->db->where('email', $this->session->userdata('email'));
+	public function pass_reset_email(){
+		$mail_setting = $this->settings_model->get_email_settings();
+		$user_details = $this->get_user_details($this->input->post('email'));
+        $message = $this->settings_model->get_email_template('FORGOT_PWD');
+        $subject = $message['subject'];
+        $emailbody = $message['content'];
 
-		if($this->db->update('tbl_users', $data1)){
+		$key = $this->helper_model->genRandomString('32');
+		$email = sha1(md5($this->input->post('email')));
+			
+        $confirm = "<a target='_blank' href='".base_url()."login_user/validate_pw_reset_credentials/$key/$email'>here</a>";        
+        $parseElement = array(
+        	"USERNAME" => $user_details['f_name'],
+            "SITENAME" => 'JobPortal',
+            "LINK" => $confirm,
+            "SITELINK" => base_url()
+        );
+        $subject = $this->parse_email($parseElement, $subject);
+	    $message = $this->parse_email($parseElement, $emailbody);
+	    //echo $message; die;
+	    //$sendTo = $this->input->post('email');
+        $data = array(
+					'subject' => $subject,
+					'message' => $message,
+					'to' => $this->input->post('email')
+					);
+        $this->update_activation_reset_key($key);
+        $this->helper_model->send_email($mail_setting,$data);
+	}
+
+
+	public function update_pw($email){
+		$user_details = $this->get_user_details($email);
+		if($user_details['verification_status']==0){
+			$this->db->set('verification_status', 1);
+		}
+		$this->db->set('activation_reset_key', $this->helper_model->genRandomString(42));
+		$this->db->set('password', $this->helper_model->encrypt_me($this->input->post('password')));
+		/*$data1 = array(
+			'activation_reset_key' => $update_data['key'],
+			'password' => $this->helper_model->encrypt_me($this->input->post('password')),
+			'verification_status' => 1
+			);*/
+
+		$this->db->where('email', $email);
+
+		if($this->db->update('tbl_users')){
 			return true;
 		} else {
 			return false;
 		}
 	}
 
-	public function pass_confirmation_email(){
-		$mail_setting = $this->settings_model->get_email_settings();
-        $message = $this->settings_model->get_email_template('FORGOT_PWD');
-        $subject = $message['subject'];
-        $emailbody = $message['content'];
 
-		$code = $this->get_activation_code($this->input->post('email'));
-		$email = sha1(md5($this->input->post('email')));
-		$this->hash_email = $email;
-			
-        $confirm = "<p><a href='".site_url()."login_user/validate_pw_reset_credentials/$code/$email'>Click Here</a></p>";
-        $parseElement = array(
-            "SITENAME" => 'JobPortal',
-            "LINK" => $confirm,
-            "EMAIL" => $this->input->post('email')
-        );
-        $subject = $this->parse_email($parseElement, $subject);
-	    $message = $this->parse_email($parseElement, $emailbody);
-	    echo $message; die;
-	    $sendTo = $this->input->post('email');
-        $data = array(
-					'subject' => $subject,
-					'message' => $message,
-					'to' => $sendTo
-					);
-        $this->helper_model->send_email($mail_setting,$data);
-	}
-
-    public function get_activation_code($email){
-    	$this->db->where('email', $email);
-		$query = $this->db->get('tbl_users');
-
-		if ($query->num_rows() > 0) {
-			foreach ($query->result_array() as $row) {
-		   			return $row['activation_code'];
-			}
-			
-		} else {
-			return false;
-		}
+    public function update_activation_reset_key($code){
+    	$data = array('activation_reset_key' => $code );
+    	$this->db->where("email", $this->input->post("email"));
+    	$this->db->update("tbl_users", $data);
     }
 
+
     public function is_key_valid($data) {
-		$this->db->where('activation_code', $data['key']);
+		$this->db->where('activation_reset_key', $data['user_key']);
 		$query = $this->db->get('tbl_users');
 
 		if ($query->num_rows() > 0) {
 			foreach ($query->result_array() as $row) {
-		   		if($data['email'] == sha1(md5($row['email']))) {
+		   		if($data['user_hash_email'] === sha1(md5($row['email']))) {
 		   			return $row['email'];
-		   			break;
 		   		}
 			}
 			return false;
@@ -113,16 +117,21 @@ class Login_User_Model extends CI_Model {
 		}
 	}
 
-   	public function update_password($email,$password) {
+   	public function update_password($email) {
 		$this->db->where('email',$email);
-		if($this->db->update('tbl_users', $password)){
+		$data = array(
+					'password' => $this->helper_model->encrypt_me($this->input->post('password')),
+					'activation_reset_key' => $this->helper_model->genRandomString('42')
+				);
+		if($this->db->update('tbl_users', $data)){
 			return true;
 		} else {
 			return false;
 		}
     }
 
-		//to parse the the email which is available in the
+
+	//to parse the the email which is available in the
     function parse_email($parseElement, $mail_body) {
         foreach ($parseElement as $name => $value) {
             $parserName = $name;
@@ -133,8 +142,8 @@ class Login_User_Model extends CI_Model {
     }
 
 
-    public function get_user_details() {
-    	return $this->db->get_where('tbl_users', array('email' => $this->input->post('email')))->row_array();
+    public function get_user_details($email) {
+    	return $this->db->get_where('tbl_users', array('email' => $email))->row_array();
 	}
 
 }

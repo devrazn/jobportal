@@ -27,8 +27,9 @@ class Home extends CI_Controller {
 	public function landing() {
         $this->session->set_userdata('referred_from', current_url());
 		$this->data["content_jobs"] = $this->home_model->get_jobs();
-		//echo '<pre>',print_r($data2,1),'</pre>'; exit;
+		//echo '<pre>',print_r($this->data["content_jobs"],1),'</pre>'; exit;
 		$this->data["sliders"] = $this->home_model->get_slider();
+        //echo '<pre>',print_r($this->data["sliders"],1),'</pre>'; exit;
 		$this->template->__set('title', 'Home');
 		$this->template->partial->view("home_layout", $this->data, $overwrite=FALSE);
 		$this->template->publish('home_layout');	
@@ -90,12 +91,12 @@ class Home extends CI_Controller {
 			$this->template->publish('contact_us');
 		} else {
 			if($this->home_model->insert_contact_message()){
-				$this->session->set_userdata( 'flash_msg_type_public_user', "success" );
-	            $this->session->set_flashdata('flash_msg_public_user', "Thanks for contacting JobPortal. We will get back to you as soon as we can.");
+				$this->session->set_userdata( 'user_flash_msg_type', "success" );
+	            $this->session->set_flashdata('user_flash_msg', "Thanks for contacting JobPortal. We will get back to you as soon as we can.");
 	            redirect(base_url() . 'contact_us', 'refresh');
 			} else {
-				$this->session->set_userdata( 'flash_msg_type_public_user', "failure" );
-	            $this->session->set_flashdata('flash_msg_public_user', 'User Updated Successfully');
+				$this->session->set_userdata( 'user_flash_msg_type', "failure" );
+	            $this->session->set_flashdata('user_flash_msg', "Your message can't be sent now. Please try again later.");
 	            redirect(base_url() . 'contact_us', 'refresh');
 			}
 		}
@@ -137,7 +138,6 @@ class Home extends CI_Controller {
         $this->data["employer_details"] = $this->home_model->get_employer_details($id);
         $this->data["employer_jobs"] = $this->home_model->get_employer_jobs($id);
         $this->data["page"] = 'employer_details';
-        //echo '<pre>',print_r($this->data2,1),'</pre>'; exit;
         $this->template->partial->view("default_layout", $this->data, $overwrite=FALSE);
         $this->template->publish('default_layout');
         
@@ -145,7 +145,7 @@ class Home extends CI_Controller {
 
 
     public function job_apply(){
-    	if($this->session->userdata('is_Login')) {
+    	if($this->helper_model->validate_user_session()) {
     		$this->home_model->apply_job();
 			echo "success";
     	} else {

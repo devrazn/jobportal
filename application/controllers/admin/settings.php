@@ -8,7 +8,9 @@ class Settings extends CI_Controller {
         $this->load->model('admin/settings_model');
         $this->load->library('form_validation');
         $this->load->helper('file');
-        $this->helper_model->validate_session();
+        if(!$this->helper_model->validate_admin_session()){
+          redirect(base_url() . 'admin');
+        }
     }
 
     public function index() {
@@ -17,6 +19,7 @@ class Settings extends CI_Controller {
 
 
     public function site_settings() {
+        $this->form_validation->set_rules('logo', 'Logo Image', 'xss_clean|callback_handle_upload');
         $this->form_validation->set_rules('site_name', 'Site Name', 'required|xss_clean|min_length[2]|max_length[32]');
         $this->form_validation->set_rules('site_title', 'Site Title', 'xss_clean');
         $this->form_validation->set_rules('site_slogan', 'Site Title', 'xss_clean');
@@ -30,10 +33,19 @@ class Settings extends CI_Controller {
         $this->form_validation->set_rules('site_status', 'Site Status', 'xss_clean');
         $this->form_validation->set_rules('prev_image', 'Previous Image', 'xss_clean');
         $this->form_validation->set_rules('site_offline_msg', 'Site Offline Message', 'required|xss_clean');
+        //$this->form_validation->set_rules('logo', 'Logo Image', 'xss_clean|callback_handle_upload');
 
         $this->helper_model->editor();
         
-        if ($this->form_validation->run() == FALSE) {        
+        if ($this->form_validation->run() == FALSE) {
+            if(isset($_POST['logo'])){
+                if (file_exists("./uploads/admin/images/" . $_POST['logo'])){
+                @unlink("./uploads/admin/images/" . $_POST['logo']);
+                echo "delete file". $_POST['logo']; exit;
+            }
+            }
+
+            
             $data['info'] = $this->settings_model->get_site_settings();
             $data['main'] = 'admin/site_settings';
             $data['title'] = 'Site Settings';
@@ -43,9 +55,7 @@ class Settings extends CI_Controller {
             $uploaded_details = $this->upload_image('logo');
             if ($uploaded_details['file_name'] != '') {
                 $image = $uploaded_details['file_name'];
-                //echo ("./uploads/admin/images/" . $this->input->post('prev_image')); exit;
                 if (file_exists("./uploads/admin/images/" . $this->input->post('prev_image'))){
-                    //echo (base_url()."uploads/admin/images/" . $this->input->post('prev_image')); exit;
                     @unlink("./uploads/admin/images/" . $this->input->post('prev_image'));
                 }
             } else {
@@ -65,25 +75,35 @@ class Settings extends CI_Controller {
     }
 
 
-    function upload_image($file) {
-        $config['upload_path'] = './uploads/admin/images/';
-        $config['allowed_types'] = 'gif|jpg|png';
-        $config['max_size'] = '10000000';
-        $config['max_width'] = '65';
-        $config['max_height'] = '50';
-        $config['remove_spaces'] = true;
-        $config['encrypt_name'] = true;
+    function handle_upload() {
+        if (isset($_FILES['logo']) && !empty($_FILES['logo']['name'])) {
+            $config['upload_path']          = './uploads/admin/images';
+            $config['allowed_types']        = 'gif|jpg|png|jpeg';
+            $config['max_size']             = 1024;
+            $config['max_width']            = 1024;
+            $config['max_height']           = 768;
+            $config['min_width']            = 102;
+            $config['min_height']           = 76;
+            $config['remove_spaces']        = true;
+            $config['file_ext_tolower']     = true;
+            $config['encrypt_name']         = true;
 
-        $this->load->library('upload', $config);
-        //var_dump($file); exit;
-        $this->upload->do_upload($file);
-        if ($this->upload->display_errors()) {
-            $this->error = $this->upload->display_errors();
-            //echo $this->error; exit;
-            return true;
+            $this->load->library('upload', $config);
+
+            if ($this->upload->do_upload('logo')) {
+                // set a $_POST value for 'image' that we can use later
+                $upload_data    = $this->upload->data();
+                $_POST['logo'] = $upload_data['file_name'];
+                return true;
+            } else {
+                // possibly do some clean up ... then throw an error
+                $this->form_validation->set_message('handle_upload', "<div style='color:red'>" . $this->upload->display_errors() . "</div>");
+                return false;
+            }
         } else {
-            $data = $this->upload->data();
-            return $data;
+            // throw an error because nothing was uploaded
+            $this->form_validation->set_message('handle_upload', "You must select an image to upload.");
+            return false;
         }
     }
 
@@ -163,13 +183,10 @@ class Settings extends CI_Controller {
 
          if($this->form_validation->run() == FALSE) {
             $data['info'] = $this->settings_model->get_cms($title);
-            //echo json_encode($data['info']); exit;
             $data['select_info'] = $this->settings_model->get_cms();
-            //echo json_encode($data['select_info']); exit;
             $data['main'] = 'admin/cms';
             $data['title'] = 'Content Management';
             if(!(validation_errors())) {
-                //echo 1; exit;
                 $this->load->view('admin/admin', $data);
             } else {
                 /*$data['main'] = $this->input->post('cms_page');
@@ -252,10 +269,10 @@ class Settings extends CI_Controller {
         $this->form_validation->set_rules('mailtype', 'Mail Type', 'required|xss_clean');
         $this->form_validation->set_rules('protocol', 'Protocol', 'required|xss_clean');
         $this->form_validation->set_rules('smtp_host', 'SMTP Host', 'required');
-        $this->form_validation->set_rules('smtp_port', 'SMTP Port', 'xss_clean');
-        $this->form_validation->set_rules('smtp_user', 'SMTP Username', 'xss_clean');
+        $this->form_validation->set_rules('smtp_port', 'SMTP Port', 'required|xss_clean');
+        $this->form_validation->set_rules('smtp_user', 'SMTP Username', 'required|xss_clean');
         $this->form_validation->set_rules('receive_email', 'Receiver Email', 'required|xss_clean');
-        //$this->form_validation->set_rules('smtp_pass', 'SMTP Password', 'required|xss_clean');
+        $this->form_validation->set_rules('smtp_pass', 'SMTP Password', 'required|xss_clean');
         //$this->form_validation->set_rules('charset', 'CharSet', 'required|xss_clean');
 
         if ($this->form_validation->run() == FALSE) {
@@ -280,3 +297,4 @@ class Settings extends CI_Controller {
     }
 
 }
+

@@ -8,7 +8,9 @@ class Tags extends CI_Controller {
         $this->load->model('admin/tags_model');
         $this->load->model('admin/category_model');
         $this->load->library('form_validation');
-        $this->helper_model->validate_session();
+        if(!$this->helper_model->validate_admin_session()){
+          redirect(base_url() . 'admin');
+        }
 
     }
 

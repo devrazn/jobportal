@@ -40,6 +40,12 @@
                 </div>
 
                 <div class="form-group">
+                  <label>SMTP Password</label>
+                  <input name="smtp_pass" type='password' id='smtp_pass' class="form-control" placeholder="Enter SMTP Password">
+                  <?=form_error('smtp_pass')?>
+                </div>
+
+                <div class="form-group">
                   <label>Receive Emails At</label>
                   <input name="receive_email" type='text' class="form-control" placeholder="Enter email address to receive replies" value="<?=set_value('receive_email',$info['receive_email'])?>">
                   <?=form_error('receive_email')?>

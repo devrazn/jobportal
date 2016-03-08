@@ -5,6 +5,9 @@ class Experience extends CI_Controller {
     function __construct()
     {
         parent::__construct();
+        if(!$this->helper_model->validate_admin_session()){
+          redirect(base_url() . 'admin');
+        }
         $this->load->model('admin/experience_model');
         $this->load->library('form_validation');
         $this->helper_model->validate_session();

@@ -30,7 +30,7 @@
                   <td><?=$user['email']?></td>
                   <td><?=$user['address']?></td>
                   <td><?php 
-                        if($user['user_type']==0){
+                        if($user['user_type']==1){
                           echo 'Job Seeker';
                         } else {
                           echo 'Employer';
@@ -40,15 +40,17 @@
                   <td><?=$user['dob_estd']?></td>
                   <td><?=$user['company_type']?></td>
                   <td><?php 
-                        if($user['status']==0){
+                        if($user['verification_status']==0){
                           echo 'Not Verified';
-                        } else if ($user['status']==1){
-                          echo 'Active';
-                        } else if ($user['status']==2){
-                          echo 'Suspended';
-                        } else if ($user['status']==3){
-                          echo 'Blocked';
-                        }
+                        } else if ($user['verification_status']==1){
+                          if($user['user_type']==1){
+                            echo 'Verified';
+                          } else {
+                            echo "Email Verified";
+                          }
+                        } else if ($user['verification_status']==2){
+                          echo 'Admin Verified';
+                        } 
                       ?>
                   </td>
                   <td>

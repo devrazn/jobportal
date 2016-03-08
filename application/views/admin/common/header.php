@@ -162,7 +162,7 @@
                         <li><a href="<?=base_url().'admin/settings';?>"><i class="fa fa-gear fa-fw"></i> Settings</a>
                         </li>
                         <li class="divider"></li>
-                        <li><a href="<?=base_url().'login/logout';?>"><i class="fa fa-sign-out fa-fw"></i> Logout</a>
+                        <li><a href="<?=base_url().'login_admin/logout';?>"><i class="fa fa-sign-out fa-fw"></i> Logout</a>
                         </li>
                     </ul>
                     <!-- /.dropdown-user -->
@@ -173,9 +173,6 @@
 
 <script type="text/javascript">
     $(document).ready(function(){
-        //$(document).find('.dropdown-menu').removeClass('caret');
-        //$("#dropdown-menu>li>a>span.caret").removeClass("caret");
         $("#dropdown-menu").find('.caret').removeClass("caret");
-        //$(this).removeClass('fa-plus').addClass('fa-minus');
     });
 </script>            

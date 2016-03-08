@@ -29,7 +29,7 @@
                 ?>
                 <tr <?php if($message['read_flag']==0) echo "style='font-weight:bold'"?> > 
                   <td><a href="<?=site_url(ADMIN_PATH.'/messages/details/'.$message['id'])?>"><?=$message['subject']?></a></td>
-                  <?php if($this->helper_model->is_user_registered($message['email'])) {
+                  <?php if($message['user_id']!=NULL) {
                   ?>
                   <td><a href="<?=site_url(ADMIN_PATH.'/user/details/'.$message['user_id'])?>"><?=$message['name']?></a></td>
                   <?php

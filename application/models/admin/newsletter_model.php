@@ -60,14 +60,16 @@ class Newsletter_model extends CI_Model {
         $options = array('newsletter_subscription' => '1',
                             'del_flag' => '0');
         if($this->input->post('receiver_options')=='3') {
-            $options += ['user_type' => '1'];
+            $options += ['user_type' => '0'];
         } else if($this->input->post('receiver_options')=='4') {
-            $options += ['user_type' => '2'];
+            $options += ['user_type' => '1'];
         } else if($this->input->post('receiver_options')=='5') {
-            $options += ['status' => '2'];
-        }
+            $options += ['status' => '1'];
+        } else if($this->input->post('receiver_options')=='6') {
+            $options += ['status' => '0'];
+        } 
         $this->db->select('email');
-        return $this->db->get_where('tbl_users', $options)->row_array();
+        return $this->db->get_where('tbl_users', $options)->result_array();
     }
 
 

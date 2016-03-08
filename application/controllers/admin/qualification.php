@@ -7,7 +7,9 @@ class Qualification extends CI_Controller {
         parent::__construct();
         $this->load->model('admin/qualification_model');
         $this->load->library('form_validation');
-        $this->helper_model->validate_session();
+        if(!$this->helper_model->validate_admin_session()){
+          redirect(base_url() . 'admin');
+        }
 
     }
  

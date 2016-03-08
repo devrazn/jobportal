@@ -16,13 +16,6 @@ class Helper_model extends CI_Model {
     }
 
 
-    public function validate_session() {
-        if(!($this->session->userdata('is_logged_in'))){
-            redirect('login/login');
-        }
-    }
-
-
     function humanize_admin($string) {
         $my_val = array('(', ')', '&', '', '&pound;', ' ', ',', '/', '_', '"', "'", '&quot;', 'quot;', '&amp;', 'amp;', '£', '+', '=', '?', '%', '@', '!', '#', '$', '^', '&', '*', "'", '!', ':', '[', ']', '{', '}', '|');
         
@@ -70,19 +63,20 @@ class Helper_model extends CI_Model {
                                                 'smtp_host' => $mail_settings['smtp_host'],
                                                 'smtp_port' => $mail_settings['smtp_port'],
                                                 'smtp_user' => $mail_settings['smtp_user'],
-                                                'smtp_pass' => $mail_settings['smtp_pass'],
+                                                'smtp_pass' => $this->decrypt_me($mail_settings['smtp_pass']),
                                                 'charset' => $mail_settings['charset'],
                                                 'newline' => "\r\n"));
         $this->email->from($mail_settings['receive_email'], 'The JobPortal');
         $this->email->to($mail_params['to']);
         $this->email->subject($mail_params['subject']);
         $this->email->message($mail_params['message']);
+        //echo $mail_params['message']; exit;
 
         if($this->email->send()) {
             return true;
         } else {
-            if($this->session->userdata('is_logged_in')){
-                $this->session->set_userdata('error_log_title', "Error while sending email");
+            if($this->validate_admin_session()){
+                $this->session->set_userdata('error_log_title', "Error while sending email.");
                 $this->session->set_userdata('error_log', $this->email->print_debugger());
             }
             return false;
@@ -92,6 +86,7 @@ class Helper_model extends CI_Model {
 
     function humanize_date($date) {
         $temp_date = date_create_from_format('Y-m-d', $date);
+        //echo $temp_date; exit;
         return(date_format($temp_date,  'jS M Y'));
     }
 
@@ -108,6 +103,10 @@ class Helper_model extends CI_Model {
 
     function calculate_age_year_from_y_m_d($date) {
         return(DateTime::createFromFormat('Y-m-d', $date)->diff(new DateTime('now'))->y);
+    }
+
+    function calculate_age_from_year($year) {
+        return date("Y")-$year;
     }
 
 
@@ -230,76 +229,6 @@ class Helper_model extends CI_Model {
         return $menu_html;
     }
 
-    function bootstrap_menu_user($array,$parent_id = 0,$parents = array()) {
-        if($parent_id==0)
-        {
-            foreach ($array as $element) {
-                if (($element['parent_id'] != 0) && !in_array($element['parent_id'],$parents)) {
-                    $parents[] = $element['parent_id'];
-                }
-            }
-        }
-        $menu_html = '';
-        foreach($array as $element)
-        {
-            if($element['parent_id']==$parent_id)
-            {
-                if(in_array($element['id'], $parents))
-                {
-                    $menu_html .= '<li class="dropdown-submenu">';
-                    $menu_html .= '<a href="' . base_url() . 'admin/category/' .$element['id'].'" class="dropdown-toggle" data-toggle="" role="button" aria-expanded="true">'.$element['name'].' <span class="caret"></span></a>';
-                } else {
-                    $menu_html .= '<li>';
-                    $menu_html .= '<a href="' . base_url() . 'admin/category/' . $element['id'] . '">' . $element['name'] . '</a>';
-                }
-                if(in_array($element['id'],$parents))
-                {
-                    $menu_html .= '<ul class="dropdown-menu" role="menu">';
-                    $menu_html .= $this->bootstrap_menu_user($array, $element['id'], $parents);
-                    $menu_html .= '</ul>';
-                }
-                $menu_html .= '</li>';
-            }
-        }
-        return $menu_html;
-    }
-
-
-    function multilevel_select($array,$parent_id = 0,$parents = array(), $level=0) {
-        static $i=0;
-        if($parent_id==0)
-        {
-            foreach ($array as $element) {
-                if (($element['parent_id'] != 0) && !in_array($element['parent_id'],$parents)) {
-                    $parents[] = $element['parent_id'];
-                }
-            }
-        }
-
-        $menu_html = '';
-        foreach($array as $element){
-            if($element['parent_id']==$parent_id && $level < 2){
-                $menu_html .= '<option';
-                if($level==0){
-                    $menu_html .= ' style="font-weight:bold;"';
-                } else {
-                    $menu_html .= ' style="font-style:italic;"';
-                }
-                $menu_html .= ' value="' . $element['id'] .'">';
-                for($j=0; $j<$i; $j++) {
-                    $menu_html .= '&mdash;';
-                }
-                $menu_html .= $element['name'].'</option>';
-                if(in_array($element['id'], $parents)){
-                    $i++;
-                    $menu_html .= $this->multilevel_select($array, $element['id'], $parents, $level+1);
-                }
-            }
-        }
-        $i--;
-        return $menu_html;
-    }
-
 
     function humanize_url($url) {
         return strtolower(str_replace(' ', '_', $url));
@@ -346,8 +275,8 @@ class Helper_model extends CI_Model {
         if ($length == '') {
             $length = 20;
         }
-        $characters = '12345CARTN6789ABCDEFGHIJKMNPQRSTUVWXYZ12345CARTN6789ABCDEFGHIJKMNPQRSTUVWXYZ12345CARTN6789ABCDEFGHIJKMNPQRSTUVWXYZ12345CARTN6789ABCDEFGHIJKMNPQRSTUVWXYZ12345CARTN6789ABCDEFGHIJKMNPQRSTUVWXYZ12345CARTN6789ABCDEFGHIJKMNPQRSTUVWXYZ12345CARTN6789ABCDEFGHIJKMPQRSTUVWXYZ12345CARTN6789ABCDEFGHIJKMNPQRSTUVWXYZ12345CARTN6789ABCDEFGHIJKMNPQRSTUVWXYZ12345CARTN6789ABCDEFGHIJKMNPQRSTUVWXYZ12345CARTN6789ABCDEFGHIJKMNPQRSTUVWXYZ12345CARTN6789ABCDEFGHIJKMPQRSTUVWXYZ12345CARTN6789ABCDEFGHIJKMNPQRSTUVWXYZ12345CARTN6789ABCDEFGHIJKMNPQRSTUVWXYZ12345CARTN6789ABCDEFGHIJKMNPQRSTUVWXYZ12345CARTN6789ABCDEFGHIJKMNPQRSTUVWXYZ12345CARTN6789ABCDEFGHIJKMPQRSTUVWXYZ12345CARTN6789ABCDEFGHIJKMNPQRSTUVWXYZ12345CARTN6789ABCDEFGHIJKMNPQRSTUVWXYZ12345CARTN6789ABCDEFGHIJKMNPQRSTUVWXYZ12345CARTN6789ABCDEFGHIJKMNPQRSTUVWXYZ12345CARTN6789ABCDEFGHIJKMNPQRSTUVWXYZ12345CARTN6789ABCDEFGHIJKMNPQRSTUVWXYZ12345CARTN6789ABCDEFGHIJKMNPQRSTUVWXYZ12345CARTN6789ABCDEFGHIJKMNPQRSTUVWXYZ12345CARTN6789ABCDEFGHIJKMNPQRSTUVWXYZ';
-        $string = '';
+        $characters = '12345CARTN6789ABCDEFGHIJKLMNOPQRSTUVWXYZ12345CARTN6789abcdefghijklmnopqrstuvwxyz12345CARTN6789ABCDEFGHIJKLMNOPQRSTUVWXYZ12345CARTN6789abcdefghijklmnopqrstuvwxyz12345CARTN6789abcdefghijklmnopqrstuvwxyz12345CARTN6789abcdefghijklmnopqrstuvwxyz12345CARTN6789ABCDEFGHIJKLMNOPQRSTUVWXYZ12345CARTN6789abcdefghijklmnopqrstuvwxyz12345CARTN6789ABCDEFGHIJKLMNOPQRSTUVWXYZ12345CARTN6789abcdefghijklmnopqrstuvwxyz12345CARTN6789ABCDEFGHIJKMPQRSTUVWXYZ12345CARTN6789abcdefghijklmnopqrstuvwxyz12345CARTN6789ABCDEFGHIJKLMNOPQRSTUVWXYZ12345CARTN6789abcdefghijklmnopqrstuvwxyz12345CARTN6789ABCDEFGHIJKLMNOPQRSTUVWXYZ12345CARTN6789abcdefghijklmnopqrstuvwxyz12345CARTN6789ABCDEFGHIJKLMNOPQRSTUVWXYZ12345CARTN6789abcdefghijklmnopqrstuvwxyz12345CARTN6789ABCDEFGHIJKLMNOPQRSTUVWXYZ12345CARTN6789abcdefghijklmnopqrstuvwxyz12345CARTN6789ABCDEFGHIJKLMNOPQRSTUVWXYZ12345CARTN6789abcdefghijklmnopqrstuvwxyz12345CARTN6789ABCDEFGHIJKLMNOPQRSTUVWXYZ12345CARTN6789abcdefghijklmnopqrstuvwxyz12345CARTN6789ABCDEFGHIJKMNPQRSTUVWXYZ';
+        $string = "";
         for ($p = 0; $p < $length; $p++) {
             $string .= $characters[mt_rand(0, strlen($characters))];
         }
@@ -356,28 +285,19 @@ class Helper_model extends CI_Model {
 
 
     public function validate_user_session(){
-        if($this->session->userdata('user_email') && $this->session->userdata('user_pw')) {
+        if(($this->session->userdata('user_email') && $this->session->userdata('user_pw')) || isset($_SESSION['tw_status']) || isset($_SESSION['fb_access_token'])) {
             $options = array(
                             'email' => $this->session->userdata('user_email'),
                             );
             $this->db->where($options);
             $this->db->select("password");
             $db_pw = $this->db->get('tbl_users')->row_array();
-            if($this->decrypt_me($this->session->userdata('user_pw')) == $this->decrypt_me($db_pw["password"])){
+            if($this->decrypt_me($this->session->userdata('user_pw')) === $this->decrypt_me($db_pw["password"])){
                 return true;
             } else{
-                /*$data = array(
-                'user_email' => NULL,
-                'user_pw' => NULL,
-                'is_Login' => NULL,
-                'user_id' => NULL
-                );
-                $this->session->set_userdata($data);*/
-                //$this->session->sess_destroy();
                 return false;
             }
         } else {
-            //$this->session->sess_destroy();
             return false;
         }
     }
@@ -410,6 +330,60 @@ class Helper_model extends CI_Model {
             return false;
         }
     }
+
+
+    public function set_user_login_session($email){
+        $user_details = $this->db->get_where('tbl_users', array('email' => $email))->row_array();
+        $name = $user_details["f_name"];
+        if($user_details["user_type"]==2){
+            $name .= " " . $user_details["l_name"];
+        }
+        //echo '<pre>',print_r($user_details,1),'</pre>'; exit;
+        $data = array(
+                    'user_email' => $email,
+                    'user_pw' => $user_details['password'],
+                    'name' => $name,
+                    'is_Login' => 1,
+                    'user_id' => $user_details["id"],
+                    'user_type' => $user_details["user_type"],
+                );
+        $this->session->set_userdata($data);
+        echo $this->session->userdata('user_id'); exit;
+    }
+
+
+    public function set_admin_login_session($email){
+        $admin_details = $this->db->get_where('tbl_admin', array('email' => $email))->row_array();
+        //echo '<pre>',print_r($user_details,1),'</pre>'; exit;
+        $data = array(
+                    'admin_email' => $email,
+                    'admin_pw' => $admin_details['password'],
+                    'name' => $admin_details['admin_details'],
+                    'is_logged_in' => 1,
+                    'admin_id' => $admin_details["id"],
+                );
+        $this->session->set_userdata($data);
+    }
+
+
+    public function validate_admin_session(){
+        if($this->session->userdata('admin_email') && $this->session->userdata('admin_pw')) {
+            $options = array(
+                            'email' => $this->session->userdata('admin_email'),
+                            );
+            $this->db->where($options);
+            $this->db->select("password");
+            $db_pw = $this->db->get('tbl_admin')->row_array();
+            if($this->decrypt_me($this->session->userdata('admin_pw')) === $this->decrypt_me($db_pw["password"])){
+                return true;
+            } else{
+                return false;
+            }
+        } else {
+            return false;
+        }
+    }
+
 
 }
 

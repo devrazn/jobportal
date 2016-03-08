@@ -105,10 +105,9 @@
 		            <a href="#" class="dropdown-toggle" data-toggle="dropdown">Categories<b class="caret"></b></a>
 		            <ul class="dropdown-menu" id="dropdown-menu">
 			            <?php
-                            //$top_menu = $this->helper_model->bootstrap_menu($menu_items);
-                             $menu_items = $this->helper_model->get_category();
-                             $top_menu = $this->helper_model->bootstrap_menu_user($menu_items);
-                             echo $top_menu;
+                            $menu_items = $this->helper_model->get_category();
+                            $category_menu = $this->helper_model->bootstrap_menu($menu_items);
+                            echo $category_menu;
                         ?>
 		            </ul>
 		        </li>
@@ -177,39 +176,46 @@
 			            <li><a href="jobs.html">Defence Jobs</a></li>
 		            </ul>
 		        </li>
-              	<li class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">Account<b class="caret"></b></a>
-                    <ul class="dropdown-menu">
-                    <?php  $id = $this->session->userdata('user_id'); 
-                        if($this->helper_model->validate_user_session()){?>
-                        <li><a href="<?=base_url().'user_profile';?>">Change Password</a></li>
-                        <li><a href="<?=base_url().'user_profile/jobseeker_details/'.$id;?>">Profile</a></li>
-                        <?php } else{?>
-                        		 <li><a href="<?=base_url().'register';?>">Register As JobSeeker</a></li>
-                        		<li><a href="<?=base_url().'register/register_employeer';?>">Login</a></li>
-                        	<?php }?>
-                    </ul>
-                </li>
-		        <?php if(!$this->helper_model->validate_user_session()):?>
+		        <?php
+		        if(!($this->helper_model->validate_user_session() || isset($_SESSION['tw_status']) || isset($_SESSION['fb_access_token']))):?>
 		        <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">Register<b class="caret"></b></a>
                     <ul class="dropdown-menu">
                         <li><a href="<?=base_url().'register';?>">Register As JobSeeker</a></li>
-                        <li><a href="<?=base_url().'register/register_employeer';?>">Register As Employer</a></li>
+                        <li><a href="<?=base_url().'register/register_employer';?>">Register As Employer</a></li>
                     </ul>
                 </li>
- 
                 <?php
                 	endif;
                 ?>
-                <?php if($this->helper_model->validate_user_session() || isset($_SESSION['tw_status']) || isset($_SESSION['fb_access_token'])){?>
-                		<li><a href="resume.html">Upload Resume</a></li>
-                		<li><a  href="<?=base_url().'login_user/logout'?> ">Logout</a></li>
-                	<?php }else{?>
-		        		<li><a href="<?=base_url().'login'?>">Login</a></li>
-                	<?php	
+
+                <?php
+		        	if($this->helper_model->validate_user_session() || isset($_SESSION['tw_status']) || isset($_SESSION['fb_access_token'])) {
+		        		if(isset($_SESSION['tw_status'])) {
+		        			$user = $_SESSION['tw_status'];
+		        		} else if(isset($_SESSION['fb_access_token'])) {
+		        			$user = $_SESSION['fb_access_token'];
+		        		} else {
+		        			$user = $this->session->userdata('name');
+		        		}
+		        ?>
+		        <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">Welcome, <?=$user?><b class="caret"></b></a>
+                    <ul class="dropdown-menu">
+                    	<li><a href="<?=base_url().'user_profile';?>">Change Password</a></li>
+                        <li><a href="<?=base_url().'user_profile/jobseeker_details/';?>">Profile</a></li>
+                        <li><a href="resume.html">Upload Resume</a></li>
+                        <li><a href="<?=base_url().'login_user/logout';?>">Logout</a></li>
+                    </ul>
+                </li>
+                <?php
+                	} else {
+                ?>
+                <li><a href="<?=base_url().'login';?>">Login</a></li>
+                <?php
                 	}
                 ?>
+
 	        </ul>
 	    </div>
 	    <div class="clearfix"> </div>

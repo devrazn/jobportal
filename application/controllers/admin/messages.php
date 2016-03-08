@@ -7,6 +7,9 @@ class Messages extends CI_Controller {
 
     function __construct() {
 		parent::__construct();
+        if(!$this->helper_model->validate_admin_session()){
+          redirect(base_url() . 'admin');
+        }
 		$this->load->model('admin/messages_model');
 	}
 

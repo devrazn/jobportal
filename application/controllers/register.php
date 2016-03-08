@@ -6,7 +6,10 @@ if (!defined('BASEPATH'))
 class Register extends CI_Controller {
 
     function __construct() {
-		parent::__construct();		
+		parent::__construct();
+		if($this->helper_model->validate_user_session()){
+			redirect(base_url());
+		}
 		$this->load->model('registration_model');
 	}
 
@@ -18,176 +21,101 @@ class Register extends CI_Controller {
 		$this->template->publish('register/register_jobseeker',$data);
 	}
 
-	public function register_employeer() {
+	public function register_employer() {
 		$this->template->set_template('register');
 		$data['menu_active']='register';
         $this->template->__set('title', 'Register');
-		$this->template->publish('register/register_employeer',$data);
+		$this->template->publish('register/register_employer',$data);
    	}
 
 	function add_user($user){
 		if($user==1){
-			$dob_estd = "Date of Birth";
+			//echo $user; exit;
 			$f_name = "First Name";
 			$this->form_validation->set_rules('l_name', "Last Name",'required|xss_clean');
-			$this->form_validation->set_rules('email', "Email",'required|xss_clean|valid_email|callback_check_email_check');
 			$this->form_validation->set_rules('gender', "Gender",'required|xss_clean');
 			$this->form_validation->set_rules('marital_status', "Marital Status",'required|xss_clean');
-		}else {
+			$this->form_validation->set_rules('phone', "Phone",'xss_clean|trim');
+			$this->form_validation->set_rules('dob_estd', "Date of Birth",'xss_clean|trim|callback_validate_date');
+		} else {
+			//echo $user; exit;
 			$dob_estd = "Date of Establishment";
 			$f_name = "Company Name";
-			$this->form_validation->set_rules('company_type', "Company Type",'required|xss_clean|trim');
-			$this->form_validation->set_rules('profile', "Profile",'xss_clean|trim');
-			$this->form_validation->set_rules('benefits', "Benefits",'xss_clean|trim');
-			$this->form_validation->set_rules('website', "Website","xss_clean|callback_valid_url|trim");
+			$this->form_validation->set_rules('phone', "Phone",'required|xss_clean|trim|is_natural_no_zero|min_length[7]|max_length[15]');
+			// $this->form_validation->set_rules('company_type', "Company Type",'required|xss_clean|trim');
+			// $this->form_validation->set_rules('profile', "Profile",'xss_clean|trim');
+			// $this->form_validation->set_rules('benefits', "Benefits",'xss_clean|trim');
+			$this->form_validation->set_rules('website', "Website","xss_clean|trim|valid_url");
+			$this->form_validation->set_rules('address', "Address",'required|trim|xss_clean');
+			$this->form_validation->set_rules('image', "Image",'xss_clean|callback_handle_upload');
+			$this->form_validation->set_rules('dob_estd', "Established Year",'xss_clean|trim|greater_than[1900]|callback_validate_date_year');
 		}
-			$this->form_validation->set_rules('f_name', $f_name,'required|xss_clean|trim');
-			$this->form_validation->set_rules('email', "Email",'required|xss_clean|trim|valid_email|is_unique[tbl_users.email]');
-			$this->form_validation->set_rules('password','Password','required|xss_clean|min_length[6]|max_length[50]');
-			$this->form_validation->set_rules('cpassword','Confirm Password','required|xss_clean|matches[password]');
-			$this->form_validation->set_rules('dob_estd', $dob_estd,'trim|required|xss_clean');
-			$this->form_validation->set_rules('address', "Address",'trim|required|xss_clean');
-			$this->form_validation->set_rules('phone', "Phone",'trim|required|xss_clean|regex_match[/^[0-9]{10}$/]');
-			if (empty($_FILES['image']['name'])) {
-				$this->form_validation->set_rules('required|image', "Image",'xss_clean');
-			}
+		$this->form_validation->set_rules('f_name', $f_name,'required|xss_clean|trim');
+		$this->form_validation->set_rules('email', "Email",'required|xss_clean|trim|valid_email|is_unique[tbl_users.email]');
+		$this->form_validation->set_message('is_unique', 'This %s has already been registered with JobPortal.');
+		$this->form_validation->set_rules('password','Password','required|xss_clean|min_length[6]|max_length[50]');
+		$this->form_validation->set_rules('cpassword','Confirm Password','required|xss_clean|matches[password]');
+		//$this->form_validation->set_rules('dob_estd', $dob_estd,'trim|required|xss_clean');
+		
+		$this->form_validation->set_rules('newsletter_subscription', "Newsletter Subscription", 'xss_clean');
+		
 		
 		if($this->form_validation->run()==FALSE) {
+			if(isset($_POST['image']) && file_exists("/uploads/user/" . $_POST['image'])) {
+				@unlink("./uploads/user/" . $_POST['image']);
+			}
 				$this->template->set_template('register');
 			 	$data['menu_active']='register';
 	         	$this->template->__set('title', 'Register');
          	if($user==1){
 		    	$this->template->publish('register/register_jobseeker',$data);
-         	}else{
-         		$this->template->publish('register/register_employeer',$data);
+         	} else {
+         		$this->template->publish('register/register_employer',$data);
          	}
 		} else {
-			if ($_FILES['image']['name'] != '') {
-                $uploaded_details = $this->upload_image('image');
-                if (!$uploaded_details) {
-                  
-                }
-				else {
-					$this->load->library("image_lib");
-					$config['image_library'] = 'gd2';
-	                $config['source_image'] = './uploads/user/'.$uploaded_details['file_name'];
-	                $config['create_thumb'] = TRUE;
-	                $config['thumb_marker'] = false;
-	                $config['maintain_ratio'] = TRUE;
-	                $config['width'] = $this->config->item('width');
-	                $config['height'] = $this->config->item('height');
-	                $config['new_image'] = './uploads/user/';
-	                $this->image_lib->initialize($config);
-             	}
-            }
-
-            $activation_code=$this->registration_model->register($uploaded_details['file_name']);
+			if(!isset($_POST['image'])){
+				$_POST['image']='';
+			}
+            $activation_code = $this->registration_model->register($user, $_POST['image']);
    			if($activation_code!='system_error') {
-			     $this->registration_model->reg_confirmation_email($activation_code);
+			    if($this->registration_model->reg_confirmation_email($activation_code)) {
+				    $this->session->set_userdata( 'user_flash_msg_type', "success" );
+		        	$this->session->set_flashdata('user_flash_msg', "You've successfully created your JobPortal Account. A verification link has been sent to your email. Please check your inbox");
+		        	redirect(base_url());
+		        } else {
+		        	$this->registration_model->hard_delete_user($this->input->post('email'));
+		        	if(isset($_POST['image']) && file_exists("./uploads/user/" . $_POST['image'])) {
+						@unlink("./uploads/user/" . $_POST['image']);
+					}
+					$this->session->set_userdata( 'user_flash_msg_type', "danger" );
+		        	$this->session->set_flashdata('user_flash_msg', "Sorry, we cannot complete your registration at the moment. Please try again later.");
+					$this->template->set_template('register');
+			 		$data['menu_active']='register';
+	         		$this->template->__set('title', 'Register');
+         			if($user==1){
+		    			$this->template->publish('register/register_jobseeker',$data);
+         			} else {
+         				$this->template->publish('register/register_employer',$data);
+         			}
+		        }
 			}
 
-			// $this->registration_model->register($uploaded_details['file_name']);
-			// $this->template->set_template('home');
-			// $data['menu_active']='register';
-	  //       $this->template->__set('title', 'Home');
-		 // 	$this->template->publish('home',$data);
-
 		}
-	}	
-		
-	function success() {
-			$cms=$this->Cms_model->get_cms(35);
-		
-			$data['menu_active']=$id;
-			
-			$data['headtext']=$cms['headtext'];
-			$data['content']=$cms['content'];
-
-			
-			$this->template->set_template('two');
-			
-	        $this->template->write('title', $cms['page_title']);
-			$this->template->write('meta_description', $cms['meta_description']);
-			$this->template->write('meta_key_word', $cms['meta_key_word']);
-		
-			
-			$this->template->write_view('content_left', 'cms/left',$data);
-			$this->template->write_view('content_right', 'cms/cms',$data);
-			
-			$this->template->render();
-	}
-		
-	function failed() {
-		echo 'failed';exit;
-		$cms=$this->Cms_model->get_cms(37);
-		
-		$data['menu_active']=$id;
-		
-		$data['headtext']=$cms['headtext'];
-		$data['content']=$cms['content'];
-
-		
-		$this->template->set_template('two');
-		
-        $this->template->write('title', $cms['page_title']);
-		$this->template->write('meta_description', $cms['meta_description']);
-		$this->template->write('meta_key_word', $cms['meta_key_word']);
-	
-		
-		$this->template->write_view('content_left', 'cms/left',$data);
-		$this->template->write_view('content_right', 'cms/cms',$data);
-		
-		$this->template->render();
-	}
-		
-	function successed() {
-		echo "sucess";die;
-		$cms=$this->settings_model->get_cms_content(36);
-		$data['menu_active']=$id;
-		
-		$data['headtext']=$cms['headtext'];
-		$data['content']=$cms['content'];
-
-		$this->template->set_template('two');
-		
-        $this->template->write('title', $cms['page_title']);
-		$this->template->write('meta_description', $cms['meta_description']);
-		$this->template->write('meta_key_word', $cms['meta_key_word']);
-	
-		
-		$this->template->write_view('content_left', 'cms/left',$data);
-		$this->template->write_view('content_right', 'cms/cms',$data);
-		
-		$this->template->render();
 	}
 
-	function activation_process($activation_code,$key) {
-        if($this->registration_model->activated($key,$activation_code)==true) {
-			redirect('register/successed/');					
+
+	function activation_process($key='', $hash_email='') {
+		$email = $this->registration_model->activated($key, $hash_email);
+        if($email) {
+        	$this->session->set_userdata( 'user_flash_msg_type', "success" );
+	        $this->session->set_flashdata('user_flash_msg', "Congratulations, you've successfully activated your JobPortal account.");
+	        $this->helper_model->set_user_login_session($email);
+			redirect(base_url());					
 		} else {
 			echo "Invalid Credentials"; exit;
 		}
- 	}
-		
-	function check_email_check() {
-		if($this->registration_model->get_aleady_registered_email()==TRUE) {
-			$this->form_validation->set_message('check_email_check', 'This Email is Already Registered,Please Choose Another One.');
-			return false;
-		}
-			return true;
-	}			
-		
-	function username_check() {
-        if(strlen($this->input->post('username'))<6 || strlen($this->input->post('username'))>16) {
-			$this->form_validation->set_message('username_check', 'Username should be within 6-16');
-			return false;     	
-		}
-		else if($this->registration_model->get_aleady_registered_email()==TRUE) {
-			$this->form_validation->set_message('username_check', 'This username is Already Registered,Please Choose Another One.');
-			return false;
-		}
-			return true;
-	}
+ 	}		
+ 	
 	
 	function password_check(){
         if($this->input->post('cpassword')!=$this->input->post('password')) {
@@ -204,33 +132,81 @@ class Register extends CI_Controller {
 		}
 			return true;        
 	}
-		
-	function upload_image($file) {
-        $config['upload_path'] = './uploads/user/';
-        $config['allowed_types'] = 'gif|jpg|jpeg|png';
-        $config['max_size'] = '9999999999999999999999999999999999999999';
-        $config['max_width'] = '9999999999999999999999999999999999999999';
-        $config['max_height'] = '9999999999999999999999999999999999999999';
-        $config['remove_spaces'] = 'true';
 
-        $this->load->library('upload', $config);
-        $this->upload->do_upload($file);
 
-        if ($this->upload->display_errors()) {
-            $this->error = $this->upload->display_errors();
-            return false;
+    function handle_upload() {
+        if (isset($_FILES['image']) && !empty($_FILES['image']['name'])) {
+            $config['upload_path']          = './uploads/user';
+            $config['allowed_types']        = 'gif|jpg|png|jpeg';
+            $config['max_size']             = 10000;
+            $config['max_width']            = 3840;
+            $config['max_height']           = 2160;
+            $config['min_width']            = 480;
+            $config['min_height']           = 360;
+            $config['remove_spaces']        = true;
+            $config['file_ext_tolower']     = true;
+            $config['encrypt_name']         = true;
+
+            $this->load->library('upload', $config);
+
+            if ($this->upload->do_upload('image')) {
+                // set a $_POST value for 'image' that we can use later
+                $upload_data = $this->upload->data();
+                $_POST['image'] = $upload_data['file_name'];
+                return true;
+            } else {
+                // possibly do some clean up ... then throw an error
+                $this->form_validation->set_message('handle_upload', "<div style='color:red'>" . $this->upload->display_errors() . "</div>");
+                return false;
+            }
         } else {
-            $data = $this->upload->data();
-            return $data;
+            // throw an error because nothing was uploaded
+            $this->form_validation->set_message('handle_upload', "You must select an image to upload.");
+            return false;
         }
     }
 
-    function valid_url($url){
+    /*function valid_url($url){
     	$pattern = "|^http(s)?://[a-z0-9-]+(.[a-z0-9-]+)*(:[0-9]+)?(/.*)?$|i";
 	    if (!preg_match($pattern, $url)){
 	        return FALSE;
 	    }
 			return TRUE;
+	}*/
+
+
+	public function validate_date($date){
+		$parts = explode("-", $date);
+	    if (count($parts) == 3) { 
+			if (checkdate($parts[1], $parts[2], $parts[0])){
+				$datetime1 = new DateTime($date);
+		        $datetime2 = new DateTime('now');
+		        $interval = $datetime2->diff($datetime1);
+		        $diff = $interval->format('%R%a');
+		        if($diff >= 0){
+		        	$this->form_validation->set_message('validate_date', 'The %s must be yyyy-mm-dd format with date between 1900-01-01 & current date');
+		        	return false;
+		        } else {
+		        	return TRUE;
+		        }
+	      	} else {
+	      		$this->form_validation->set_message('validate_date', 'The %s must be yyyy-mm-dd format & between current date & 1900-01-01');
+		        return false;
+	      	}
+	    } else {
+		    $this->form_validation->set_message('validate_date', 'The %s must be yyyy-mm-dd format & between current date & 1900-01-01');
+		    return false;
+		}
+	}
+
+
+	public function validate_date_year($year){
+		if($year - date("Y") > 0){
+			$this->form_validation->set_message('validate_date_year', 'The %s field must be between current 1900 & current year');
+			return false;
+		} else {
+			return true;
+		}
 	}
 
 }

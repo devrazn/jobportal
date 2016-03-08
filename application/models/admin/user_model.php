@@ -20,13 +20,17 @@ class User_model extends CI_Model {
         return $query->row_array();
     }
 
-    function change_status($status, $id) {
-        $sql ="Update tbl_users SET status='$status' where id='$id'";
-        return($this->db->query($sql));
+    function update_jobseeker_status() {
+        $data = array('verification_status' => $this->input->post('verification_status'),
+                    'account_status' => $this->input->post('account_status')
+                  );
+      $this->db->where('id', $this->input->post('id'));
+      return $this->db->update('tbl_users', $data);
     }
 
-    function update_employer() {
-      $data = array('status' => $this->input->post('status'),
+    function update_employer_status() {
+      $data = array('verification_status' => $this->input->post('verification_status'),
+                    'account_status' => $this->input->post('account_status'),
                     'feature_in_slider' => $this->input->post('feature_in_slider')
         );
       $this->db->where('id', $this->input->post('id'));

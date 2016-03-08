@@ -59,14 +59,31 @@
                 </div>
             
                 <div class="form-group">
-                  <label>Status&nbsp;&nbsp;</label>
+                  <label>Verification Status&nbsp;&nbsp;</label>
                   <label class="radio-inline">
-                      <input type="radio" value="1" name="status" <?php if(set_value('status',$info['status'])==1){echo "checked";}?> >Active
+                      <input type="radio" value="0" name="verification_status" <?php if(set_value('verification_status',$info['verification_status'])==0){echo "checked";}?> >Unverified
                   </label>
                   <label class="radio-inline">
-                      <input type="radio" value="0" name="status" <?php if(set_value('status',$info['status'])==0) {echo "checked";}?> >Inactive
+                      <input type="radio" value="1" name="verification_status" <?php if(set_value('verification_status',$info['verification_status'])==1) {echo "checked";}?> ><?php if($info['user_type']==1){echo "Verified";} else {echo "Verified";} ?>
                   </label>
-                  <?=form_error('status')?>
+                  <label class="radio-inline">
+                      <input type="radio" value="2" name="verification_status" <?php if(set_value('verification_status',$info['verification_status'])==2) {echo "checked";}?> >Email &amp Admin Verified
+                  </label>
+                  <?=form_error('verification_status')?>
+              </div>
+
+              <div class="form-group">
+                  <label>Account Status&nbsp;&nbsp;</label>
+                  <label class="radio-inline">
+                      <input type="radio" value="1" name="verification_status" <?php if(set_value('account_status',$info['account_status'])==1){echo "checked";}?> >Active
+                  </label>
+                  <label class="radio-inline">
+                      <input type="radio" value="2" name="verification_status" <?php if(set_value('verification_status',$info['verification_status'])==2) {echo "checked";}?> >Suspended
+                  </label>
+                  <label class="radio-inline">
+                      <input type="radio" value="3" name="verification_status" <?php if(set_value('verification_status',$info['verification_status'])==3) {echo "checked";}?> >Blocked
+                  </label>
+                  <?=form_error('verification_status')?>
               </div>
               <button class="btn btn-success" type="submit">Update</button>
               <button class="btn btn-warning" type="reset">Reset</button>

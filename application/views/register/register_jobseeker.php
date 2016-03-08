@@ -22,7 +22,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 <div class="container">
     <div class="single">  
 	   <div class="form-container">
-        <h2>Register Form</h2>
+        <h2>Register as Jobseeker</h2>
         <form role="form" id="frmRegister" method="post" action="<?=base_url().'register/add_user/1'?>" enctype="multipart/form-data">
 	        <div class="form-group">
 	            <div class="form-group col-md-12">
@@ -72,63 +72,38 @@ defined('BASEPATH') OR exit('No direct script access allowed');
     	    <div class="form-group">
                 <div class="form-group col-md-12">
                     <label class="col-md-3 control-lable">Gender</label>
-                        <div class="col-md-4">
-                            <label class="radio-inline">
-                                <input type="radio" value="1" name="gender" <?php if(set_value('gender')=='1') echo "checked";?> >Male
-                            </label>
-                            <label class="radio-inline">
-                                <input type="radio" value="0" name="gender" <?php if(set_value('gender')=='0') echo "checked";?> >Female
-                            </label>
-                            <?= form_error('gender') ?>
-                        </div>
-                </div>
-            </div>
-            <div class="form-group">
-                <div class="form-group col-md-12">
-                    <label class="col-md-3 control-lable">Image</label>
                     <div class="col-md-4">
-                       <input type="file" name="image" value="<?= set_value('image') ?>" accept="gif|GIF|png|PNG|jpg|JPG|jpeg|JPEG">
-                    <?= form_error('image') ?>
+                        <label class="radio-inline">
+                            <input type="radio" value="1" name="gender" <?php if(set_value('gender')=='1') echo "checked";?> >Male
+                        </label>
+                        <label class="radio-inline">
+                            <input type="radio" value="0" name="gender" <?php if(set_value('gender')=='0') echo "checked";?> >Female
+                        </label>
+                        <?= form_error('gender') ?>
                     </div>
                 </div>
             </div>
-             <div class="form-group">
-                <div class="form-group col-md-12">
-                    <label class="col-md-3 control-lable">Phone</label>
-                    <div class="col-md-4">
-                       <input type="text" name="phone" class="form-control input-sm" value="<?= set_value('phone') ?>"/>
-                    <?= form_error('phone') ?>
-                    </div>
-                </div>
+             
             </div>
     	    <div class="form-group">
                 <div class="form-group col-md-12">
                     <label class="col-md-3 control-lable">Date of birth</label>
                     <div class="col-md-4">
-                        <input type="text" name="dob_estd" id="datepicker" class="form-control input-sm" value="<?= set_value('dob_estd')?>"/>
+                        <input type="text" name="dob_estd" id="datepicker" placeholder="Enter date in YYYY-MM-DD format" class="form-control input-sm" value="<?= set_value('dob_estd')?>"/>
                     <?= form_error('dob_estd') ?>
                     </div>
                 </div>
             </div>
-    	    <div class="form-group">
-    	        <div class="form-group col-md-12">
-    	            <label class="col-md-3 control-lable">Address</label>
-    	            <div class="col-md-4">
-                        <textarea cols="39" rows="6" name="address"><?= set_value('address') ?></textarea>
-    	            <?= form_error('address') ?>
-                    </div>
-                </div>
-    	    </div>
 
             <div class="form-group">
                 <div class="form-group col-md-12">
                     <label class="col-md-3 control-lable">Marital Status</label>
                         <div class="col-md-4">
                             <label class="radio-inline">
-                                <input type="radio" value="1" name="marital_status" <?php if(set_value('marital_status')=='1') echo "checked";?>>Unmarried
+                                <input type="radio" value="1" name="marital_status" <?php if(set_value('marital_status')=='0') echo "checked";?>>Unmarried
                             </label>
                             <label class="radio-inline">
-                                <input type="radio" value="0" name="marital_status" <?php if(set_value('marital_status')=='0') echo "checked";?>>Marrried
+                                <input type="radio" value="0" name="marital_status" <?php if(set_value('marital_status')=='1') echo "checked";?>>Marrried
                             </label>
                         <?= form_error('marital_status') ?>
                         </div>
@@ -139,7 +114,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                 <div class="form-group col-md-12">
                     <label class="col-md-3 control-lable">Newsletter Subscription</label>
                     <div class="col-md-4">
-                        <input type="hidden" name="newsletter_subscription" value="0" />
+                        <!-- <input type="hidden" name="newsletter_subscription" value="0" /> -->
                         <input type="checkbox" name="newsletter_subscription" value="1" <?php if ($this->input->post('newsletter_subscription') == 1) echo "checked"?>/>
                         Would you like to receive our newsletter? 
                     </div>

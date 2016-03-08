@@ -2,9 +2,9 @@
     <h3><?=$job_details["title"]?></h3>
     <div class="row_1">
         <div class="col-sm-3 single_img">
-      		<a href="<?=base_url().'employer/'.$job_details["user_id"]?>">
-      			<img src="<?=base_url().'uploads/user/'.$job_details["image"]?>" class="img-responsive" alt="<?=$job_details["f_name"]?>" title="<?=$job_details["f_name"]?>"/>
-      		</a>
+            <a href="<?=base_url().'employer/'.$job_details["user_id"]?>">
+                <img src="<?=base_url().'uploads/user/'.$job_details["image"]?>" class="img-responsive" alt="<?=$job_details["f_name"]?>" title="<?=$job_details["f_name"]?>"/>
+            </a>
         </div>
         <div class="col-sm-9 single-para">
             <dl class="dl-horizontal">
@@ -146,17 +146,19 @@ endif;
         Apply via JobPortal:
             <ul><?php
                     if(!$this->helper_model->validate_user_session()) {
-                        echo "<p>Please <a onClick='apply()' href='" . base_url() . "login'> login </a>to apply.</p>";
+                        echo "<div>Please <a onClick='apply()' href='" . base_url() . "login'>login</a> to apply.</div>";
                     } else {
-                        if(!$this->helper_model->check_job_app_status($job_details['job_id'])) {
+                        if($this->session->userdata('user_type')==1) {
+                            if(!$this->helper_model->check_job_app_status($job_details['job_id'])) {
                 ?>
                 <p id="apply_button">
                     <a id="job_apply" href="javascript:void(0)" class="btn btn-default pull-left">Apply Now</a><br>
                 </p>
                 <?php
                     } else {
-                        echo "<p style='color:red'>You've applied for this job.</p>";
+                        echo "<div style='color:red'>You've applied for this job.</div>";
                     }
+                }
                 ?>
                 <?php
                     }
@@ -168,14 +170,14 @@ endif;
         ?>
         <?php
             } else {
-                echo "<p style='color:red'>Job Application Date Expired.</p>";
+                echo "<div style='color:red'>Job Application Date Expired.</div>";
             }
         ?>
 
     </div>
 </div>
 <?php
-    if($deadline_day>=0):
+    if($deadline_day>=0 && !$this->helper_model->check_job_app_status($job_details['job_id']) && $this->session->userdata('user_type')==1):
 ?>
 <script type="text/javascript">
     $(document).ready(function(){

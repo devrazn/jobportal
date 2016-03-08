@@ -9,26 +9,13 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>Job Portal - Reset Password</title>
+    <title>Job Portal - Reset Admin Password</title>
 
     <!-- Bootstrap Core CSS -->
     <link href="<?=base_url();?>assets/admin/template/bower_components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
 
-    <!-- MetisMenu CSS -->
-    <!--<link href="../bower_components/metisMenu/dist/metisMenu.min.css" rel="stylesheet">-->
-
     <!-- Custom CSS -->
     <link href="<?=base_url();?>assets/admin/template/dist/css/sb-admin-2.css" rel="stylesheet">
-
-    <!-- Custom Fonts -->
-    <!--<link href="../bower_components/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">-->
-
-    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
-    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
-    <!--[if lt IE 9]>
-        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
-        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
-    <![endif]-->
 
 </head>
 
@@ -42,7 +29,7 @@
                         <h3 class="panel-title">Reset Your Password</h3>
                     </div>
                     <div class="panel-body">
-                        <form role="form" method="post" action="<?=base_url();?>login/reset_pw_validation">
+                        <form role="form" method="post" action="<?=base_url();?>login_admin/validate_admin_pw_reset_credentials">
                             
                             <fieldset>
                                 <div class="form-group">
@@ -70,18 +57,7 @@
         </div>
     </div>
 
-    <!-- jQuery -->
-    <script src="../bower_components/jquery/dist/jquery.min.js"></script>
-
-    <!-- Bootstrap Core JavaScript -->
-    <!--<script src="../bower_components/bootstrap/dist/js/bootstrap.min.js"></script>-->
-
-    <!-- Metis Menu Plugin JavaScript -->
-    <!--<script src="../bower_components/metisMenu/dist/metisMenu.min.js"></script>-->
-
-    <!-- Custom Theme JavaScript -->
-    <!--<script src="../dist/js/sb-admin-2.js"></script>-->
-
 </body>
-
+<!-- jQuery -->
+<script src="../bower_components/jquery/dist/jquery.min.js"></script>
 </html>

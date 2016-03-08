@@ -27,7 +27,7 @@
                     endif;
                 ?>
                 <dt>Established</dt>
-                <dd><?=$this->helper_model->humanize_date($employer_details['dob_estd'])?></dd>
+                <dd><?=$employer_details['dob_estd']?></dd>
                 <?php
                     if($employer_details['website']):
                 ?>

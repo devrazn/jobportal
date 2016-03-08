@@ -31,17 +31,17 @@
                   </div>
                   <div class="radio">
                       <label>
-                          <input type="radio" name="receiver_options" id="optionsRadios3" value="4">All Subscribers registered as employeers
+                          <input type="radio" name="receiver_options" value="4">All Subscribers registered as employeers
                       </label>
                   </div>
                   <div class="radio">
                       <label>
-                          <input type="radio" name="receiver_options" id="optionsRadios3" value="5">All verified users who are also subscribers
+                          <input type="radio" name="receiver_options" value="5">All verified users who are also subscribers
                       </label>
                   </div>
                   <div class="radio">
                       <label>
-                          <input type="radio" name="receiver_options" id="optionsRadios3" value="6">All unverified users
+                          <input type="radio" name="receiver_options" value="6">All unverified users who are subscribers
                       </label>
                   </div>
                 <?=form_error('receiver_options')?> 
@@ -65,18 +65,6 @@
                     ?>
 
                     <?=form_error('content')?>
-                </div>
-                           
-                <div class="form-group">
-                    <label>Send From</label>
-                    <input name="sender" type="text" id='sender' class="form-control" size="50" placeholder="Enter sender email" value="<?=set_value('sender', $mail_settings['smtp_user']);?>">
-                    <?=form_error('sender')?>
-                </div>
-                
-                <div class="form-group">
-                    <label>Password</label>
-                    <input name="password" type="password" id='password' class="form-control" size="50" placeholder="Enter password for <?=set_value('sender', $mail_settings['smtp_user']);?>">
-                    <?=form_error('password')?>
                 </div>
 
                 <button class="btn btn-success" type="submit">Submit</button>
@@ -108,9 +96,5 @@
 
   $("#receiver_email").click(function(){
     $("#single").prop("checked", true);
-  });
-
-  $('#sender').on('input', function() {
-    $("#password").attr("placeholder", "Enter password for " + $('#sender').val());
   });
 </script>

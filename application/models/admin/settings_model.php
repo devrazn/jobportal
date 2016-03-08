@@ -182,6 +182,7 @@ class Settings_model extends CI_Model {
 			'smtp_host' => $this->input->post('smtp_host'),
 			'smtp_port' => $this->input->post('smtp_port'),
 			'smtp_user' => $this->input->post('smtp_user'),
+			'smtp_pass' => $this->helper_model->encrypt_me($this->input->post('smtp_pass')),
 			'receive_email' => $this->input->post('receive_email')
 			//'charset' => $this->input->post('charset'),
 			//'newline' => $this->input->post('newline')			

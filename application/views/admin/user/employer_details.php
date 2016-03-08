@@ -27,17 +27,22 @@
                                 <dt>Employer / Company</dt>
                                 <dd><?=$user_info['f_name']?></dd>
                                 <dt>Established</dt>
-                                <dd>
+                                <dd><?=$user_info['dob_estd']?>
                                     <?php
-                                        echo $this->helper_model->humanize_date($user_info['dob_estd']);
-                                        $age = $this->helper_model->calculate_age_year_from_y_m_d($user_info['dob_estd']); 
-                                    ?> &nbsp;&nbsp;&nbsp;(<?php
+                                        $age = $this->helper_model->calculate_age_from_year($user_info['dob_estd']); 
+                                    ?> &nbsp;(<?php
                                                                         echo $age . ' Yr';
                                                                         if($age>1) echo 's';
                                                                     ?> ago)
                                 </dd>
+                                <?php 
+                                    if($user_info['company_type']):
+                                ?>
                                 <dt>Type</dt>
                                 <dd><?=$user_info['company_type']?></dd>
+                                <?php
+                                    endif;
+                                ?>
                                 <dt>Email</dt>
                                 <dd><a href='javascript:void(0)' data-toggle="modal" data-target="#myModal"><?=$user_info['email']?></a></dd>
                                 <dt>Address</dt>
@@ -87,7 +92,7 @@
                                                 </div>
 
                                                 <div id='content_div' class="form-group">
-                                                    <label>Content</label>
+                                                    <label>Message</label>
                                                     <textarea id="content" name="content" rows="10" cols="80">
                                                     </textarea>
                                                     <?=form_error('content')?>
@@ -112,7 +117,7 @@
                         </div>
                         <!-- /.panel-body -->
 
-                        <form class='col-lg-6' role="form" id="employer_form" method="post" action="">
+                        <form class='col-lg-12' role="form" id="employer_form" method="post" action="">
                             <div class="form-group">
                                 <label>Feature on the homepage slider&nbsp;&nbsp;</label>
                                 <label class="radio-inline">
@@ -124,20 +129,30 @@
                                 <?=form_error('feature_in_slider')?>
                             </div>
                             <div class="form-group">
-                              <label>Status&nbsp;&nbsp;</label>
+                              <label>Verification Status&nbsp;&nbsp;</label>
                               <label class="radio-inline">
-                                  <input type="radio" value="1" name="status" <?php if(set_value('status',$user_info['status'])==1){echo "checked";}?> >Active
+                                  <input type="radio" value="0" name="verification_status" <?php if(set_value('verification_status',$user_info['verification_status'])==0){echo "checked";}?> >Unverified
                               </label>
                               <label class="radio-inline">
-                                  <input type="radio" value="0" name="status" <?php if(set_value('status',$user_info['status'])==0) {echo "checked";}?> >Unverified
+                                  <input type="radio" value="1" name="verification_status" <?php if(set_value('verification_status',$user_info['verification_status'])==1) {echo "checked";}?> >Email Verified
                               </label>
                               <label class="radio-inline">
-                                  <input type="radio" value="2" name="status" <?php if(set_value('status',$user_info['status'])==2) {echo "checked";}?> >Suspended
+                                  <input type="radio" value="2" name="verification_status" <?php if(set_value('verification_status',$user_info['verification_status'])==2) {echo "checked";}?> >Email &amp Admin Verified
+                              </label>
+                                <?=form_error('verification_status')?>
+                            </div>
+                            <div class="form-group">
+                              <label>Account Status&nbsp;&nbsp;</label>
+                              <label class="radio-inline">
+                                  <input type="radio" value="1" name="account_status" <?php if(set_value('account_status',$user_info['account_status'])==1) {echo "checked";}?> >Active
                               </label>
                               <label class="radio-inline">
-                                  <input type="radio" value="3" name="status" <?php if(set_value('status',$user_info['status'])==3) {echo "checked";}?> >Blocked
+                                  <input type="radio" value="2" name="account_status" <?php if(set_value('account_status',$user_info['account_status'])==2) {echo "checked";}?> >Suspended
                               </label>
-                              <?=form_error('status')?>
+                              <label class="radio-inline">
+                                  <input type="radio" value="3" name="account_status" <?php if(set_value('account_status',$user_info['account_status'])==3) {echo "checked";}?> >Blocked
+                              </label>
+                            <?=form_error('account_status')?>
                             </div>
                             <input type='hidden' name='id' value="<?=$user_info['id']?>" >
                             <div id='action_status_user'>
@@ -205,7 +220,6 @@
                                                     <dt>Experience</dt>
                                                     <dd><?php 
                                                             echo $row['experience'];
-                                                            if($row['experience']>1) echo 's';
                                                         ?>
                                                     </dd>
                                                     <dt>Salary</dt>
@@ -333,7 +347,7 @@
 
                 $.ajax({
                     type: 'post',
-                    url: "<?=base_url().'admin/user/update_employer'; ?>",
+                    url: "<?=base_url().'admin/user/update_employer_status'; ?>",
                     data: values,
                     beforeSend: function(){
                         $('#action_status_user').html("<img src='<?php echo base_url('assets/ajax/images/ajax-loader_dark.gif');?>' >");
@@ -360,7 +374,8 @@
                                 "<button aria-label='Close' data-dismiss='alert' class='close' type='button'>" + 
                                 "<span aria-hidden='true'>×</span>" +
                                 "</button>" + 
-                                "An Unknown Error Occured. Please Try Again Later" + 
+                                //"An Unknown Error Occured. Please Try Again Later" + 
+                                data +
                                 "</div>";
 
                             $('.alert').remove();
