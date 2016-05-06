@@ -33,7 +33,7 @@ class Settings extends CI_Controller {
         $this->form_validation->set_rules('site_status', 'Site Status', 'xss_clean');
         $this->form_validation->set_rules('prev_image', 'Previous Image', 'xss_clean');
         $this->form_validation->set_rules('site_offline_msg', 'Site Offline Message', 'required|xss_clean');
-        //$this->form_validation->set_rules('logo', 'Logo Image', 'xss_clean|callback_handle_upload');
+        $this->form_validation->set_rules('logo', 'Logo Image', 'xss_clean|callback_handle_upload');
 
         $this->helper_model->editor();
         
@@ -102,8 +102,8 @@ class Settings extends CI_Controller {
             }
         } else {
             // throw an error because nothing was uploaded
-            $this->form_validation->set_message('handle_upload', "You must select an image to upload.");
-            return false;
+            //$this->form_validation->set_message('handle_upload', "You must select an image to upload.");
+            return true;
         }
     }
 

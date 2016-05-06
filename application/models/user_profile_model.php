@@ -56,6 +56,31 @@ class User_Profile_Model extends CI_Model {
         return $query->result_array();
 	}
 
-   
+	public function get_user_detail($id) {
+    	return $this->db->get_where('tbl_users', array('id' => $id))->row_array();
+	}
+
+	public function update_user_detail($image,$id) {
+		if ($image == '')
+            $image = $this->input->post('prev_image');
+    	$data = array(
+    					'f_name' => $this->input->post('f_name'),
+			            'l_name' => $this->input->post('l_name'),
+			            'gender' => $this->input->post('gender'),
+			            'dob_estd' => $this->input->post('dob_estd'),
+			            'address' => $this->input->post('address'),
+			            'marital_status' => $this->input->post('marital_status'),
+			            'phone' => $this->input->post('phone'),
+			            'website' => $this->input->post('website'),
+			            'newsletter_subscription' => $this->input->post('newsletter_subscription'),
+			            'image'=> $image,
+        );
+        $this->db->where('id', $id);
+        if($this->db->update('tbl_users', $data)){
+			return true;
+		} else {
+			return false;
+		}
+	}
 }
 ?>

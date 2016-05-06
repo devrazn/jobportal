@@ -190,6 +190,7 @@
                 ?>
 
                 <?php
+                $id = $this->session->userdata('user_id');
 		        	if($this->helper_model->validate_user_session() || isset($_SESSION['tw_status']) || isset($_SESSION['fb_access_token'])) {
 		        		if(isset($_SESSION['tw_status'])) {
 		        			$user = $_SESSION['tw_status'];
@@ -203,8 +204,9 @@
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">Welcome, <?=$user?><b class="caret"></b></a>
                     <ul class="dropdown-menu">
                     	<li><a href="<?=base_url().'user_profile';?>">Change Password</a></li>
-                        <li><a href="<?=base_url().'user_profile/jobseeker_details/';?>">Profile</a></li>
+                        <li><a href="<?=base_url().'user_profile/jobseeker_details/'.$id;?>">Profile</a></li>
                         <li><a href="resume.html">Upload Resume</a></li>
+                        <li><a href="<?=base_url().'user_profile/edit_profile/'.$id;?>">Update Profile</a></li>
                         <li><a href="<?=base_url().'login_user/logout';?>">Logout</a></li>
                     </ul>
                 </li>
