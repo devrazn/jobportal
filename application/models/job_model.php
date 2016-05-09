@@ -1,6 +1,6 @@
 <?php
 
-class Home_model extends CI_Model {
+class Job_model extends CI_Model {
 
 	public function get_job_details($id) {
 		$this->db->select('*');
@@ -39,5 +39,32 @@ class Home_model extends CI_Model {
       return $this->db->get_where('tbl_experience', $options)->result_array();*/
     }
 
+    public function post_job() {
+    	$user_id = $this->session->userdata('user_id');
+    	$data = array(
+            'title' => $this->input->post('title'),
+            'position' => $this->input->post('position'),
+            'openings' => $this->input->post('openings'),
+            'location' => $this->input->post('location'),
+            'qualification' => $this->input->post('qualification'),
+            'experience' => $this->input->post('experience'),
+            'salary' => $this->input->post('salary'),
+            'category_id' => $this->input->post('category_id'),
+            'job_description' => $this->input->post('job_description'),
+            'requirements' => $this->input->post('requirements'),
+            'facilities' => $this->input->post('facilities'),
+            'additional_info' => $this->input->post('additional_info'),
+            'published_date' => $this->helper_model->get_local_time('published_date'),
+            'deadline_date' => $this->input->post('deadline_date'),
+            'application_procedure' => $this->input->post('application_procedure'),
+            'user_id' => $user_id,
+            'status' => 1,
+        );
+        if($this->db->insert('tbl_jobs', $data)){
+        	return true;
+        } else {
+			return false;
+        }
+    }
 
 }

@@ -207,6 +207,7 @@
                         <li><a href="<?=base_url().'user_profile/jobseeker_details/'.$id;?>">Profile</a></li>
                         <li><a href="resume.html">Upload Resume</a></li>
                         <li><a href="<?=base_url().'user_profile/edit_profile/'.$id;?>">Update Profile</a></li>
+                        <li><a href="<?=base_url().'job/'?>">Post Job</a></li>
                         <li><a href="<?=base_url().'login_user/logout';?>">Logout</a></li>
                     </ul>
                 </li>
