@@ -1,17 +1,12 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-ini_set('include_path', 'C:\xampp\htdocs\jobportal\api\gmail\vendor\google\apiclient\src');
-require_once ('api/gmail/vendor/autoload.php');
-require_once 'Google/Client.php';
-require_once 'Google/Service/Oauth2.php';
-
-
 class Api_Login extends CI_Controller {
 
 	public function __construct()
 	{
 	  	parent::__construct();
+	  	$this->load->model('api_login_model');
 	}
 
 	public function twitter(){
@@ -63,40 +58,35 @@ class Api_Login extends CI_Controller {
 		}
 	}
 
-	public function gmail(){
-		$client = new Google_Client();
-		$client->setApplicationName("Job Portal");
-		$client->setClientId(CLIENT_ID);
-		$client->setClientSecret(CLIENT_SECRET);
-		$client->setRedirectUri(REDIRECT_URI);
-		$client->setDeveloperKey(SIMPLE_API_KEY);
-		$client->addScope("https://www.googleapis.com/auth/userinfo.email");
-
-		//Send Client Request
-		$objOAuthService = new Google_Service_Oauth2($client);
-
-		//Authenticate code from Google OAuth Flow
-		//Add Access Token to Session
-		if (isset($_GET['code'])) {
-			die("hfffere");
-		  $client->authenticate($_GET['code']);
-		  $_SESSION['access_token'] = $client->getAccessToken();
-		  header('Location: ' . filter_var($redirect_uri, FILTER_SANITIZE_URL));
-		} else {
-			die("hello");
-		}
-
-		//Set Access Token to make Request
-		if (isset($_SESSION['access_token']) && $_SESSION['access_token']) {
-			die("herhgfhe");
-		  $client->setAccessToken($_SESSION['access_token']);
-		}
-
-		die("here");
-	}
-
 	public function gmail_call_back(){
-		die("there");
+		$gClient = new Google_Client();
+		$gClient->setApplicationName('Job Portal');
+		$gClient->setClientId(CLIENT_ID);
+		$gClient->setClientSecret(CLIENT_SECRET);
+		$gClient->setRedirectUri(REDIRECT_URI);
+		$google_oauthV2 = new Google_Oauth2Service($gClient);
+
+		if(isset($_REQUEST['code'])) {
+			$gClient->authenticate();
+			$_SESSION['token'] = $gClient->getAccessToken();
+			header('Location: ' . filter_var(REDIRECT_URI, FILTER_SANITIZE_URL));
+		}
+		if (isset($_SESSION['token'])) {
+			$gClient->setAccessToken($_SESSION['token']);
+		}
+
+		if ($gClient->getAccessToken()) {
+			$_SESSION['gmail_status'] = true;
+			$userProfile = $google_oauthV2->userinfo->get();
+			//DB Insert
+			$this->api_login_model->insert_gmail_user_info($userProfile);
+				unset($_SESSION['token']);
+                $this->session->set_userdata( 'user_flash_msg_type', "success" );
+                $this->session->set_flashdata('user_flash_msg', 'Sucessfully Login');
+				redirect('home');
+		} else {
+			$authUrl = $gClient->createAuthUrl();
+		}
 	}
 
 	public function fb_callback(){
@@ -167,6 +157,5 @@ class Api_Login extends CI_Controller {
 
 		$_SESSION['fb_access_token'] = (string) $accessToken;
 		redirect('home');
-
 	}
 }

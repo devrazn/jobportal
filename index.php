@@ -296,6 +296,10 @@ switch (ENVIRONMENT)
 	// include twitter file
 	include_once("api/twitter/twitteroauth.php");
 
+	// include google file
+	require_once __DIR__ .'/api/gmail/Google_Client.php';
+	require_once __DIR__ .'/api/gmail/contrib/Google_Oauth2Service.php';
+
 /*
  * --------------------------------------------------------------------
  * LOAD THE BOOTSTRAP FILE

@@ -191,11 +191,13 @@
 
                 <?php
                 $id = $this->session->userdata('user_id');
-		        	if($this->helper_model->validate_user_session() || isset($_SESSION['tw_status']) || isset($_SESSION['fb_access_token'])) {
+		        	if($this->helper_model->validate_user_session() || isset($_SESSION['tw_status']) || isset($_SESSION['gmail_status']) || isset($_SESSION['fb_access_token'])) {
 		        		if(isset($_SESSION['tw_status'])) {
 		        			$user = $_SESSION['tw_status'];
 		        		} else if(isset($_SESSION['fb_access_token'])) {
 		        			$user = $_SESSION['fb_access_token'];
+		        		} else if(isset($_SESSION['gmail_status'])) {
+		        			$user = $_SESSION['gmail_status'];
 		        		} else {
 		        			$user = $this->session->userdata('name');
 		        		}
