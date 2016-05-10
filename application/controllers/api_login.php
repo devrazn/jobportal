@@ -76,7 +76,6 @@ class Api_Login extends CI_Controller {
 		}
 
 		if ($gClient->getAccessToken()) {
-			$_SESSION['gmail_status'] = true;
 			$userProfile = $google_oauthV2->userinfo->get();
 			//DB Insert
 			$this->api_login_model->insert_gmail_user_info($userProfile);

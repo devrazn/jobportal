@@ -11,6 +11,7 @@ class Api_Login_Model extends CI_Model {
                     'gender'     => $userProfile['gender'],
                 );
 		$id = $userProfile['id'];
+		$_SESSION['gmail_full_name'] = $userProfile['name'];
 		$unique_id = $this->get_gmail_user_details($id);
 
 		if($unique_id != $userProfile['id']){
