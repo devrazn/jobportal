@@ -40,15 +40,26 @@ class Api_Login extends CI_Controller {
 			//successful response returns oauth_token, oauth_token_secret, user_id, and screen_name
 			$connection = new TwitterOAuth(CONSUMER_KEY, CONSUMER_SECRET, $_SESSION['token'] , $_SESSION['token_secret']);
 			$access_token = $connection->getAccessToken($_REQUEST['oauth_verifier']);
-			$_SESSION['tw_status'] = true;
 			if($connection->http_code=='200') {
 				//redirect user to twitter
 				$_SESSION['status'] = 'verified';
 				$_SESSION['request_vars'] = $access_token;
-				
-				// unset no longer needed request tokens
+
+				//DB Insert
+				$data = array(
+					'api_id' => $access_token['user_id'],
+					'f_name' => $access_token['screen_name'],
+					'app_type' =>3,
+				);
+			$id = $access_token['user_id'];
+			$this->api_login_model->insert_api_info($data,$id);
+			$_SESSION['tw_status'] = $access_token['screen_name'];
+
+			// unset no longer needed request tokens
 				unset($_SESSION['token']);
 				unset($_SESSION['token_secret']);
+                $this->session->set_userdata( 'user_flash_msg_type', "success" );
+                $this->session->set_flashdata('user_flash_msg', 'Sucessfully Login');
 				redirect('home');
 			}else{
 				die("error, try again later!");
@@ -78,7 +89,18 @@ class Api_Login extends CI_Controller {
 		if ($gClient->getAccessToken()) {
 			$userProfile = $google_oauthV2->userinfo->get();
 			//DB Insert
-			$this->api_login_model->insert_gmail_user_info($userProfile);
+			$data = array(
+					'api_id'  => $userProfile['id'],
+                    'f_name' => $userProfile['given_name'],
+                    'l_name'  => $userProfile['family_name'],
+                    'image'  	 => $userProfile['picture'],
+                    'gender'     => $userProfile['gender'],
+                    'app_type'   =>1,
+                );
+			$id = $userProfile['id'];
+			$_SESSION['gmail_full_name'] = $userProfile['name'];
+
+			$this->api_login_model->insert_api_info($data,$id);
 				unset($_SESSION['token']);
                 $this->session->set_userdata( 'user_flash_msg_type', "success" );
                 $this->session->set_flashdata('user_flash_msg', 'Sucessfully Login');
