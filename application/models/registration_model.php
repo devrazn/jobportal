@@ -15,7 +15,7 @@ class Registration_Model extends CI_Model {
     }
 
     function register($user_type, $image='') {
-        $activation_code = $this->helper_model->genRandomString(32);
+        $activation_code = genRandomString(32);
 
         $data = array(
             'f_name' => $this->input->post('f_name'),
@@ -36,7 +36,7 @@ class Registration_Model extends CI_Model {
             'newsletter_subscription' => $this->input->post('newsletter_subscription'),
             'verification_status' => 0,
             'image'=> $image,
-            'reg_date' => $this->helper_model->get_local_time('time'),
+            'reg_date' => get_local_time('time'),
             'activation_reset_key' => $activation_code
         );
         $this->db->insert('tbl_users', $data);
@@ -65,7 +65,7 @@ class Registration_Model extends CI_Model {
                         'subject' => $subject,
                         'message' => $emailbody,
                 );
-        if($this->helper_model->send_email($mail_setting, $mail_params)){
+        if(send_email($mail_setting, $mail_params)){
             return true;
         } else {
             return false;
@@ -82,7 +82,7 @@ class Registration_Model extends CI_Model {
         if ($query->num_rows() > 0) {
             foreach ($query->result_array() as $row) {
                 if($hash_email === sha1(md5($row['email']))) {
-                    $this->db->set('activation_reset_key', $this->helper_model->genRandomString('42'));
+                    $this->db->set('activation_reset_key', genRandomString('42'));
                     $this->db->set('verification_status', 1);
                     $this->db->where('email',$row['email']);
                     if($this->db->update('tbl_users')) {

@@ -17,9 +17,9 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                         <h2 class='page-header'>
                             <?php
                                 if($this->uri->segment(3)!='') {
-                                    echo ucfirst($this->helper_model->humanize_admin($this->uri->segment(2)));
+                                    echo ucfirst(humanize_admin($this->uri->segment(2)));
                                 } else if($this->uri->segment(2)!='') {
-                                    echo ucfirst($this->helper_model->humanize_admin($this->uri->segment(2)));
+                                    echo ucfirst(humanize_admin($this->uri->segment(2)));
                                 } else {
                                     echo 'Dashboard';
                                 }
@@ -32,10 +32,10 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                                         echo ' / Dashboard';
 
                                     }?>
-                                    <?php if($this->uri->segment(2)!='' && !(is_numeric($this->uri->segment(2)))) echo '/ '.$this->helper_model->humanize_admin($this->uri->segment(2));?>
-                                    <?php if($this->uri->segment(3)!='' && !(is_numeric($this->uri->segment(3)))) echo '/ '.$this->helper_model->humanize_admin($this->uri->segment(3));?>
-                                    <?php if($this->uri->segment(4)!=''  && !(is_numeric($this->uri->segment(4)))) echo '/ '.$this->helper_model->humanize_admin($this->uri->segment(4));?>
-                                    <?php if($this->uri->segment(5)!=''  && !(is_numeric($this->uri->segment(5)))) echo '/ '.$this->helper_model->humanize_admin($this->uri->segment(5));?>
+                                    <?php if($this->uri->segment(2)!='' && !(is_numeric($this->uri->segment(2)))) echo '/ '.humanize_admin($this->uri->segment(2));?>
+                                    <?php if($this->uri->segment(3)!='' && !(is_numeric($this->uri->segment(3)))) echo '/ '.humanize_admin($this->uri->segment(3));?>
+                                    <?php if($this->uri->segment(4)!=''  && !(is_numeric($this->uri->segment(4)))) echo '/ '.humanize_admin($this->uri->segment(4));?>
+                                    <?php if($this->uri->segment(5)!=''  && !(is_numeric($this->uri->segment(5)))) echo '/ '.humanize_admin($this->uri->segment(5));?>
                         </li>
                         </ol>
                         

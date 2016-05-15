@@ -98,7 +98,7 @@ class Login_model extends CI_Model {
 	public function update_pw($email, $password){
 
 		$data = array(
-			'pw_reset_key' => $this->helper_model->genRandomString("42"),
+			'pw_reset_key' => genRandomString("42"),
 			'password' => $password
 			);
 

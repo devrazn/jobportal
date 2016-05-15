@@ -37,8 +37,8 @@ class Newsletter extends CI_Controller {
 
     function add() {
         $this->form_validation->set_rules('subject', 'Subject', 'required|xss_clean');
-         $this->form_validation->set_rules('content', 'Content', 'required|xss_clean');
-        $this->helper_model->editor();
+        $this->form_validation->set_rules('content', 'Content', 'required|xss_clean');
+        editor();
 
         if ($this->form_validation->run() == FALSE) {
             $data['main'] = 'admin/newsletter/add';
@@ -54,7 +54,7 @@ class Newsletter extends CI_Controller {
 
     function edit($id) {
         $this->form_validation->set_rules('subject', 'Subject', 'required|xss_clean');
-        $this->helper_model->editor();
+        editor();
 
         if ($this->form_validation->run() == FALSE) {
             $data['info'] = $this->newsletter_model->get_newsletter($id);
@@ -108,7 +108,7 @@ class Newsletter extends CI_Controller {
 
         $this->form_validation->set_rules('content', 'Content', 'required|xss_clean');
 
-        $this->helper_model->editor();
+        editor();
 
         if ($this->form_validation->run() == FALSE) {
             $data['info'] = $this->newsletter_model->get_newsletter($id);
@@ -131,7 +131,7 @@ class Newsletter extends CI_Controller {
                                 "message" => $this->input->post('content'),
                                 "to" => $emails
                             );
-            if($this->helper_model->send_email($mail_settings, $mail_params)){
+            if(send_email($mail_settings, $mail_params)){
                 $this->session->set_userdata( 'flash_msg_type', "success" );
                 $this->session->set_flashdata('flash_msg', 'Newsletter Sent Successfully.');
                 redirect(ADMIN_PATH . '/newsletter/send_newsletter' . '/' .$id, 'refresh');

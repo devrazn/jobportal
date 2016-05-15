@@ -54,7 +54,7 @@ class Job_model extends CI_Model {
             'requirements' => $this->input->post('requirements'),
             'facilities' => $this->input->post('facilities'),
             'additional_info' => $this->input->post('additional_info'),
-            'published_date' => $this->helper_model->get_local_time('published_date'),
+            'published_date' => get_local_time('published_date'),
             'deadline_date' => $this->input->post('deadline_date'),
             'application_procedure' => $this->input->post('application_procedure'),
             'user_id' => $user_id,

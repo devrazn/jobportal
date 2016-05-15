@@ -68,12 +68,6 @@
 <script src="<?=base_url();?>assets/user/js/jquery.min.js"></script>
 <script src="<?=base_url();?>assets/user/js/bootstrap.min.js"></script>
 
-<script type="text/javascript">
-    $(document).ready(function(){
-        $("#dropdown-menu").find('.caret').removeClass("caret");
-    });
-</script>
-
 </head>
 <body>
 <nav class="navbar navbar-default" role="navigation">
@@ -104,11 +98,7 @@
 		        <li class="dropdown">
 		            <a href="#" class="dropdown-toggle" data-toggle="dropdown">Categories<b class="caret"></b></a>
 		            <ul class="dropdown-menu" id="dropdown-menu">
-			            <?php
-                            $menu_items = $this->helper_model->get_category();
-                            $category_menu = $this->helper_model->bootstrap_menu($menu_items);
-                            echo $category_menu;
-                        ?>
+			            <?=bootstrap_menu($this->helper_model->get_category_for_menu())?>
 		            </ul>
 		        </li>
 		        <li class="dropdown">

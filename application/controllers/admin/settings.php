@@ -33,16 +33,15 @@ class Settings extends CI_Controller {
         $this->form_validation->set_rules('site_status', 'Site Status', 'xss_clean');
         $this->form_validation->set_rules('prev_image', 'Previous Image', 'xss_clean');
         $this->form_validation->set_rules('site_offline_msg', 'Site Offline Message', 'required|xss_clean');
-        $this->form_validation->set_rules('logo', 'Logo Image', 'xss_clean|callback_handle_upload');
 
-        $this->helper_model->editor();
+        editor();
         
         if ($this->form_validation->run() == FALSE) {
             if(isset($_POST['logo'])){
                 if (file_exists("./uploads/admin/images/" . $_POST['logo'])){
-                @unlink("./uploads/admin/images/" . $_POST['logo']);
-                echo "delete file". $_POST['logo']; exit;
-            }
+                    @unlink("./uploads/admin/images/" . $_POST['logo']);
+                    echo "delete file". $_POST['logo']; exit;
+                }
             }
 
             
@@ -146,7 +145,7 @@ class Settings extends CI_Controller {
         $this->form_validation->set_rules('subject', 'Subject', 'required|xss_clean');
         $this->form_validation->set_rules('content', 'Email Body', 'required|xss_clean');
 
-        $this->helper_model->editor();
+        editor();
 
          if ($this->form_validation->run() == FALSE) {
             $data['info'] = $this->settings_model->get_email_template($template_code);
@@ -177,7 +176,7 @@ class Settings extends CI_Controller {
         $this->form_validation->set_rules('status', 'Status', 'required|xss_clean');        
         $this->form_validation->set_rules('meta_description', 'Meta Description', 'required|xss_clean');
 
-        $this->helper_model->editor();
+        editor();
 
         $page_title=$this->input->post('page_title');
 

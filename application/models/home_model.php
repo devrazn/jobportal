@@ -1,4 +1,5 @@
 <?php
+defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Home_model extends CI_Model {
 
@@ -167,7 +168,7 @@ class Home_model extends CI_Model {
     						't1.del_flag' => '0',
     						't1.status' => '1',
     						't3.del_flag' => '0',
-    						't3.status' => '1'
+    						't3.account_status' => '1'
     						);
     	$like_options = array(
     						'title' => $keyword,

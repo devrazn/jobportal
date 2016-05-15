@@ -83,7 +83,7 @@ class Home extends CI_Controller {
         }
 
 		if($this->form_validation->run() == FALSE){
-	    	$data["captcha"] = $this->helper_model->generate_captcha();
+	    	$data["captcha"] = generate_captcha();
 			$data["contact_details"] = $this->home_model->get_contact_details();
 			$data["page"] = 'contact_us';
 			
@@ -104,7 +104,7 @@ class Home extends CI_Controller {
 
 
     public function refresh_captcha(){
-    	$data = $this->helper_model->generate_captcha(true);
+    	$data = generate_captcha(true);
     	echo json_encode(array(
                 'status' => true,
                 'src' => $data["filename"]

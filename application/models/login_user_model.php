@@ -46,7 +46,7 @@ class Login_User_Model extends CI_Model {
         $subject = $message['subject'];
         $emailbody = $message['content'];
 
-		$key = $this->helper_model->genRandomString('32');
+		$key = genRandomString('32');
 		$email = sha1(md5($this->input->post('email')));
 			
         $confirm = "<a target='_blank' href='".base_url()."login_user/validate_pw_reset_credentials/$key/$email'>here</a>";        
@@ -66,7 +66,7 @@ class Login_User_Model extends CI_Model {
 					'to' => $this->input->post('email')
 					);
         $this->update_activation_reset_key($key);
-        $this->helper_model->send_email($mail_setting,$data);
+        send_email($mail_setting,$data);
 	}
 
 
@@ -75,7 +75,7 @@ class Login_User_Model extends CI_Model {
 		if($user_details['verification_status']==0){
 			$this->db->set('verification_status', 1);
 		}
-		$this->db->set('activation_reset_key', $this->helper_model->genRandomString(42));
+		$this->db->set('activation_reset_key', genRandomString(42));
 		$this->db->set('password', $this->helper_model->encrypt_me($this->input->post('password')));
 		/*$data1 = array(
 			'activation_reset_key' => $update_data['key'],
@@ -121,7 +121,7 @@ class Login_User_Model extends CI_Model {
 		$this->db->where('email',$email);
 		$data = array(
 					'password' => $this->helper_model->encrypt_me($this->input->post('password')),
-					'activation_reset_key' => $this->helper_model->genRandomString('42')
+					'activation_reset_key' => genRandomString('42')
 				);
 		if($this->db->update('tbl_users', $data)){
 			return true;

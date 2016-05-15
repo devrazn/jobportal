@@ -103,7 +103,7 @@ class Login_Admin extends CI_Controller {
 		if($this->form_validation->run()){
 			$this->load->model('admin/settings_model');
 			$mail_settings = $this->settings_model->get_email_settings();
-			$key = $this->helper_model->genRandomString("16");
+			$key = genRandomString("16");
 			$email = sha1(md5($this->input->post('email')));
 			$message = "<p>Reset your JobPortal Admin Password.<br>";
 			$message .= "Click <a href='".base_url()."login_admin/validate_admin_pw_reset_credentials/$key/$email'> Here</a> to reset your password.</p>";
@@ -113,7 +113,7 @@ class Login_Admin extends CI_Controller {
 					'to' => $this->input->post('email')
 					);
 			$this->login_model->update_pw_reset_key($key);
-			if($this->helper_model->send_email($mail_settings, $data)) {
+			if(send_email($mail_settings, $data)) {
 				echo "<p>Please check your email inbox. <br> A message has been sent with Password Reset link.</p>";
 				exit;
 				//echo $this->email->print_debugger();
@@ -185,7 +185,7 @@ class Login_Admin extends CI_Controller {
 
 		if($this->form_validation->run()) {
 			//generate random key
-			$data['key'] = $this->helper_model->genRandomString('32');
+			$data['key'] = genRandomString('32');
 			$data['password'] = $this->helper_model->encrypt_me($this->input->post('password'));
 			if($this->login_model->update_pw($data)){
 				$this->session->set_userdata( 'flash_msg_type', "success" );

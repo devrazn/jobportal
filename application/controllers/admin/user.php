@@ -89,14 +89,14 @@ class User extends CI_Controller {
 
         //$this->helper_model->editor();
 
-        if($data['user_info']['user_type']==1) {
+        if($data['user_info']['user_type']==0) {
             //echo json_encode($data['user_info']['user_type']); exit;
             //echo json_encode($data['user_info']['user_type']); exit;
             $data['title'] = 'User Details';
             $data['qualification'] = $this->user_model->get_qualification($id);
             $data['experience'] = $this->user_model->get_experience($id);
             $data['main'] = 'admin/user/user_details';
-        } else if ($data['user_info']['user_type']==2) {
+        } else if ($data['user_info']['user_type']==1) {
             //echo json_encode($data['user_info']['user_type']) . " else if"; exit;
             $data['title'] = 'Employer Details';
             $data['jobs'] = $this->user_model->get_jobs($id);
@@ -138,7 +138,7 @@ class User extends CI_Controller {
                         'subject' => $this->input->post('subject'),
                         'message' => $this->input->post('content'),
                 );
-            if($this->helper_model->send_email($mail_settings, $mail_params)) {
+            if(send_email($mail_settings, $mail_params)) {
                 echo json_encode(array(
                     'error_msg' => 'Email Sent Successfully.',
                     'error_title' => 'success'

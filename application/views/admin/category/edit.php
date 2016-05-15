@@ -15,6 +15,20 @@
                 <input name="name" type='text' class="form-control" placeholder="Enter Category Name" value="<?=set_value('name',$info['name']);?>">
                 <?=form_error('name')?>
               </div>
+
+              <div class="form-group">
+                <label>Parent Category</label><p style="color:blue">Select only if you want to create a subcategory</p>
+                <select name = "parent_id" class="form-control">
+                  <option>Select Parent Category</option>
+                  <?php
+                    $selected = '';
+                    if(set_value('parent_id', $info['parent_id'])) {
+                      $selected = set_value('parent_id');
+                    }
+                    echo $this->helper_model->multilevel_select_edit($this->helper_model->get_category());
+                  ?>
+                </select>
+              </div>
               
               <div class="form-group">
                 <label>Status&nbsp;&nbsp;</label>

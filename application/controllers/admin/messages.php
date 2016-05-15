@@ -68,7 +68,7 @@ class Messages extends CI_Controller {
                         'subject' => $this->input->post('subject'),
                         'message' => $this->input->post('content'),
                 );
-        	if($this->helper_model->send_email($mail_settings, $mail_params)) {
+        	if(send_email($mail_settings, $mail_params)) {
                 echo json_encode(array(
                     'status' => 'success',
                     'message' => 'Email successfully sent.'

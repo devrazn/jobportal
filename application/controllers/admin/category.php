@@ -6,14 +6,13 @@ class Category extends CI_Controller {
     {
         parent::__construct();
         $this->load->model('admin/category_model');
-        $this->load->library('form_validation');
         if(!$this->helper_model->validate_admin_session()) {
             redirect(base_url().'admin');
         }
-        $this->load->library('datatables');
     }
 
     public function index() {
+        $data['categories'] = $this->category_model->get_all_categories();
         $data['main'] = 'admin/category/list';
         $data['title'] = 'Categories';
         $this->load->view('admin/admin', $data);
@@ -101,7 +100,7 @@ class Category extends CI_Controller {
 
     function edit($id) {
         $this->form_validation->set_rules('name', 'Name', 'required|xss_clean');
-        $this->form_validation->set_rules('status', 'Status', 'required|xss_clean');
+    $this->form_validation->set_rules('status', 'Status', 'required|xss_clean');
 
         if ($this->form_validation->run() == FALSE) {
             $data['info'] = $this->category_model->get_category($id);
@@ -114,29 +113,62 @@ class Category extends CI_Controller {
             $this->session->set_flashdata('flash_msg', 'Category Updated Successfully');
             redirect(ADMIN_PATH . '/category', 'refresh');
         }
-    }
 
+        $data['is_childable'] = $this->category_model->is_childable($category_id);
+        $this->form_validation->set_rules('name', 'Name', 'required|xss_clean|callback__matches_existing_category['.$category_id.']');
+        $this->form_validation->set_rules('parent_id', 'Parent Category', 'xss_clean');
 
-    function delete_category($id) {
-        $this->load->model('admin/tags_model');
-        if(!($this->tags_model->tags_list())) {
-            if($this->category_model->delete_category($id)){
-                $this->session->set_userdata( 'flash_msg_type', "success" );
-                $this->session->set_flashdata('flash_msg', 'Category Deleted Successfully.');
-                redirect(ADMIN_PATH . '/category', 'refresh');
-            } else {
-                echo 'error';
-            }
+        if ($this->form_validation->run() == FALSE) {
+            $data['info'] = $this->category_model->get_category($category_id);
+            $data['main'] = 'admin/category/edit';
+            $data['title'] = 'Edit Category';
+            $this->load->view('admin/admin', $data);
         } else {
-            $this->session->set_userdata( 'flash_msg_type', "danger" );
-            $this->session->set_flashdata('flash_msg', 'Sorry, Unable to Delete the Category. Please empty the tags & jobs under this category first.');
+            if($data['is_childable']) {
+                $parent_id = $this->input->post('parent_id');
+            } else {
+                $parent_id=0;
+            }
+            $this->category_model->update_category($category_id, $parent_id);
+            $this->session->set_userdata( 'flash_msg_type', "success" );
+            $this->session->set_flashdata('flash_msg', 'Category Updated Successfully');
             redirect(ADMIN_PATH . '/category', 'refresh');
         }
     }
 
+
+    function delete_category_ajax($id) {
+        if($this->category_model->delete_category($id)) {
+            echo json_encode(array(
+                    'response' => TRUE,
+                    'title' => "success",
+                    'msg' => 'Category successfully deleted'
+                ));
+        } else {
+            echo json_encode(array(
+                    'response' => FALSE,
+                    'title' => "failure",
+                    'msg' => 'You cannot delete this category until there are jobs & sub-categories under it.'
+                ));
+        }
+    }
+
+
     function change_status($status = '', $id = '') {
         $this->category_model->change_status(strtolower($status), $id);
         redirect(ADMIN_PATH . '/category', 'refresh');
+    }
+
+
+    function change_status_ajax($status = '', $id = '') {
+        //($status)? $status = 0 : $status = 1;
+        if($status == 0) {
+            $status = 1;
+        } else {
+            $status = 0;
+        }
+        $this->category_model->change_status($status, $id);
+        echo $status;
     }
 
 }

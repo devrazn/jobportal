@@ -13,26 +13,15 @@ class Category_model extends CI_Model {
         $data = array('name' => $this->input->post('name'),
                       'status' => $this->input->post('status'),
                       'parent_id' => $this->input->post('parent_id'),
-                      'url' => $this->helper_model->humanize_url($this->input->post('name'))
+                      'url' => convert_to_url($this->input->post('name'))
         );
         $this->db->insert('tbl_job_category', $data);
     }
 
 
-    function category_list($per_page='', $offset = '1') {
-        $this->db->where('del_flag', 0);
-        $this->db->order_by('id', 'ASC');
-
-        $query = $this->db->get('tbl_job_category');
-
-
-        // $options = array('del_flag' => 0);
-        // $this->db->where('tbl_job_category', $options);
-        //$orderby = " ORDER BY id ASC";
-
-        // $sql = "SELECT * FROM tbl_job_category WHERE del_flag = '0'".$orderby ;
-        // $query = $this->db->query($sql);
-        return $query->result_array();
+    function get_all_categories() {
+        $options = array("del_flag" => "0");
+        return $this->db->get_where('tbl_job_category', $options)->result_array();
     }
 
 
@@ -53,18 +42,32 @@ class Category_model extends CI_Model {
 
 
     function delete_category($id) {
-        $data = array('del_flag' => '1');
-        $this->db->where('id', $id);
-        return $this->db->update('tbl_job_category', $data);
+       $options1 = array(
+                        'category_id' => $id,
+                        'del_flag' => 0
+                    );
+        $this->db->where($options1);
+        $job_count = $this->db->get('tbl_jobs')->num_rows();
+
+        $options2 = array(
+                        'del_flag' => 0,
+                        'parent_id' => $id
+                    );
+        $this->db->where($options2);
+        $child_category_count = $this->db->get('tbl_job_category')->num_rows();
+
+        if($job_count==0 && $child_category_count==0) {
+            //$data = array('del_flag' => '1');
+            $this->db->where('id', $id);
+            $this->db->delete('tbl_job_category');
+            return $this->db->affected_rows();
+        } else {
+            return FALSE;
+        }
     }
 
 
     function change_status($status, $id) {
-        if ($status == 'active')
-            $status = 'inactive';
-        else if ($status == 'inactive')
-            $status = 'active';
-
         $data = array(
             'status' => $status
         );
@@ -88,4 +91,16 @@ class Category_model extends CI_Model {
         $query = $this->db->query($sql);
         return $query->result_array();
     }
+
+
+    function is_childable($id) {
+        $options = array('parent_id' => $id);
+        $count_child = $this->db->get_where('tbl_job_category', $options)->num_rows();
+        if($count_child>0) {
+            return FALSE;
+        } else {
+            return TRUE;
+        }
+    }
+
 }

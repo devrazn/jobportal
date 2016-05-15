@@ -132,7 +132,7 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand" href="<?=base_url('admin');?>"><?php echo 'Job Portal';?></a>
+                <a class="navbar-brand" href="<?=base_url('admin');?>"><?=$this->config->item('site_name')?></a>
             </div>
             <!-- /.navbar-header -->
 
@@ -140,12 +140,7 @@
                 <li>
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">Job Categories <b class="caret"></b></a>
                     <ul id="dropdown-menu" class="dropdown-menu">
-                        <?php
-                            //$top_menu = $this->helper_model->bootstrap_menu($menu_items);
-                             $menu_items = $this->helper_model->get_category();
-                             $top_menu = $this->helper_model->bootstrap_menu($menu_items);
-                             echo $top_menu;
-                        ?>
+                        <?=bootstrap_menu($this->helper_model->get_category_for_menu())?>
                     </ul>
                 </li>
             </ul>
@@ -169,10 +164,4 @@
                 </li>
                 <!-- /.dropdown -->
             </ul>
-            <!-- /.navbar-top-links -->
-
-<script type="text/javascript">
-    $(document).ready(function(){
-        $("#dropdown-menu").find('.caret').removeClass("caret");
-    });
-</script>            
+            <!-- /.navbar-top-links -->          
