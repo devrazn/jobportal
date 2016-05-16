@@ -32,9 +32,9 @@
                 <dd><?=$job_details['openings']?></dd>
                 <dt>Published On</dt>
                 <dd>
-                    <?=$this->helper_model->humanize_date($job_details['published_date'])?>&nbsp;&nbsp;&nbsp;
+                    <?=humanize_date($job_details['published_date'])?>&nbsp;&nbsp;&nbsp;
                         <?php
-                                    $age_day = $this->helper_model->calculate_age_day_signed($job_details['published_date']);
+                                    $age_day = calculate_age_day_signed($job_details['published_date']);
                                     if($age_day==0) echo ' (Today)';
                                     else if($age_day==1) echo ' (Yesterday)';
                                     else {
@@ -44,13 +44,13 @@
                 </dd>
                 <dt>Deadline</dt>
                 <?php 
-                    $deadline_day = $this->helper_model->calculate_age_day_signed($job_details['deadline_date']);
+                    $deadline_day = calculate_age_day_signed($job_details['deadline_date']);
                 ?>
                 <dd <?php if($deadline_day<0) echo "style='color:red'"?> >
-                    <?=$this->helper_model->humanize_date($job_details['deadline_date'])?>&nbsp;&nbsp;&nbsp;
+                    <?=humanize_date($job_details['deadline_date'])?>&nbsp;&nbsp;&nbsp;
                     
                     <?php
-                        $deadline_day = $this->helper_model->calculate_age_day_signed($job_details['deadline_date']);
+                        $deadline_day = calculate_age_day_signed($job_details['deadline_date']);
                         if($deadline_day==0){
                             echo ' (Today)';
                         } else if($deadline_day == 1) {

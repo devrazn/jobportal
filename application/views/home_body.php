@@ -8,7 +8,7 @@
       </div>
       <div class="col-sm-8 row_1">
         <h4><a href="<?=base_url().'jobs/'.$job_item['id']?>"><?=$job_item['title']?></a></h4>
-        <h6><?=$job_item['category_name']?> <span class="dot"></span><b>Deadline: </b> <?=$this->helper_model->print_humanize_date($job_item['deadline_date'])?></h6>
+        <h6><?=$job_item['category_name']?> <span class="dot"></span><b>Deadline: </b> <?=humanize_date($job_item['deadline_date'])?></h6>
         <p><?=$job_item['job_description']?></p>
         <div class="social">  
           <a class="btn_1" href="#">

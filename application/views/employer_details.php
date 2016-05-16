@@ -86,8 +86,8 @@
                   <td><a href="<?=base_url().'jobs/'.$job['id']?>"><?=$job['title']?></a></td>
                   <td><a href="<?=base_url().'jobs/'.$job['id']?>"><?=$job['position']?></a></td>
                   <td><a href="<?=base_url().'jobs/'.$job['id']?>"><?=$job['openings']?></a></td>
-                  <td><a href="<?=base_url().'jobs/'.$job['id']?>"><?=$this->helper_model->humanize_date($job['published_date'])?></a></td>
-                  <td><a href="<?=base_url().'jobs/'.$job['id']?>"><?=$this->helper_model->humanize_date($job['deadline_date'])?></a></td>
+                  <td><a href="<?=base_url().'jobs/'.$job['id']?>"><?=humanize_date($job['published_date'])?></a></td>
+                  <td><a href="<?=base_url().'jobs/'.$job['id']?>"><?=humanize_date($job['deadline_date'])?></a></td>
                 </tr>
                       <?php
                           
