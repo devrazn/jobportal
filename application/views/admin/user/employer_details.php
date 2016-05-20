@@ -29,7 +29,7 @@
                                 <dt>Established</dt>
                                 <dd><?=$user_info['dob_estd']?>
                                     <?php
-                                        $age = $this->helper_model->calculate_age_from_year($user_info['dob_estd']); 
+                                        $age = calculate_age_from_year($user_info['dob_estd']); 
                                     ?> &nbsp;(<?php
                                                                         echo $age . ' Yr';
                                                                         if($age>1) echo 's';
@@ -184,9 +184,9 @@
                                                     <dd><?=$row['position']?></dd>
                                                     <dt>Published On</dt>
                                                     <dd>
-                                                        <?=$this->helper_model->humanize_date($row['published_date'])?>&nbsp;&nbsp;&nbsp;
+                                                        <?=humanize_date($row['published_date'])?>&nbsp;&nbsp;&nbsp;
                                                             <?php
-                                                                        $age_day = $this->helper_model->calculate_age_day($row['published_date']);
+                                                                        $age_day =calculate_age_day_signed($row['published_date']);
                                                                         if($age_day==0) echo ' (Today)';
                                                                         else if($age_day==1) echo ' (Yesterday)';
                                                                         else {
@@ -196,10 +196,10 @@
                                                     </dd>
                                                     <dt>Deadline</dt>
                                                     <dd>
-                                                        <?=$this->helper_model->humanize_date($row['deadline_date'])?>&nbsp;&nbsp;&nbsp;
+                                                        <?= humanize_date($row['deadline_date'])?>&nbsp;&nbsp;&nbsp;
                                                         
                                                         <?php
-                                                            $age_day = $this->helper_model->calculate_age_day_signed($row['deadline_date']);
+                                                            $age_day = calculate_age_day_signed($row['deadline_date']);
                                                             if($age_day==0){
                                                                 echo ' (Today)';
                                                             } else if($age_day == 1) {

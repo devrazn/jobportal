@@ -1,5 +1,5 @@
 <?php
-if ($this->session->flashdata('flash_msg'))
+if ($this->session->userdata('flash_msg_type'))
 {
     if ($this->session->userdata('flash_msg_type'))
     {
@@ -20,5 +20,6 @@ if ($this->session->flashdata('flash_msg'))
 <?php echo $this->session->flashdata('flash_msg'); ?>
 </div>
 <?php
+    
 }
 ?>
