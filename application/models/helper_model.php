@@ -47,6 +47,7 @@ class Helper_model extends CI_Model {
         $this->db->select('id, name, parent_id, url');
         $this->db->order_by('name', 'ASC');
         return $this->db->get('tbl_job_category')->result_array();
+        
     }
 
 
@@ -109,7 +110,7 @@ class Helper_model extends CI_Model {
     public function set_user_login_session($email){
         $user_details = $this->db->get_where('tbl_users', array('email' => $email))->row_array();
         $name = $user_details["f_name"];
-        if($user_details["user_type"]==2){
+        if($user_details["user_type"]==1){
             $name .= " " . $user_details["l_name"];
         }
         //echo '<pre>',print_r($user_details,1),'</pre>'; exit;
@@ -156,6 +157,14 @@ class Helper_model extends CI_Model {
         } else {
             return false;
         }
+    }
+
+
+    function get_all_categories_except_current($id) {
+        $this->db->where('id !=', $id);
+        $this->db->order_by('name', 'ASC');
+        $query = $this->db->get('tbl_job_category');
+        return $query->result_array();
     }
 
 

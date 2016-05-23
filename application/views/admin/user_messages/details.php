@@ -12,7 +12,7 @@
                         <div class="panel-heading">
                             <?=$message['subject']?>
                             <p class="pull-right">
-                              <?=$this->helper_model->humanize_date_time($message['received_date_time'])?>
+                              <?=humanize_date_time($message['received_date_time'])?>
                             </p>
                         </div>
                         <div class="panel-body">

@@ -111,7 +111,7 @@ class Login_User extends CI_Controller {
 				$this->session->set_userdata( 'user_flash_msg_type', "success" );
 	        	$this->session->set_flashdata('user_flash_msg', "A message has been sent to your email with password reset link. Please check your inbox.");
 				redirect('home/landing');
-			}else{
+			} else {
 				$data['sidebar_jobs'] = $this->home_model->get_latest_jobs();
 				$data["sidebar_categories"] = $this->home_model->get_job_categories();
 				$data["page"] = "forgot_password";
@@ -145,41 +145,31 @@ class Login_User extends CI_Controller {
 
 
 	public function validate_pw_reset_credentials($key='', $hash_email='') {
+		// echo $key."<br>".$hash_email; exit;
 		$this->form_validation->set_rules('password','Password','required|xss_clean|min_length[6]|max_length[50]');
 		$this->form_validation->set_rules('c_password','Confirm Password','required|xss_clean|matches[password]');
 		if($this->form_validation->run() == FALSE) {
-			if($this->session->userdata('user_key') && $this->session->userdata('user_hash_email')) {
-				$credential_data = array(
-									'user_key' => $this->session->userdata('user_key'),
-									'user_hash_email' => $this->session->userdata('user_hash_email')
-									);
-			} else { 
-				$credential_data = array(
-							'user_key' => $key,
-							'user_hash_email' => $hash_email
-							);
-			}
-			$email = $this->login_user_model->is_key_valid($credential_data);
+			$email = $this->login_user_model->is_key_valid($key, $hash_email);
 			if($email){
-				$this->login_user_model->update_pw($email);
+				$this->login_user_model->update_verification_status($email);
 				$this->session->set_userdata('user_email', $email);
-				$this->session->set_userdata($credential_data);
 				$data['sidebar_jobs'] = $this->home_model->get_latest_jobs();
 				$data["sidebar_categories"] = $this->home_model->get_job_categories();
 				$data["page"] = "reset_password";
+				$data["key"] = $key;
+				$data["hash_email"] = $hash_email;
 				$this->template->__set('title', 'Reset Password');
 				$this->template->partial->view("default_layout", $data, $overwrite=FALSE);
 				$this->template->publish('default_layout');
 			} else {
-				echo "Invalid password reset credentials.";
+				echo show_404();
 				exit;
 			}
 		} else {
 			$this->session->unset_userdata('user_key');
 			//$this->session->unset_userdata('user_email');
 			$password = $this->helper_model->encrypt_me($this->input->post('password'));
-			$this->login_user_model->update_pw($this->session->userdata('user_email'), $password);
-
+			$this->login_user_model->update_password($this->session->userdata('user_email'), $password);
 			$this->helper_model->set_user_login_session($this->session->userdata('user_email'));
 			$this->session->set_userdata( 'user_flash_msg_type', "success" );
 	        $this->session->set_flashdata('user_flash_msg', "Your JobPortal Password has been successfully reset.");

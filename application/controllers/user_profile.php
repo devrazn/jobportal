@@ -8,6 +8,9 @@ class User_Profile extends CI_Controller {
 	  	parent::__construct();
 	  	$this->load->model('user_profile_model');
 	  	$this->load->model('home_model');
+        if(!$this->helper_model->validate_user_session()){
+          redirect(base_url());
+        }
 	}
 
 	public function index() {
@@ -61,56 +64,59 @@ class User_Profile extends CI_Controller {
         $this->template->publish('default_layout');
     }
 
-    public function edit_profile($id){
+    public function edit_profile(){
         $data['sidebar_jobs'] = $this->home_model->get_latest_jobs();
         $data["sidebar_categories"] = $this->home_model->get_job_categories();
-        $data["user_detail"] = $this->user_profile_model->get_user_detail($id);
-        // echo "<pre>"; print_r($data['user_detail']);die;
-        $data['user_detail']['user_type']== 0?$data["page"] = "update_jobseeker_details": $data["page"] = "update_employeer_details";
+        $data["user_detail"] = $this->user_profile_model->get_user_detail($this->session->userdata('user_id'));
+        //echo "<pre>"; print_r($data['user_detail']);die;
+        $data['user_detail']['user_type']== 1?$data["page"] = "update_jobseeker_details": $data["page"] = "update_employeer_details";
         $this->template->__set('title', 'Update Profile');
         $this->template->partial->view("default_layout", $data, $overwrite=FALSE);
         $this->template->publish('default_layout');
     }
 
-    public function update_info($id){
+    public function update_info($id=''){
+        if($this->user_profile_model->count_user_by_id_type($id, $this->input->post('user_type') != 1)) {
+            echo show_404(); exit;
+        }
         $user_type = $this->input->post('user_type');
 
-        if($user_type==0){
+        if($this->session->userdata('user_type')==1){
             $dob_estd = "Date of Birth";
             $f_name = "First Name";
             $this->form_validation->set_rules('l_name', "Last Name",'required|xss_clean');
             $this->form_validation->set_rules('gender', "Gender",'required|xss_clean');
             $this->form_validation->set_rules('marital_status', "Marital Status",'required|xss_clean');
-        }else {
+        } else {
             $dob_estd = "Date of Establishment";
             $f_name = "Company Name";
-            $this->form_validation->set_rules('website', "Website","xss_clean|callback_valid_url|trim");
+            $this->form_validation->set_rules('website', "Website","xss_clean|trim|valid_url");
         }
             $this->form_validation->set_rules('f_name', $f_name,'required|xss_clean|trim');
             $this->form_validation->set_rules('dob_estd', $dob_estd,'trim|required|xss_clean');
             $this->form_validation->set_rules('address', "Address",'trim|required|xss_clean');
             $this->form_validation->set_rules('phone', "Phone",'trim|required|xss_clean|regex_match[/^[0-9]{10}$/]');
             $this->form_validation->set_rules('prev_image', 'Preview Image', 'xss_clean');
-            $this->form_validation->set_rules('image', 'Image', 'xss_clean|callback_handle_upload');
+            $this->form_validation->set_rules('image', 'Image', 'xss_clean|callback__validate_image['.true.']');
         
         if($this->form_validation->run()==FALSE) {
-            if(isset($_POST['image'])){
-                if (file_exists("./uploads/user/" . $_POST['image'])){
-                    @unlink("./uploads/user/" . $_POST['image']);
-                    echo "delete file". $_POST['image']; exit;
+            if(isset($_POST['post_image'])){
+                if (file_exists("./uploads/user/images/" . $_POST['post_image'])){
+                    @unlink("./uploads/user/images/" . $_POST['post_image']);
+                   // echo "delete file". $_POST['image']; exit;
                 }
             }
-            $this->edit_profile($id);
+            $this->edit_profile($this->session->userdata('user_id'));
         } else {
-            if (isset($_POST['image'])) {
-                $image = $_POST['image'];
-                if (file_exists("./uploads/user" . $this->input->post('prev_image'))){
-                    @unlink("./uploads/user/" . $this->input->post('prev_image'));
+            if (isset($_POST['post_image'])) {
+                $image = $_POST['post_image'];
+                if (file_exists("./uploads/user/images/" . $this->input->post('prev_image'))){
+                    @unlink("./uploads/user/images/" . $this->input->post('prev_image'));
                 }
             } else {
                 $image = $this->input->post('prev_image');
             }
-            if($this->user_profile_model->update_user_detail($image,$id)) {
+            if($this->user_profile_model->update_user_detail($image,$this->session->userdata('user_id'))) {
                 $this->session->set_userdata( 'user_flash_msg_type', "success" );
                 $this->session->set_flashdata('user_flash_msg', 'Profile Updated Successfully');
                 redirect(base_url());
@@ -122,7 +128,34 @@ class User_Profile extends CI_Controller {
         }
     }
 
-    function handle_upload() {
+
+    function _validate_image($image='', $edit=false) {
+        if(isset($_FILES['image']) && !empty($_FILES['image']['name'])) {     //check if the field is empty or not
+            $image = array(
+                        'location' => './uploads/user/images/',
+                        'temp_location' => './uploads/user/images/temp/',
+                        'width' => USER_W,
+                        'height' => USER_H,
+                        'image' => 'image'      //field name of the file in the form
+                    );
+            $this->load->helper('image_helper');
+            $response = validate_image($image);
+            if($response['status']) {
+                return true;
+            } else {
+                $this->form_validation->set_message('_validate_image', $response['msg']);
+                return false;
+            }
+        } elseif(!$edit) {
+            $this->form_validation->set_message('_validate_image', 'Please select an image for logo.');
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+
+    function _handle_upload() {
         if (isset($_FILES['image']) && !empty($_FILES['image']['name'])) {
             $config['upload_path']          = './uploads/user';
             $config['allowed_types']        = 'gif|jpg|png|jpeg';

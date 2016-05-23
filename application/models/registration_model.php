@@ -14,9 +14,7 @@ class Registration_Model extends CI_Model {
             return NULL;
     }
 
-    function register($user_type, $image='') {
-        $activation_code = genRandomString(32);
-
+    function register($user_type, $image='', $activation_code) {
         $data = array(
             'f_name' => $this->input->post('f_name'),
             'l_name' => $this->input->post('l_name'),
@@ -40,7 +38,7 @@ class Registration_Model extends CI_Model {
             'activation_reset_key' => $activation_code
         );
         $this->db->insert('tbl_users', $data);
-        return $activation_code;
+        return $this->db->insert_id();
     }
     
 
@@ -118,8 +116,8 @@ class Registration_Model extends CI_Model {
     }
 
 
-    public function hard_delete_user($email){
-        $this->db->where('email', $email);
+    public function hard_delete_user($id){
+        $this->db->where('id', $id);
         $this->db->delete('tbl_users');
     }
 }

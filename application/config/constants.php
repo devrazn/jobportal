@@ -96,3 +96,21 @@ define('CLIENT_ID', '470418843768-623ntud9a7dvtmomh9kghhfltlasofq5.apps.googleus
 define('CLIENT_SECRET', 'a4oz6EqGMAmMa4MlwR2I0djP');
 define('REDIRECT_URI', 'http://www.jobportal.com/api_login/gmail_call_back');
 define('SIMPLE_API_KEY', 'AIzaSyBUDQnbVFohillZIfRMAjQxW5DfRM0y6pQ');
+
+
+//Image Dimensions
+//logo image
+define('LOGO_W', 172); //width
+define('LOGO_H', 58); //height
+
+//userimage
+define('USER_W', 640); // width
+define('USER_H', 480); // height
+
+// banner image
+define('BANNER_W', 160); // width
+define('BANNER_H', 60); // height
+
+//
+// define('_W', ); // width
+// define('_H', ); // height

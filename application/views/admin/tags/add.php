@@ -12,23 +12,9 @@
             <form role="form" id="frm" method="post" action="<?=base_url().'admin/tags/add'?>">
               <div class="form-group">
                 <label>Name</label>
-                <input name="name" type='text' class="form-control" placeholder="Enter Tags Name" value="<?=set_value('name');?>">
+                <input name="name" type='text' class="form-control" placeholder="Enter Tag Name" value="<?=set_value('name');?>">
                 <?=form_error('name')?>
               </div>
-            <div class="form-group">
-                <label>Category</label>
-                <select name="category_id" class="form-control">
-                  <option value=""> Select Category</option>
-                    <?php
-                      foreach($category_info as $category)
-                        {
-                          ?>
-                            <option value="<?=$category['id']?>"><?=$category['name']?></option>
-                          <?php
-                        }
-                      ?>
-                </select>
-            </div>
               
               <div class="form-group">
                 <label>Status&nbsp;&nbsp;</label>

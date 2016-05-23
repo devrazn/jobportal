@@ -41,7 +41,7 @@
                   ?>
                   <td><a href="<?=site_url(ADMIN_PATH.'/messages/details/'.$message['id'])?>"><?=$message['email']?></a></td>
                   <td><a href="<?=site_url(ADMIN_PATH.'/messages/details/'.$message['id'])?>">
-                  <?=$this->helper_model->humanize_date_time($message['received_date_time'])?>
+                  <?=humanize_date_time($message['received_date_time'])?>
                   </a></td>
                   <td>
                     <a href="<?=site_url(ADMIN_PATH.'/messages/delete_message/'.$message['id']) ?>" data-toggle="tooltip" title="Delete" class="btn btn-effect-ripple btn-xs btn-danger delete"  data-original-title="Delete"><i onClick="return doConfirm()" class="fa fa-times"></i></a>

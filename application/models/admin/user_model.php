@@ -34,7 +34,8 @@ class User_model extends CI_Model {
                     'feature_in_slider' => $this->input->post('feature_in_slider')
         );
       $this->db->where('id', $this->input->post('id'));
-      return $this->db->update('tbl_users', $data);
+      $this->db->update('tbl_users', $data);
+      return $this->db->affected_rows();
     }
 
 
@@ -107,6 +108,13 @@ class User_model extends CI_Model {
         );
       $this->db->where('id', $this->input->post('id'));
       return($this->db->update('tbl_jobs', $data));
+    }
+
+
+    function get_image($id='') {
+      $this->db->select('image');
+      $options = array('id' => $id);
+      return $this->db->get_where('tbl_users', $options)->row_array();
     }
     
 }

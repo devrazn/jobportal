@@ -61,7 +61,7 @@ if(!function_exists('send_email')) {
         if($CI->email->send()) {
             return true;
         } else {
-            if($CI->validate_admin_session()){
+            if($CI->helper_model->validate_admin_session()){
                 $CI->session->set_userdata('error_log_title', "Error while sending email.");
                 $CI->session->set_userdata('error_log', $CI->email->print_debugger());
             }
@@ -297,5 +297,49 @@ if(!function_exists('convert_to_url')) {
         $url = strtolower(str_replace(' ', '-', $url));
         $url = str_replace('&', 'and',$url);
         return str_replace('_', '-', $url);
+    }
+}
+
+
+if(!function_exists('multilevel_select_edit')) {
+    function multilevel_select_edit($categories, $parent_id = 0, $parents = array(), $level=0, $parent='') {
+        static $i=0;
+        static $k=0;
+        if($k==0){
+            $parent_cat = $parent;
+            $k++;
+        }
+        
+        if($parent_id==0) {
+            foreach ($categories as $element) {
+                if (($element['parent_id'] != 0) && !in_array($element['parent_id'],$parents)) {
+                    $parents[] = $element['parent_id'];
+                }
+            }
+        }
+
+        $menu_html = '';
+        foreach($categories as $element){
+            if($element['parent_id']==$parent_id && $level < 1){
+                $menu_html .= '<option';
+                if($level==0){
+                    $menu_html .= ' style="font-weight:bold;"';
+                } else {
+                    $menu_html .= ' style="font-style:italic;"';
+                }
+                $menu_html .= ' value="' . $element['id'] .'"';
+                if($element['id'] == $parent_cat){
+                    $menu_html .= " selected";
+                }
+                $menu_html .= '>';
+                $menu_html .= $element['name'].'</option>';
+                if(in_array($element['id'], $parents)){
+                    $i++;
+                    $menu_html .= multilevel_select_edit($categories, $element['id'], $parents, $level+1);
+                }
+            }
+        }
+        $i--;
+        return $menu_html;
     }
 }

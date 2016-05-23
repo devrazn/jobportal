@@ -6,7 +6,7 @@
 		?>
 		<li>
 			<a href="<?=base_url().'employer/'.$slider['id']?>">
-				<img src="<?=base_url();?>uploads/user/<?=$slider['image']?>" class="img-responsive" alt="<?=$slider['f_name']?>" title="<?=$slider['f_name']?>"/>
+				<img src="<?=base_url();?>uploads/user/images/banner/<?=$slider['image']?>" class="img-responsive" alt="<?=$slider['f_name']?>" title="<?=$slider['f_name']?>"/>
 			</a>
 		</li>
 		<?php

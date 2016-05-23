@@ -8,7 +8,6 @@ class Tags_model extends CI_Model {
 
     function add_tags() {
         $data = array('name' => $this->input->post('name'),
-                      'category_id' => $this->input->post('category_id'),
                       'status' => $this->input->post('status')
         );
         $this->db->insert('tbl_tags', $data);
@@ -53,5 +52,19 @@ class Tags_model extends CI_Model {
         );
         $this->db->where('id', $id);
         $this->db->update('tbl_tags', $data);
+    }
+
+
+    function find_matching_tag($tag_name, $id) {
+        $options = array(
+                    'name' => $tag_name,
+                    'id !='=> $id
+                );
+        if($this->db->get_where('tbl_tags', $options)->num_rows() > 0) {
+            return true;
+        } else {
+            return false;
+        }
+
     }
 }

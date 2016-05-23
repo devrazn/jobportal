@@ -103,4 +103,12 @@ class Category_model extends CI_Model {
         }
     }
 
+
+    function get_all_categories_except_current($id) {
+        $this->db->where('id !=', $id);
+        $this->db->order_by('name', 'ASC');
+        $query = $this->db->get('tbl_job_category');
+        return $query->result_array();
+    }
+
 }

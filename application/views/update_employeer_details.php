@@ -7,7 +7,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
         <div class="single">  
     	   <div class="form-container">
             <h2><?php echo $title;?></h2>
-            <form role="form" method="post" action="<?=base_url().'user_profile/update_info/'.$user_detail['id']?>" enctype="multipart/form-data">
+            <form role="form" method="post" action="<?=base_url().'user_profile/update_info/'?>" enctype="multipart/form-data">
                 <input type="hidden" name='id' value="<?php echo $user_detail['id'];?>">
     	        <input type="hidden" name='user_type' value="<?php echo $user_detail['user_type'];?>">
                 <div class="form-group">
@@ -24,7 +24,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                         <label class="col-md-3 control-lable">Company/Organization Logo</label>
                         <div class="col-md-4">
                             <?php if($user_detail['image']!="") { ?>
-                                <img src="<?=base_url()?>uploads/user/<?=$user_detail['image']?>" style="height:inherit;width:inherit;" />
+                                <img src="<?=base_url()?>uploads/user/images/<?=$user_detail['image']?>" style="height:inherit;width:inherit;" />
                             <?php
                             }
                             ?>

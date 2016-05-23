@@ -1,7 +1,7 @@
 <div class="col-md-8 single_right">
 	 	   <div class="login-form-section">
                 <div class="login-content">
-                    <form role="form"  method="post" action="<?=base_url().'login_user/validate_pw_reset_credentials'?>" enctype="multipart/form-data">
+                    <form role="form"  method="post" action="<?=base_url().'login_user/validate_pw_reset_credentials/'.$key.'/'.$hash_email?>" enctype="multipart/form-data">
                         <div class="section-title">
                             <h3>Reset Your Password</h3>
                         </div>

@@ -1,4 +1,5 @@
 <?php
+defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Tags extends CI_Controller {
 
@@ -30,7 +31,7 @@ class Tags extends CI_Controller {
         $config['uri_segment'] = '4';
         $this->pagination->initialize($config);
 
-        $data['tags_list'] = $this->tags_model->tags_list($config['per_page'], $offset);
+        $data['tags'] = $this->tags_model->tags_list($config['per_page'], $offset);
         $data['links'] = $this->pagination->create_links();
         $data['title'] = 'Tags';
 
@@ -38,12 +39,10 @@ class Tags extends CI_Controller {
     }
 
     function add() {
-        $this->form_validation->set_rules('name', 'Name', 'required|xss_clean');
-        $this->form_validation->set_rules('category_id', 'Category', 'required|xss_clean');
+        $this->form_validation->set_rules('name', 'Name', 'required|xss_clean|is_unique[tbl_tags.name]');
         $this->form_validation->set_rules('status', 'Status', 'required|xss_clean');
 
         if ($this->form_validation->run() == FALSE) {
-            $data['category_info'] = $this->category_model->category_list_all();
             $data['main'] = 'admin/tags/add';
             $data['title'] = 'Add Tags';
             $this->load->view('admin/admin', $data);
@@ -56,7 +55,7 @@ class Tags extends CI_Controller {
     }
 
     function edit($id) {
-        $this->form_validation->set_rules('name', 'Name', 'required|xss_clean');
+        $this->form_validation->set_rules('name', 'Name', 'required|xss_clean|callback__matches_other_tags['.$id.']');
         $this->form_validation->set_rules('category_id', 'Category', 'required|xss_clean');
         $this->form_validation->set_rules('status', 'Status', 'required|xss_clean');
 
@@ -104,6 +103,16 @@ class Tags extends CI_Controller {
         $this->db->where('id', $id);
         $this->db->update('tbl_tags', $data);
         echo $txt;
+    }
+
+
+    function _matches_other_tags($tag_name='', $id='') {
+        if($this->tags_model->find_matching_tag($tag_name, $id)) {
+            $this->form_validation->set_message('_matches_other_tags', 'The tag name already exists. Please provide a different tag name.');
+            return false;
+        } else {
+            return true;
+        }
     }
 
 }

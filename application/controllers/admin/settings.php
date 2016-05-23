@@ -19,7 +19,7 @@ class Settings extends CI_Controller {
 
 
     public function site_settings() {
-        $this->form_validation->set_rules('logo', 'Logo Image', 'xss_clean|callback_handle_upload');
+        $this->form_validation->set_rules('logo', 'Logo Image', 'xss_clean|callback__validate_logo['.true.']');
         $this->form_validation->set_rules('site_name', 'Site Name', 'required|xss_clean|min_length[2]|max_length[32]');
         $this->form_validation->set_rules('site_title', 'Site Title', 'xss_clean');
         $this->form_validation->set_rules('site_slogan', 'Site Title', 'xss_clean');
@@ -37,10 +37,10 @@ class Settings extends CI_Controller {
         editor();
         
         if ($this->form_validation->run() == FALSE) {
-            if(isset($_POST['logo'])){
-                if (file_exists("./uploads/admin/images/" . $_POST['logo'])){
-                    @unlink("./uploads/admin/images/" . $_POST['logo']);
-                    echo "delete file". $_POST['logo']; exit;
+            if(isset($_POST['post_logo'])){
+                if (file_exists("./uploads/admin/images/" . $_POST['post_logo'])){
+                    @unlink("./uploads/admin/images/" . $_POST['post_logo']);
+                    echo "delete file". $_POST['post_logo']; exit;
                 }
             }
 
@@ -51,17 +51,16 @@ class Settings extends CI_Controller {
 
             $this->load->view('admin/admin', $data);
         } else {
-            $uploaded_details = $this->upload_image('logo');
-            if ($uploaded_details['file_name'] != '') {
-                $image = $uploaded_details['file_name'];
-                if (file_exists("./uploads/admin/images/" . $this->input->post('prev_image'))){
-                    @unlink("./uploads/admin/images/" . $this->input->post('prev_image'));
+            if (isset($_POST['post_logo'])) {
+                $logo = $_POST['post_logo'];
+                if (file_exists("./uploads/admin/images/" . $this->input->post('prev_logo'))){
+                    @unlink("./uploads/admin/images/" . $this->input->post('prev_logo'));
                 }
             } else {
-                $image = $this->input->post('prev_image');
+                $logo = $this->input->post('prev_logo');
             }
 
-            if($this->settings_model->update_site_settings($image)) {
+            if($this->settings_model->update_site_settings($logo)) {
                 $this->session->set_userdata( 'flash_msg_type', "success" );
                 $this->session->set_flashdata('flash_msg', 'Site Settings Updated Successfully');
                 redirect(ADMIN_PATH . '/settings/site_settings', 'refresh');
@@ -74,34 +73,27 @@ class Settings extends CI_Controller {
     }
 
 
-    function handle_upload() {
-        if (isset($_FILES['logo']) && !empty($_FILES['logo']['name'])) {
-            $config['upload_path']          = './uploads/admin/images';
-            $config['allowed_types']        = 'gif|jpg|png|jpeg';
-            $config['max_size']             = 1024;
-            $config['max_width']            = 1024;
-            $config['max_height']           = 768;
-            $config['min_width']            = 102;
-            $config['min_height']           = 76;
-            $config['remove_spaces']        = true;
-            $config['file_ext_tolower']     = true;
-            $config['encrypt_name']         = true;
-
-            $this->load->library('upload', $config);
-
-            if ($this->upload->do_upload('logo')) {
-                // set a $_POST value for 'image' that we can use later
-                $upload_data    = $this->upload->data();
-                $_POST['logo'] = $upload_data['file_name'];
+    function _validate_logo($image='', $edit=false) {
+        if(isset($_FILES['logo']) && !empty($_FILES['logo']['name'])) {     //check if the field is empty or not
+            $image = array(
+                        'location' => './uploads/admin/images/',
+                        'temp_location' => './uploads/admin/images/temp/',
+                        'width' => LOGO_W,
+                        'height' => LOGO_H,
+                        'image' => 'logo'      //field name of the file in the form
+                    );
+            $this->load->helper('image_helper');
+            $response = validate_image($image);
+            if($response['status']) {
                 return true;
             } else {
-                // possibly do some clean up ... then throw an error
-                $this->form_validation->set_message('handle_upload', "<div style='color:red'>" . $this->upload->display_errors() . "</div>");
+                $this->form_validation->set_message('_validate_logo', $response['msg']);
                 return false;
             }
+        } elseif(!$edit) {
+            $this->form_validation->set_message('_validate_logo', 'Please select an image for logo.');
+            return false;
         } else {
-            // throw an error because nothing was uploaded
-            //$this->form_validation->set_message('handle_upload', "You must select an image to upload.");
             return true;
         }
     }

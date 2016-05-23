@@ -20,12 +20,7 @@
                 <label>Parent Category</label><p style="color:blue">Select only if you want to create a subcategory</p>
                 <select name = "parent_id" class="form-control">
                   <option>Select Parent Category</option>
-                  <?php
-                    $selected = '';
-                    if(set_value('parent_id')) {
-                      $selected = set_value('parent_id');
-                    }
-                    echo multilevel_category_select($this->helper_model->get_category());
+                  <?=multilevel_category_select($this->helper_model->get_category());?>
                   ?>
                 </select>
               </div>

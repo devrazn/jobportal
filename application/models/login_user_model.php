@@ -93,16 +93,37 @@ class Login_User_Model extends CI_Model {
 	}
 
 
-    public function update_activation_reset_key($code){
-    	$data = array('activation_reset_key' => $code );
+    public function update_activation_reset_key($key){
+    	$data = array('activation_reset_key' => $key );
     	$this->db->where("email", $this->input->post("email"));
     	$this->db->update("tbl_users", $data);
     }
 
 
-    public function is_key_valid($data) {
-		$this->db->where('activation_reset_key', $data['user_key']);
-		$query = $this->db->get('tbl_users');
+    public function is_key_valid($key, $hash_email) {
+    	$options = array(
+    				'BINARY(activation_reset_key)' => $key,
+    				'BINARY(SHA1(MD5(email)))' => $hash_email
+    			);
+    	$this->db->where($options);
+    	$this->db->select('email');
+    	$query = $this->db->get_where('tbl_users', $options);
+    	//echo $this->db->get_where('tbl_users', $options)->num_rows(); exit;
+    	if($query->num_rows()==1) {
+    		$data = $query->row_array();
+    		// $this->db->flush_cache();
+    		// $this->db->reset_query();
+    		return $data['email'];
+    	} else {
+    		// $this->db->reset_query();
+    		// $this->db->flush_cache();
+    		return false;
+    	}
+
+
+		/*$this->db->where('activation_reset_key', $data['user_key']);
+		$query = $this->db->get('tbl_users')->row_array();
+		print_r($query); exit;
 
 		if ($query->num_rows() > 0) {
 			foreach ($query->result_array() as $row) {
@@ -110,20 +131,22 @@ class Login_User_Model extends CI_Model {
 		   			return $row['email'];
 		   		}
 			}
+			// got the key but not email
 			return false;
 		} else {
-			//echo "can't find either the key or the email."; exit;
+			//can't find either the key or the email.
 			return false;
-		}
+		}*/
 	}
 
    	public function update_password($email) {
 		$this->db->where('email',$email);
 		$data = array(
 					'password' => $this->helper_model->encrypt_me($this->input->post('password')),
-					'activation_reset_key' => genRandomString('42')
+					'activation_reset_key' => genRandomString('42')	
 				);
-		if($this->db->update('tbl_users', $data)){
+		$this->db->update('tbl_users', $data);
+		if($this->db->affected_rows()){
 			return true;
 		} else {
 			return false;
@@ -145,6 +168,16 @@ class Login_User_Model extends CI_Model {
     public function get_user_details($email) {
     	return $this->db->get_where('tbl_users', array('email' => $email))->row_array();
 	}
+
+
+	function update_verification_status($email) {
+		$this->db->set('verification_status', '1');
+		$this->db->where('email', $email);
+		$this->db->update('tbl_users');
+	}
+
+
+
 
 }
 

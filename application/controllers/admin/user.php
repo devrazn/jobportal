@@ -73,11 +73,26 @@ class User extends CI_Controller {
 
 
     function update_employer_status() {
-        if($this->user_model->update_employer_status()){
-            echo 'success';
-        } else {
-            echo 'failure';
-        }
+        if($this->input->post('feature_in_slider')=='1') {
+            $image_file = $this->user_model->get_image($this->input->post('id'));
+            if(!file_exists("./uploads/user/images/banner/" . $image_file['image'])) {
+                $this->load->helper('image_helper');
+                $file_path = "./uploads/user/images/" . $image_file['image'];
+                $image = create_image_from_any($file_path); //create image object to create thumbnail for the slider
+                $image_param = array(
+                                'image'     => $image_file['image'],
+                                'image_loc' => "./uploads/user/images/",
+                                'thumb_loc' => "./uploads/user/images/banner/",
+                                'thumb_w'   => BANNER_W,
+                                'thumb_h'   => BANNER_H,
+                                'master_dim'=> 'height'
+                            );
+                create_thumb($image_param);
+            }
+        } 
+        $this->user_model->update_employer_status();
+        echo 'success';
+        exit;
     }
 
 
@@ -89,19 +104,20 @@ class User extends CI_Controller {
 
         //$this->helper_model->editor();
 
-        if($data['user_info']['user_type']==0) {
+        if($data['user_info']['user_type']==1) {
             //echo json_encode($data['user_info']['user_type']); exit;
             //echo json_encode($data['user_info']['user_type']); exit;
             $data['title'] = 'User Details';
             $data['qualification'] = $this->user_model->get_qualification($id);
             $data['experience'] = $this->user_model->get_experience($id);
             $data['main'] = 'admin/user/user_details';
-        } else if ($data['user_info']['user_type']==1) {
+        } else if ($data['user_info']['user_type']==2) {
             //echo json_encode($data['user_info']['user_type']) . " else if"; exit;
             $data['title'] = 'Employer Details';
             $data['jobs'] = $this->user_model->get_jobs($id);
             $data['main'] = 'admin/user/employer_details';
         } else {
+            echo show_404(); exit;
         }
 
         $this->load->view('admin/admin', $data);

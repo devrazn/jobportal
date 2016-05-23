@@ -82,5 +82,14 @@ class User_Profile_Model extends CI_Model {
 			return false;
 		}
 	}
+
+
+	function count_user_by_id_type($id, $user_type) {
+		$options = array(
+					'id' => $id,
+					'user_type' => $user_type
+				);
+		return $this->db->get_where('tbl_users', $options)->num_rows();
+
+	}
 }
-?>

@@ -22,7 +22,7 @@
 
                     
                         <div class="panel-body">
-                            <img src="<?=base_url().'uploads/user/'.$user_info['image']?>" class="img-responsive img-rounded" style="max-width:400px; width:200px">
+                            <img src="<?=base_url().'uploads/user/images/'.$user_info['image']?>" class="img-responsive img-rounded" style="max-width:400px; width:200px">
                             <dl class="dl-horizontal">
                                 <dt>Employer / Company</dt>
                                 <dd><?=$user_info['f_name']?></dd>
@@ -40,6 +40,14 @@
                                 ?>
                                 <dt>Type</dt>
                                 <dd><?=$user_info['company_type']?></dd>
+                                <?php
+                                    endif;
+                                ?>
+                                <?php 
+                                    if($user_info['website']):
+                                ?>
+                                <dt>Website</dt>
+                                <dd><a href="<?=$user_info['website']?>" target="_blank"><?=$user_info['website']?></a></dd>
                                 <?php
                                     endif;
                                 ?>
@@ -186,7 +194,7 @@
                                                     <dd>
                                                         <?=humanize_date($row['published_date'])?>&nbsp;&nbsp;&nbsp;
                                                             <?php
-                                                                        $age_day =calculate_age_day_signed($row['published_date']);
+                                                                        $age_day = calculate_age_day($row['published_date']);
                                                                         if($age_day==0) echo ' (Today)';
                                                                         else if($age_day==1) echo ' (Yesterday)';
                                                                         else {
@@ -196,7 +204,7 @@
                                                     </dd>
                                                     <dt>Deadline</dt>
                                                     <dd>
-                                                        <?= humanize_date($row['deadline_date'])?>&nbsp;&nbsp;&nbsp;
+                                                        <?=humanize_date($row['deadline_date'])?>&nbsp;&nbsp;&nbsp;
                                                         
                                                         <?php
                                                             $age_day = calculate_age_day_signed($row['deadline_date']);
@@ -370,7 +378,7 @@
                                 scrollTop: $("body").offset().top
                             }, 1000);
                         } else {
-                            var responseHTML = "<div role='alert' class='alert alert-warning fade in' id='alert'>" + 
+                            var responseHTML = "<div role='alert' class='alert alert-danger fade in' id='alert'>" + 
                                 "<button aria-label='Close' data-dismiss='alert' class='close' type='button'>" + 
                                 "<span aria-hidden='true'>×</span>" +
                                 "</button>" + 

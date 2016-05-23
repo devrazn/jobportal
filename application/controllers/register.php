@@ -37,7 +37,7 @@ class Register extends CI_Controller {
 			$this->form_validation->set_rules('marital_status', "Marital Status",'required|xss_clean');
 			$this->form_validation->set_rules('phone', "Phone",'xss_clean|trim');
 			$this->form_validation->set_rules('dob_estd', "Date of Birth",'xss_clean|trim|callback_validate_date');
-		} else {
+		} else if($user==2){
 			//echo $user; exit;
 			$dob_estd = "Date of Establishment";
 			$f_name = "Company Name";
@@ -47,8 +47,10 @@ class Register extends CI_Controller {
 			// $this->form_validation->set_rules('benefits', "Benefits",'xss_clean|trim');
 			$this->form_validation->set_rules('website', "Website","xss_clean|trim|valid_url");
 			$this->form_validation->set_rules('address', "Address",'required|trim|xss_clean');
-			$this->form_validation->set_rules('image', "Image",'xss_clean|callback_handle_upload');
+			$this->form_validation->set_rules('image', "Image",'xss_clean|callback__validate_image');
 			$this->form_validation->set_rules('dob_estd', "Established Year",'xss_clean|trim|greater_than[1900]|callback_validate_date_year');
+		} else {
+			echo show_404(); exit;
 		}
 		$this->form_validation->set_rules('f_name', $f_name,'required|xss_clean|trim');
 		$this->form_validation->set_rules('email', "Email",'required|xss_clean|trim|valid_email|is_unique[tbl_users.email]');
@@ -61,8 +63,8 @@ class Register extends CI_Controller {
 		
 		
 		if($this->form_validation->run()==FALSE) {
-			if(isset($_POST['image']) && file_exists("/uploads/user/" . $_POST['image'])) {
-				@unlink("./uploads/user/" . $_POST['image']);
+			if(isset($_POST['post_image']) && file_exists("./uploads/user/images/" . $_POST['post_image'])) {
+				@unlink("./uploads/user/images/" . $_POST['post_image']);
 			}
 				$this->template->set_template('register');
 			 	$data['menu_active']='register';
@@ -73,19 +75,20 @@ class Register extends CI_Controller {
          		$this->template->publish('register/register_employer',$data);
          	}
 		} else {
-			if(!isset($_POST['image'])){
-				$_POST['image']='';
+			if(!isset($_POST['post_image'])){
+				$_POST['post_image']='';
 			}
-            $activation_code = $this->registration_model->register($user, $_POST['image']);
+			$activation_code = genRandomString(32);
+            $inserted_id = $this->registration_model->register($user, $_POST['post_image'], $activation_code);
    			if($activation_code!='system_error') {
 			    if($this->registration_model->reg_confirmation_email($activation_code)) {
 				    $this->session->set_userdata( 'user_flash_msg_type', "success" );
 		        	$this->session->set_flashdata('user_flash_msg', "You've successfully created your JobPortal Account. A verification link has been sent to your email. Please check your inbox");
 		        	redirect(base_url());
 		        } else {
-		        	$this->registration_model->hard_delete_user($this->input->post('email'));
-		        	if(isset($_POST['image']) && file_exists("./uploads/user/" . $_POST['image'])) {
-						@unlink("./uploads/user/" . $_POST['image']);
+		        	$this->registration_model->hard_delete_user($inserted_id);
+		        	if(isset($_POST['post_image']) && file_exists("./uploads/user/images/" . $_POST['post_image'])) {
+						@unlink("./uploads/user/images/" . $_POST['post_image']);
 					}
 					$this->session->set_userdata( 'user_flash_msg_type', "danger" );
 		        	$this->session->set_flashdata('user_flash_msg', "Sorry, we cannot complete your registration at the moment. Please try again later.");
@@ -102,6 +105,32 @@ class Register extends CI_Controller {
 
 		}
 	}
+
+
+	function _validate_image($received_image='', $edit=false){
+        if(isset($_FILES['image']) && !empty($_FILES['image']['name'])) {
+        	$this->load->helper('image_helper');
+            $image = array(
+                        'location' => './uploads/user/images/',
+                        'temp_location' => './uploads/user/images/temp/',
+                        'width' => USER_W,
+                        'height' => USER_H,
+                        'image' => 'image'
+                    );
+            $response = validate_image($image);
+            if($response['status']) {
+                return true;
+            } else {
+                $this->form_validation->set_message('_validate_image', $response['msg']);
+                return false;
+            }
+        } elseif(!$edit) {
+            $this->form_validation->set_message('_validate_image', 'You must provide an image.');
+            return false;
+        } else {
+            return true;
+        }
+    }
 
 
 	function activation_process($key='', $hash_email='') {

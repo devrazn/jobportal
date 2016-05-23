@@ -1,15 +1,5 @@
 <script>
 
-// $("#Button1").on("click", function () {
-//     alertify.confirm("This is an alert dialog", function (e) {
-//         if (e) {
-//             // user clicked ok
-//         } else {
-//             // user clicked cancel
-//         }
-//     });
-// });
-
     $(document).on('click', '.delete', function(event){
         alertify.confirm("Are you sure you want to perform this operation?", function (e) {
             if (e) {
@@ -27,20 +17,6 @@
             } else {
                 return false;
             }
-
-
-        // if( ! confirm("Are you sure to perform this operation?"))
-        //     return false;
-        // _this=$(this);
-        // var id = $(this).attr('data');
-        
-        // jQuery.ajax({
-        //     url: "<?=base_url().'admin/tags/delete_tags'; ?>/"+id,
-        //     beforeSend: function(){_this.html("<img src='<?php echo base_url('images/ajax-loader.gif');?>' >")},
-        //     success: function(data) {
-        //        _this.closest('tr').remove();                  
-        //     }
-        // }); 
         });              
     });
 
@@ -80,23 +56,21 @@
               <thead>
                 <tr>
                   <th>Name</th>
-                  <th>Category</th>
                   <th>Status</th>
                   <th>Options</th>
                 </tr>
               </thead>
               <tbody>
                 <?php
-                  if(count($tags_list)>0){
-                  foreach($tags_list as $tags){
+                  if(count($tags)>0){
+                  foreach($tags as $tag){
                 ?>
                 <tr>
-                  <td><?=$tags['name']?></td>
-                  <td><?=$this->category_model->category_name_by_id($tags['category_id'])?></td>
-                  <td><i href="javascript:void(0)" data="<?php echo $tags['id'];?>" class="change_status btn <?php echo ($tags['status'])? 'btn-success' : 'btn-danger'?>"><?php echo ($tags['status'])? 'Active' : 'Inactive'?></i></td>
+                  <td><?=$tag['name']?></td>
+                  <td><i href="javascript:void(0)" data="<?php echo $tag['id'];?>" class="change_status btn <?php echo ($tag['status'])? 'btn-success' : 'btn-danger'?>"><?php echo ($tag['status'])? 'Active' : 'Inactive'?></i></td>
                   <td>
-                    <a href="<?=site_url(ADMIN_PATH.'/tags/edit/'.$tags['id']) ?>" data-toggle="tooltip" title="Edit" class="btn btn-effect-ripple btn-xs btn-success"  data-original-title="Edit"><i class="fa fa-pencil"></i></a>
-                    <a data="<?php echo $tags['id'];?>" data-toggle="tooltip" title="Delete" class="btn btn-effect-ripple btn-xs btn-warning delete"  data-original-title="Delete"><i class="fa fa-times"></i></a>
+                    <a href="<?=site_url(ADMIN_PATH.'/tags/edit/'.$tag['id']) ?>" data-toggle="tooltip" title="Edit" class="btn btn-effect-ripple btn-xs btn-success"  data-original-title="Edit"><i class="fa fa-pencil"></i></a>
+                    <a data="<?php echo $tag['id'];?>" data-toggle="tooltip" title="Delete" class="btn btn-effect-ripple btn-xs btn-warning delete"  data-original-title="Delete"><i class="fa fa-times"></i></a>
                         <?php
                         }
                         ?>

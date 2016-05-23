@@ -25,15 +25,15 @@
 
                     
                         <div class="panel-body">
-                            <img src="<?=base_url().'uploads/user/'.$user_info['image']?>" class="img-responsive img-rounded" style="max-width:400px; width:200px">
+                            <img src="<?=base_url().'uploads/user/images/'.$user_info['image']?>" class="img-responsive img-rounded" style="max-width:400px; width:200px">
                             <dl class="dl-horizontal">
                                 <dt>Full Name</dt>
                                 <dd><?=$user_info['f_name']. ' '.$user_info['l_name']?></dd>
                                 <dt>Date of Birth</dt>
                                 <dd>
-                                    <?=$this->helper_model->humanize_date($user_info['dob_estd'])?> 
+                                    <?=humanize_date($user_info['dob_estd'])?> 
                                     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                    <b>Age </b><?=$this->helper_model->calculate_age_year_from_y_m_d($user_info['dob_estd']).' Yrs'?>
+                                    <b>Age </b><?=calculate_age_year_from_y_m_d($user_info['dob_estd']).' Yrs'?>
                                 </dd>
                                 <dt>Gender</dt>
                                 <dd><?php if( strcasecmp($user_info['gender'], 'm') == 0 ) echo 'Male'; else echo 'Female';?></dd>
