@@ -39,7 +39,7 @@ class Job_model extends CI_Model {
       return $this->db->get_where('tbl_experience', $options)->result_array();*/
     }
 
-    public function post_job() {
+    public function post_job($data) {
     	$user_id = $this->session->userdata('user_id');
     	$data = array(
             'title' => $this->input->post('title'),
@@ -56,7 +56,7 @@ class Job_model extends CI_Model {
             'additional_info' => $this->input->post('additional_info'),
             'published_date' => get_local_time('published_date'),
             'deadline_date' => $this->input->post('deadline_date'),
-            'application_procedure' => $this->input->post('application_procedure'),
+            'application_procedure' => $data,
             'user_id' => $user_id,
             'status' => 1,
         );

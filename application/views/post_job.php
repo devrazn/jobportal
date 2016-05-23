@@ -133,14 +133,23 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 	                    </div>
 	                </div>
 	                <div class="form-group">
-	                    <div class="form-group col-md-12">
-	                        <label class="col-md-3 control-lable">Applicaion Procedure</label>
-	                        <div class="col-md-4">
-	                           <textarea cols="39" rows="6" name="application_procedure"><?= set_value('application_procedure') ?> </textarea>  
-	                        <?= form_error('application_procedure') ?>
-	                        </div>
+	                	<div class="form-group col-md-12">
+                            <?php $checkboxValues = explode(",", $temp_procedure);?>
+                                <label class="col-md-3 control-lable">Application Procedure</label>
+                                <div class="col-md-4">
+	                                <label class="checkbox-inline">
+	                                    <input type="checkbox" name="application_procedure[]" value="0" <?php if(in_array("0", $checkboxValues)) echo 'checked';?> >Apply in Writing
+	                                </label>
+	                                <label class="checkbox-inline">
+	                                    <input type="checkbox" name="application_procedure[]" value="1" <?php if(in_array("1", $checkboxValues)) echo 'checked';?> >Apply via Company's Email
+	                                </label>
+	                                <label class="checkbox-inline">
+	                                    <input type="checkbox" name="application_procedure[]" value="2" <?php if(in_array("2", $checkboxValues)) echo 'checked';?> >Apply via JobPortal
+	                                </label>
+	                            	<?= form_error('application_procedure') ?>
+	                            </div>
 	                    </div>
-	                </div>
+                    </div>
 	                <div class="form-group">
 	                    <div class="form-actions floatRight">
 	                        <input type="submit" value="POST" class="btn btn-primary btn-sm">
