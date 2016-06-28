@@ -168,6 +168,17 @@ class Helper_model extends CI_Model {
     }
 
 
+    function get_applied_jobs($user_id='') {
+        $this->db->select('t1.job_id');
+        $this->db->select('t2.title');
+        $this->db->from('tbl_user_map_jobs t1');
+        $this->db->join('tbl_jobs t2', 't2.id=t1.job_id');
+        $this->db->where('t1.user_id', $user_id);
+        return $this->db->get()->result_array();
+
+    }
+
+
 }
 
 ?>

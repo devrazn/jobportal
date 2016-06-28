@@ -1,7 +1,7 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class User_Profile extends CI_Controller {
+class User_profile extends CI_Controller {
 
 	public function __construct()
 	{
@@ -14,12 +14,7 @@ class User_Profile extends CI_Controller {
 	}
 
 	public function index() {
-		$data['sidebar_jobs'] = $this->home_model->get_latest_jobs();
-		$data["sidebar_categories"] = $this->home_model->get_job_categories();
-		$data["page"] = "change_password";
-		$this->template->__set('title', 'Change Password');
-		$this->template->partial->view("default_layout", $data, $overwrite=FALSE);
-		$this->template->publish('default_layout');
+		$this->edit_profile();
 	}
 
 	public function change_password() {
@@ -27,8 +22,28 @@ class User_Profile extends CI_Controller {
         $this->form_validation->set_rules('new_password', 'Password', 'required|xss_clean|min_length[6]|max_length[64]');
         $this->form_validation->set_rules('c_password', 'Confirm Password', 'required|xss_clean|matches[new_password]');
 
-        if ($this->form_validation->run() == FALSE) {
+        /*if ($this->form_validation->run() == FALSE) {
            $this->index();
+        } else {
+            $password = $this->helper_model->encrypt_me($this->input->post('new_password'));
+            if($this->user_profile_model->update_password($password)) {
+                $this->session->set_userdata( 'flash_msg_type_public_user', "success" );
+                $this->session->set_flashdata('flash_msg_public_user', 'Password Changed Successfully');
+                redirect(base_url());
+            } else {
+                $this->session->set_userdata( 'flash_msg_type_public_user', "danger" );
+                $this->session->set_flashdata('flash_msg_public_user', 'Sorry, Unable to Change the Password');
+                $this->index();
+            }
+        }*/
+
+        if ($this->form_validation->run() == FALSE) {
+            // $data['sidebar_jobs'] = $this->home_model->get_latest_jobs();
+            // $data["sidebar_categories"] = $this->home_model->get_job_categories();
+            $data["page"] = "change_password";
+            $this->template->__set('title', 'Change Password');
+            $this->template->partial->view("user_layout", $data, $overwrite=FALSE);
+            $this->template->publish('user_layout');
         } else {
             $password = $this->helper_model->encrypt_me($this->input->post('new_password'));
             if($this->user_profile_model->update_password($password)) {
@@ -52,27 +67,24 @@ class User_Profile extends CI_Controller {
         }
     }
 
-    public function jobseeker_details($id){
-        $data["sidebar_jobs"] = $this->home_model->get_latest_jobs();
-        $data["sidebar_categories"] = $this->home_model->get_job_categories();
+    public function jobseeker_details(){
+        $id = $this->session->userdata('user_id');
         $data["jobseeker_details"] = $this->user_profile_model->get_jobseeker_details($id);
         $data["qualification"] = $this->user_profile_model->get_jobseeker_qualification($id);
         $data["experience"] = $this->user_profile_model->get_jobseeker_experience($id);
         $data["page"] = "jobseeker_details";
         $this->template->__set('title', 'Details');
-        $this->template->partial->view("default_layout", $data, $overwrite=FALSE);
-        $this->template->publish('default_layout');
+        $this->template->partial->view("user_layout", $data, $overwrite=FALSE);
+        $this->template->publish('user_layout');
     }
 
     public function edit_profile(){
-        $data['sidebar_jobs'] = $this->home_model->get_latest_jobs();
-        $data["sidebar_categories"] = $this->home_model->get_job_categories();
         $data["user_detail"] = $this->user_profile_model->get_user_detail($this->session->userdata('user_id'));
         //echo "<pre>"; print_r($data['user_detail']);die;
         $data['user_detail']['user_type']== 1?$data["page"] = "update_jobseeker_details": $data["page"] = "update_employeer_details";
         $this->template->__set('title', 'Update Profile');
-        $this->template->partial->view("default_layout", $data, $overwrite=FALSE);
-        $this->template->publish('default_layout');
+        $this->template->partial->view("user_layout", $data, $overwrite=FALSE);
+        $this->template->publish('user_layout');
     }
 
     public function update_info($id=''){
@@ -117,9 +129,10 @@ class User_Profile extends CI_Controller {
                 $image = $this->input->post('prev_image');
             }
             if($this->user_profile_model->update_user_detail($image,$this->session->userdata('user_id'))) {
-                $this->session->set_userdata( 'user_flash_msg_type', "success" );
+                $this->session->set_userdata('user_flash_msg_type', "success" );
                 $this->session->set_flashdata('user_flash_msg', 'Profile Updated Successfully');
-                redirect(base_url());
+                $this->index();
+                // redirect(cur_url());
             } else {
                 $this->session->set_userdata( 'user_flash_msg_type', "danger" );
                 $this->session->set_flashdata('user_flash_msg', 'Sorry, Unable to Update Profile');

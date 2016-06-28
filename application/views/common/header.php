@@ -171,7 +171,7 @@
 		        <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">Register<b class="caret"></b></a>
                     <ul class="dropdown-menu">
-                        <li><a href="<?=base_url().'register';?>">Register As JobSeeker</a></li>
+                        <li><a href="<?=base_url().'Register';?>">Register As JobSeeker</a></li>
                         <li><a href="<?=base_url().'register/register_employer';?>">Register As Employer</a></li>
                     </ul>
                 </li>
@@ -195,11 +195,17 @@
 		        <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">Welcome, <?=$this->session->userdata('name');?><b class="caret"></b></a>
                     <ul class="dropdown-menu">
-                    	<li><a href="<?=base_url().'user_profile';?>">Change Password</a></li>
-                        <li><a href="<?=base_url().'user_profile/jobseeker_details/'.$id;?>">Profile</a></li>
+                    	<li><a href="<?=base_url().'user_profile/jobseeker_details';?>">Details</a></li>
+                    	<li><a href="<?=base_url().'user_profile/change_password';?>">Change Password</a></li>
                         <li><a href="resume.html">Upload Resume</a></li>
                         <li><a href="<?=base_url().'user_profile/edit_profile';?>">Update Profile</a></li>
+                        <?php 
+                        	if($this->session->userdata('user_type') == 2) {
+                        ?>
                         <li><a href="<?=base_url().'job/'?>">Post Job</a></li>
+                        <?php } else { ?>
+                        <li><a href="<?=base_url().'details/upload_resume'?>">Upload Resume</a></li>
+                        <?php } ?>
                         <li><a href="<?=base_url().'login_user/logout';?>">Logout</a></li>
                     </ul>
                 </li>

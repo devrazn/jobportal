@@ -18,7 +18,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 |
 */
 // $config['base_url'] = 'http://localhost/jobportal/';
-$config['base_url']    = 'http://www.jobportal.com/';
+$config['base_url']    = 'http://jobportal.com/';
 
 
 /*
