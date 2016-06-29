@@ -1,6 +1,6 @@
 <?php
 
-class User_Profile_Model extends CI_Model {
+class User_profile_model extends CI_Model {
 
     public function verify_current_pw() {
 		$this->db->where('email', $this->session->userdata('user_email'));
@@ -91,5 +91,11 @@ class User_Profile_Model extends CI_Model {
 				);
 		return $this->db->get_where('tbl_users', $options)->num_rows();
 
+	}
+
+
+	function get_all_user_experience($user_id) {
+		$options = array('user_id' => $user_id);
+		return $this->db->get_where('tbl_experience', $options)->result_array();
 	}
 }

@@ -40,7 +40,7 @@ class User_profile extends CI_Controller {
         if ($this->form_validation->run() == FALSE) {
             // $data['sidebar_jobs'] = $this->home_model->get_latest_jobs();
             // $data["sidebar_categories"] = $this->home_model->get_job_categories();
-            $data["page"] = "change_password";
+            $data["page"] = "member/change_password";
             $this->template->__set('title', 'Change Password');
             $this->template->partial->view("user_layout", $data, $overwrite=FALSE);
             $this->template->publish('user_layout');
@@ -72,7 +72,7 @@ class User_profile extends CI_Controller {
         $data["jobseeker_details"] = $this->user_profile_model->get_jobseeker_details($id);
         $data["qualification"] = $this->user_profile_model->get_jobseeker_qualification($id);
         $data["experience"] = $this->user_profile_model->get_jobseeker_experience($id);
-        $data["page"] = "jobseeker_details";
+        $data["page"] = "member/jobseeker/jobseeker_details";
         $this->template->__set('title', 'Details');
         $this->template->partial->view("user_layout", $data, $overwrite=FALSE);
         $this->template->publish('user_layout');
@@ -81,18 +81,13 @@ class User_profile extends CI_Controller {
     public function edit_profile(){
         $data["user_detail"] = $this->user_profile_model->get_user_detail($this->session->userdata('user_id'));
         //echo "<pre>"; print_r($data['user_detail']);die;
-        $data['user_detail']['user_type']== 1?$data["page"] = "update_jobseeker_details": $data["page"] = "update_employeer_details";
+        $data["page"] = "member/jobseeker/update_jobseeker_details";
         $this->template->__set('title', 'Update Profile');
         $this->template->partial->view("user_layout", $data, $overwrite=FALSE);
         $this->template->publish('user_layout');
     }
 
     public function update_info($id=''){
-        if($this->user_profile_model->count_user_by_id_type($id, $this->input->post('user_type') != 1)) {
-            echo show_404(); exit;
-        }
-        $user_type = $this->input->post('user_type');
-
         if($this->session->userdata('user_type')==1){
             $dob_estd = "Date of Birth";
             $f_name = "First Name";
@@ -204,5 +199,15 @@ class User_profile extends CI_Controller {
             return FALSE;
         }
             return TRUE;
+    }
+
+
+    function experience(){
+        $data['experiences'] = $this->user_profile_model->get_all_user_experience($this->session->userdata('user_id'));
+        //echo "<pre>"; print_r($data['user_detail']);die;
+        $data["page"] = "member/jobseeker/experience/list";
+        $this->template->__set('title', 'Your Experiences');
+        $this->template->partial->view("user_layout", $data, $overwrite=FALSE);
+        $this->template->publish('user_layout');
     }
 }
