@@ -60,14 +60,16 @@ class Helper_model extends CI_Model {
 
 
     public function validate_user_session(){
-        if(($this->session->userdata('user_email') && $this->session->userdata('user_pw')) || isset($_SESSION['tw_status']) || isset($_SESSION['fb_access_token'])) {
+        if(isset($_SESSION['gmail_full_name']) || isset($_SESSION['tw_status']) || isset($_SESSION['fb_access_token']) {
+            return true;
+        } else if($this->session->userdata('user_email') && $this->session->userdata('user_pw')) {
             $options = array(
                             'email' => $this->session->userdata('user_email'),
                             );
             $this->db->where($options);
             $this->db->select("password");
             $db_pw = $this->db->get('tbl_users')->row_array();
-            if($this->decrypt_me($this->session->userdata('user_pw')) === $this->decrypt_me($db_pw["password"])){
+            if($this->decrypt_me($this->session->userdata('user_pw')) === $this->decrypt_me($db_pw["password"]) && $this->session->userdata('user_type') == 1){
                 return true;
             } else{
                 return false;
@@ -75,6 +77,26 @@ class Helper_model extends CI_Model {
         } else {
             return false;
         }
+    }
+
+
+    public function validate_employer_session() {
+        if($this->session->userdate('user_type')==2) {
+            if($this->session->userdata('user_email') && $this->session->userdata('user_pw')) {
+                $options = array(
+                                'email' => $this->session->userdata('user_email'),
+                                );
+                $this->db->where($options);
+                $this->db->select("password");
+                $db_pw = $this->db->get('tbl_admin')->row_array();
+                if($this->decrypt_me($this->session->userdata('user_pw')) === $this->decrypt_me($db_pw["password"])){
+                    return true;
+                } else{
+                    return false;
+                }
+            } else {
+                return false;
+            }
     }
 
 
@@ -129,7 +151,6 @@ class Helper_model extends CI_Model {
 
     public function set_admin_login_session($email){
         $admin_details = $this->db->get_where('tbl_admin', array('email' => $email))->row_array();
-        //echo '<pre>',print_r($user_details,1),'</pre>'; exit;
         $data = array(
                     'admin_email' => $email,
                     'admin_pw' => $admin_details['password'],
@@ -175,7 +196,6 @@ class Helper_model extends CI_Model {
         $this->db->join('tbl_jobs t2', 't2.id=t1.job_id');
         $this->db->where('t1.user_id', $user_id);
         return $this->db->get()->result_array();
-
     }
 
 

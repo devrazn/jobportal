@@ -11,6 +11,7 @@
 <link href='//fonts.googleapis.com/css?family=Roboto:100,200,300,400,500,600,700,800,900' rel='stylesheet' type='text/css'>
 <!--font-Awesome-->
 <link href="<?=base_url();?>assets/user/css/font-awesome.css" rel="stylesheet"> 
+<link href="<?=base_url();?>assets/user/css/custom.css" rel="stylesheet">
 <!--jQuery UI CSS for DatePicker-->
 <link href="<?=base_url();?>assets/user/css/jquery-ui.css" rel="stylesheet">
 
@@ -195,9 +196,8 @@
 		        <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">Welcome, <?=$this->session->userdata('name');?><b class="caret"></b></a>
                     <ul class="dropdown-menu">
-                    	<li><a href="<?=base_url().'user_profile/jobseeker_details';?>">Details</a></li>
+                    	<li><a href="<?=base_url().'user_profile/jobseeker_details';?>">Profile</a></li>
                     	<li><a href="<?=base_url().'user_profile/change_password';?>">Change Password</a></li>
-                        <li><a href="resume.html">Upload Resume</a></li>
                         <li><a href="<?=base_url().'user_profile/edit_profile';?>">Update Profile</a></li>
                         <?php 
                         	if($this->session->userdata('user_type') == 2) {

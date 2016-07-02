@@ -7,6 +7,9 @@
 
 <div class="col-md-8 single_right">
     <h3>Your Experiences</h3>
+    <div class="panel-heading">
+      <a class="btn btn-primary" href="<?=base_url().'user_profile/add_experience';?>"><i class="fa fa-plus"> </i> Add New Experience</a>   
+    </div>
     <div class="well">
         <div class="dataTable_wrapper">
             <table class="table table-striped table-hover" id="employer_jobs-dataTables">
@@ -28,9 +31,9 @@
                 <tr> 
                   <td><a href="<?=base_url().'user_profile/edit_experience/'.$experience['id']?>"><?=$experience['title']?></a></td>
                   <td><a href="<?=base_url().'user_profile/edit_experience/'.$experience['id']?>"><?=$experience['position']?></a></td>
-                  <td><a href="<?=base_url().'user_profile/edit_experience/'.$experience['id']?>"><?=$experience['company']?></a></td>
+                  <td><a href="<?=base_url().'user_profile/edit_experience/'.$experience['id']?>"><?=$experience['company_name']?></a></td>
                   <td><a href="<?=base_url().'user_profile/edit_experience/'.$experience['id']?>"><?=$experience['start_year']?></a></td>
-                  <td><a href="<?=base_url().'user_profile/edit_experience/'.$experience['id']?>"><?=$experience['deadline_date']?></a></td>
+                  <td><a href="<?=base_url().'user_profile/edit_experience/'.$experience['id']?>"><?=$experience['duration']?> <?php if($experience['duration_unit']==1){echo 'Yr';}else{echo 'Month';} ?></a></td>
                   <td><a href="javascript:void(0)">Delete</a></td>
                 </tr>
                       <?php

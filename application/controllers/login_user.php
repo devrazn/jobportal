@@ -16,7 +16,7 @@ class Login_User extends CI_Controller {
 	}
 
 	public function index() {
-		if($this->helper_model->validate_user_session()){
+		if($this->helper_model->validate_user_session() || $this->helper_model->validate_employer_session()){
 			redirect(base_url());
 		} else {
 			$data['sidebar_jobs'] = $this->home_model->get_latest_jobs();

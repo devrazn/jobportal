@@ -22,24 +22,7 @@ class User_profile extends CI_Controller {
         $this->form_validation->set_rules('new_password', 'Password', 'required|xss_clean|min_length[6]|max_length[64]');
         $this->form_validation->set_rules('c_password', 'Confirm Password', 'required|xss_clean|matches[new_password]');
 
-        /*if ($this->form_validation->run() == FALSE) {
-           $this->index();
-        } else {
-            $password = $this->helper_model->encrypt_me($this->input->post('new_password'));
-            if($this->user_profile_model->update_password($password)) {
-                $this->session->set_userdata( 'flash_msg_type_public_user', "success" );
-                $this->session->set_flashdata('flash_msg_public_user', 'Password Changed Successfully');
-                redirect(base_url());
-            } else {
-                $this->session->set_userdata( 'flash_msg_type_public_user', "danger" );
-                $this->session->set_flashdata('flash_msg_public_user', 'Sorry, Unable to Change the Password');
-                $this->index();
-            }
-        }*/
-
         if ($this->form_validation->run() == FALSE) {
-            // $data['sidebar_jobs'] = $this->home_model->get_latest_jobs();
-            // $data["sidebar_categories"] = $this->home_model->get_job_categories();
             $data["page"] = "member/change_password";
             $this->template->__set('title', 'Change Password');
             $this->template->partial->view("user_layout", $data, $overwrite=FALSE);
@@ -110,7 +93,6 @@ class User_profile extends CI_Controller {
             if(isset($_POST['post_image'])){
                 if (file_exists("./uploads/user/images/" . $_POST['post_image'])){
                     @unlink("./uploads/user/images/" . $_POST['post_image']);
-                   // echo "delete file". $_POST['image']; exit;
                 }
             }
             $this->edit_profile($this->session->userdata('user_id'));
@@ -127,7 +109,6 @@ class User_profile extends CI_Controller {
                 $this->session->set_userdata('user_flash_msg_type', "success" );
                 $this->session->set_flashdata('user_flash_msg', 'Profile Updated Successfully');
                 $this->index();
-                // redirect(cur_url());
             } else {
                 $this->session->set_userdata( 'user_flash_msg_type', "danger" );
                 $this->session->set_flashdata('user_flash_msg', 'Sorry, Unable to Update Profile');
@@ -193,7 +174,7 @@ class User_profile extends CI_Controller {
         }
     }
 
-    function valid_url($url){
+    function _valid_url($url){
         $pattern = "|^http(s)?://[a-z0-9-]+(.[a-z0-9-]+)*(:[0-9]+)?(/.*)?$|i";
         if (!preg_match($pattern, $url)){
             return FALSE;
@@ -209,5 +190,57 @@ class User_profile extends CI_Controller {
         $this->template->__set('title', 'Your Experiences');
         $this->template->partial->view("user_layout", $data, $overwrite=FALSE);
         $this->template->publish('user_layout');
+    }
+
+
+    public function add_experience(){
+        $date = date('Y');
+        $this->form_validation->set_rules('title', 'Title', 'required|trim|xss_clean');
+        $this->form_validation->set_rules('position', 'Position', 'required|trim|xss_clean');
+        $this->form_validation->set_rules('company_name', 'Company Name', 'trim|xss_clean');
+        $this->form_validation->set_rules('start_year', 'Start Year', 'required|trim|xss_clean|integer|greater_than_equal_to[1970]|less_than[' . $date . ']');
+        $this->form_validation->set_rules('duration', 'Duration', 'required|xss_clean|integer|greater_than[0]');
+        $this->form_validation->set_rules('duration_unit', 'Duration Unit', 'required|xss_clean|integer|greater_than_equal_to[1]|less_than_equal_to[2]');
+        $this->form_validation->set_rules('description', 'Description', 'xss_clean');
+        if(!$this->form_validation->run()) {
+            //echo "<pre>"; print_r($data['user_detail']);die;
+            $data["page"] = "member/jobseeker/experience/add";
+            $this->template->__set('title', 'Add Your Experiences');
+            $this->template->partial->view("user_layout", $data, $overwrite=FALSE);
+            $this->template->publish('user_layout');
+        } else {
+            $this->user_profile_model->add_experience($this->session->userdata('user_id'));
+            $this->session->set_userdata( 'user_flash_msg_type', "success" );
+            $this->session->set_flashdata('user_flash_msg', 'Experience addded successfully');
+            redirect(base_url().'User_profile/experience', 'refresh');
+        }
+    }
+
+
+     public function edit_experience($experience_id){
+        $data['experience'] = $this->user_profile_model->get_experience($experience_id);
+        if($data['experience']['user_id'] != $this->session->userdata('user_id')) { //$this->session->userdata('user_id')
+            show_404();
+            exit;
+        }
+        $date = date('Y');
+        $this->form_validation->set_rules('title', 'Title', 'required|trim|xss_clean');
+        $this->form_validation->set_rules('position', 'Position', 'required|trim|xss_clean');
+        $this->form_validation->set_rules('company_name', 'Company Name', 'trim|xss_clean');
+        $this->form_validation->set_rules('start_year', 'Start Year', 'required|trim|xss_clean|integer|greater_than_equal_to[1900]|less_than[' . $date . ']');
+        $this->form_validation->set_rules('duration', 'Duration', 'required|xss_clean|integer|greater_than[0]');
+        $this->form_validation->set_rules('duration_unit', 'Duration Unit', 'required|xss_clean|integer|greater_than_equal_to[1]|less_than_equal_to[2]');
+        $this->form_validation->set_rules('description', 'Description', 'xss_clean');
+        if(!$this->form_validation->run()) {
+            $data["page"] = "member/jobseeker/experience/edit";
+            $this->template->__set('title', 'Edit Your Experience');
+            $this->template->partial->view("user_layout", $data, $overwrite=FALSE);
+            $this->template->publish('user_layout');
+        } else {
+            $this->user_profile_model->update_experience($experience_id, $this->session->userdata('user_id'));
+            $this->session->set_userdata( 'user_flash_msg_type', "success" );
+            $this->session->set_flashdata('user_flash_msg', 'Experience updated successfully');
+            redirect(base_url().'user_profile/experience', 'refresh');
+        }
     }
 }

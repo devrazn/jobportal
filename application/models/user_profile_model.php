@@ -90,7 +90,6 @@ class User_profile_model extends CI_Model {
 					'user_type' => $user_type
 				);
 		return $this->db->get_where('tbl_users', $options)->num_rows();
-
 	}
 
 
@@ -98,4 +97,44 @@ class User_profile_model extends CI_Model {
 		$options = array('user_id' => $user_id);
 		return $this->db->get_where('tbl_experience', $options)->result_array();
 	}
+
+
+	function add_experience($user_id) {
+      $data = array(
+      		'title' => $this->input->post('title'),
+            'position' => $this->input->post('position'),
+            'company_name' => $this->input->post('company_name'),
+            'start_year' => $this->input->post('start_year'),
+            'duration' => $this->input->post('duration'),
+            'duration_unit' => $this->input->post('duration_unit'),
+            'description' => $this->input->post('description'),
+            'user_id' => $user_id,
+          );
+      $this->db->insert('tbl_experience', $data);
+    }
+
+
+    function update_experience($experience_id, $user_id) {
+		$data = array(
+				'title' => $this->input->post('title'),
+				'position' => $this->input->post('position'),
+				'company_name' => $this->input->post('company_name'),
+				'start_year' => $this->input->post('start_year'),
+				'duration' => $this->input->post('duration'),
+				'duration_unit' => $this->input->post('duration_unit'),
+				'description' => $this->input->post('description')
+			);
+		$options = array(
+					'id' => $experience_id,
+					'user_id' => $user_id
+				);
+
+		$this->db->where($options);
+		$this->db->update('tbl_experience', $data);
+    }
+
+
+    function get_experience($experience_id) {
+    	return $this->db->get_where('tbl_experience', array('id' => $experience_id))->row_array();
+    }
 }
