@@ -6,7 +6,7 @@
     <script src="<?=base_url();?>assets/admin/template/bower_components/datatables-plugins/integration/bootstrap/3/dataTables.bootstrap.min.js"></script>
 
 <div class="col-md-8 single_right">
-    <h3>Your Experiences</h3>
+    <h3><?php echo $title?></h3>
     <div class="panel-heading">
       <a class="btn btn-primary" href="<?=base_url().'user_profile/add_experience';?>"><i class="fa fa-plus"> </i> Add New Experience</a>   
     </div>
