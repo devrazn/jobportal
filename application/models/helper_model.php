@@ -198,6 +198,14 @@ class Helper_model extends CI_Model {
         return $this->db->get()->result_array();
     }
 
+    function delete_from_table($id, $table) {
+        $data = array(
+                    'del_flag' => 1
+                );
+        $this->db->where('id', $id);
+        $this->db->update($table, $data);
+    }
+
 
 }
 

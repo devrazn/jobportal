@@ -28,13 +28,15 @@
                   if(count($experiences)>0){
                   foreach($experiences as $experience){
                 ?>
-                <tr> 
+                <tr id="tr_<?php echo $experience['id']; ?>"> 
                   <td><a href="<?=base_url().'user_profile/edit_experience/'.$experience['id']?>"><?=$experience['title']?></a></td>
                   <td><a href="<?=base_url().'user_profile/edit_experience/'.$experience['id']?>"><?=$experience['position']?></a></td>
                   <td><a href="<?=base_url().'user_profile/edit_experience/'.$experience['id']?>"><?=$experience['company_name']?></a></td>
                   <td><a href="<?=base_url().'user_profile/edit_experience/'.$experience['id']?>"><?=$experience['start_year']?></a></td>
                   <td><a href="<?=base_url().'user_profile/edit_experience/'.$experience['id']?>"><?=$experience['duration']?> <?php if($experience['duration_unit']==1){echo 'Yr';}else{echo 'Month';} ?></a></td>
-                  <td><a href="javascript:void(0)">Delete</a></td>
+                  <td>
+                    <a class="btn btn-danger delete" data="<?php echo $experience['id'];?>" data-toggle="tooltip" title="Delete"  data-original-title="Delete"><i class="fa fa-trash-o fa-lg"></i> Delete</a>
+                  </td>
                 </tr>
                       <?php
                           
@@ -42,7 +44,7 @@
                       } else {
                         ?>
                 <tr>
-                  <td colspan="5">
+                  <td colspan="6">
                     <center>
                       <font color="#FF0000">::You have not uploaded any experience yet..::</font>
                     </center>
@@ -60,12 +62,58 @@
 </div>
 
 <script>
-    $(document).ready(function() {
-        $('#employer_jobs-dataTables').dataTable({
-                responsive: true,
-                sPaginationType: "full_numbers",
-                "aaSorting": [4, "asc"]
-                //"order": [[ 3, "desc" ]]
-        });
+  $(document).ready(function() {
+      $('#employer_jobs-dataTables').dataTable({
+              responsive: true,
+              sPaginationType: "full_numbers",
+              "aaSorting": [3, "asc"]
+      });
+
+      $(document).on('click', '.delete', function(event){    
+        if( ! confirm("Are you sure to delete this tag?")){
+          return false;
+        } else {
+        _this=$(this);
+        var id = _this.attr('data');
+        _this_tr_html = _this.closest('tr').html();
+
+        jQuery.ajax({
+          url: "<?=base_url().'user_profile/delete_experience/'; ?>" + id,
+          dataType: 'json',
+          beforeSend: function(){
+            _this.closest('tr').html("<td colspan='6' align='center'><img src='<?php echo base_url('assets/ajax/images/ajax-loader_dark.gif');?>' ></td>");
+          },
+          success: function(data) {
+            if(data['response']) {
+              $('#tr_'+id).remove();
+              var responseHTML = "<div role='alert' class='alert alert-success fade in' id='alert'>" + 
+                            "<button aria-label='Close' data-dismiss='alert' class='close' type='button'>" + 
+                            "<span aria-hidden='true'>×</span>" +
+                            "</button>" + 
+                            'Experience Deleted Successfully' + 
+                            "</div>";
+              $('.alert').remove();
+              $(".alert_parent").append(responseHTML);
+              $('html, body').animate({
+                scrollTop: $("body").offset().top
+              }, 1000);
+            } else {
+              $('#tr_'+id).html(_this_tr_html);
+              var responseHTML = "<div role='alert' class='alert alert-danger fade in' id='alert'>" + 
+                            "<button aria-label='Close' data-dismiss='alert' class='close' type='button'>" + 
+                            "<span aria-hidden='true'>×</span>" +
+                            "</button>" + 
+                            data['message'] + 
+                            "</div>";
+              $('.alert').remove();
+              $(".alert_parent").append(responseHTML);
+              $('html, body').animate({
+                scrollTop: $("body").offset().top
+              }, 1000);
+            }
+          }
+        }); 
+      }              
     });
+  });
 </script>

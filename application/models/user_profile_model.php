@@ -45,6 +45,7 @@ class User_profile_model extends CI_Model {
 	public function get_jobseeker_qualification(){
 		$id = $this->session->userdata('user_id');
 		$this->db->where('user_id',$id);
+		$this->db->where('del_flag', 0);
         $this->db->order_by('id', 'ASC');
         $query = $this->db->get('tbl_qualification');
         return $query->result_array();
@@ -96,7 +97,11 @@ class User_profile_model extends CI_Model {
 
 
 	function get_all_user_experience($user_id) {
-		$options = array('user_id' => $user_id);
+		$options = array(
+					'user_id' => $user_id,
+					'del_flag' => 0
+
+				);
 		return $this->db->get_where('tbl_experience', $options)->result_array();
 	}
 

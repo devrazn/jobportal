@@ -1,3 +1,4 @@
+<div class="alert_parent">
 <?php
 if ($this->session->flashdata('user_flash_msg'))
 {
@@ -27,3 +28,4 @@ if ($this->session->flashdata('user_flash_msg'))
     //$this->session->unset_flashdata('user_flash_msg');
 }
 ?>
+</div>

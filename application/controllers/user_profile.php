@@ -219,7 +219,7 @@ class User_profile extends CI_Controller {
 
     public function edit_experience($experience_id){
         $data['experience'] = $this->user_profile_model->get_experience($experience_id);
-        if($data['experience']['user_id'] != $this->session->userdata('user_id')) { //$this->session->userdata('user_id')
+        if($data['experience']['user_id'] != $this->session->userdata('user_id') && $data['experience']['del_flag'] == 1) { //$this->session->userdata('user_id')
             show_404();
             exit;
         }
@@ -244,7 +244,25 @@ class User_profile extends CI_Controller {
         }
     }
 
-     function qualification(){
+
+    function delete_experience($experience_id) {
+        $data['experience'] = $this->user_profile_model->get_experience($experience_id);
+        if($data['experience']['user_id'] != $this->session->userdata('user_id')) { //$this->session->userdata('user_id')
+            echo json_encode(array(
+                    'response' => FALSE,
+                    'message' => "The experience can't be deleted. Please try again later."
+                ));
+        } else {
+            $table = 'tbl_experience';
+            $this->helper_model->delete_from_table($experience_id, $table);
+            echo json_encode(array(
+                    'response' => TRUE,
+                ));
+        }
+    }
+
+
+    function qualification(){
         $data['qualification'] = $this->user_profile_model->get_jobseeker_qualification($this->session->userdata('user_id'));
         $data["title"] = "Your Qualifications";
         $data["page"] = "member/jobseeker/qualification/list";
@@ -279,6 +297,7 @@ class User_profile extends CI_Controller {
         }
     }
 
+    
     function edit_qualification($id) {
         $data["row"] = $this->user_profile_model->get_qualification_by_id($id);
         if($data['row']['user_id'] != $this->session->userdata('user_id')) { //$this->session->userdata('user_id')
@@ -311,4 +330,8 @@ class User_profile extends CI_Controller {
             }
         }
     }
+
+
+
+
 }
