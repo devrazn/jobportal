@@ -42,14 +42,16 @@ class User_profile_model extends CI_Model {
 		return  $this->db->get("tbl_users")->row_array();
 	}
 
-	public function get_jobseeker_qualification($id){
+	public function get_jobseeker_qualification(){
+		$id = $this->session->userdata('user_id');
 		$this->db->where('user_id',$id);
         $this->db->order_by('id', 'ASC');
         $query = $this->db->get('tbl_qualification');
         return $query->result_array();
 	}
 
-	public function get_jobseeker_experience($id){
+	public function get_jobseeker_experience(){
+		$id = $this->session->userdata('user_id');
 		$this->db->where('user_id',$id);
         $this->db->order_by('id', 'ASC');
         $query = $this->db->get('tbl_experience');
@@ -137,4 +139,56 @@ class User_profile_model extends CI_Model {
     function get_experience($experience_id) {
     	return $this->db->get_where('tbl_experience', array('id' => $experience_id))->row_array();
     }
+
+    function get_qualification_by_id($id) {
+    	$options = array('id' => $id,
+    		'del_flag'=>0
+    		);
+    	$query = $this->db->get_where('tbl_qualification', $options, 1);
+    	return $query->row_array();
+    }
+
+    public function add_qualification() {
+		$user_id = $this->session->userdata('user_id');
+		$data = array(
+			'degree' => $this->input->post('degree'),
+			'institution' => $this->input->post('institution'),
+			'completion_date' => $this->input->post('completion_date'),
+			'gpa_pct' => $this->input->post('gpa_pct'),
+			'remarks' => $this->input->post('remarks'),
+			'user_id' => $user_id,
+			'status' => 1,
+			);
+		if($this->db->insert('tbl_qualification', $data)){
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	function update_qualification($qualification,$user_id) {
+        $data = array('degree' => $this->input->post('degree'),
+                      'institution' => $this->input->post('institution'),
+                      'completion_date' => $this->input->post('completion_date'),
+                      'gpa_pct' => $this->input->post('gpa_pct'),
+                      'remarks' => $this->input->post('remarks')
+        );
+        $options = array(
+					'id' => $qualification,
+					'user_id' => $user_id
+				);
+        $this->db->where($options);
+        if($this->db->update('tbl_qualification', $data)) {
+        	return true;
+		} else {
+			return false;
+		}
+
+    }
+
+    function delete_qualifications($id) {
+        $sql ="Update tbl_qualification set del_flag=1 where id='$id'";
+        $this->db->query($sql);
+    }
+
 }

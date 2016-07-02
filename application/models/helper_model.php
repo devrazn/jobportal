@@ -60,7 +60,7 @@ class Helper_model extends CI_Model {
 
 
     public function validate_user_session(){
-        if(isset($_SESSION['gmail_full_name']) || isset($_SESSION['tw_status']) || isset($_SESSION['fb_access_token']) {
+        if(isset($_SESSION['gmail_full_name']) || isset($_SESSION['tw_status']) || isset($_SESSION['fb_access_token'])) {
             return true;
         } else if($this->session->userdata('user_email') && $this->session->userdata('user_pw')) {
             $options = array(
@@ -97,8 +97,8 @@ class Helper_model extends CI_Model {
             } else {
                 return false;
             }
+        }
     }
-
 
     public function check_job_app_status($job_id){
         $options = array(

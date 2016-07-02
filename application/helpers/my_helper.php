@@ -343,3 +343,14 @@ if(!function_exists('multilevel_select_edit')) {
         return $menu_html;
     }
 }
+
+if (!function_exists('prePrint')) {
+    function prePrint($arrData, $exit = TRUE)
+    {
+        echo "<pre>";
+        print_r($arrData);
+        if ($exit === TRUE) {
+            die();
+        }
+    }
+}

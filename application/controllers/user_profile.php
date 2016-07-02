@@ -53,8 +53,8 @@ class User_profile extends CI_Controller {
     public function jobseeker_details(){
         $id = $this->session->userdata('user_id');
         $data["jobseeker_details"] = $this->user_profile_model->get_jobseeker_details($id);
-        $data["qualification"] = $this->user_profile_model->get_jobseeker_qualification($id);
-        $data["experience"] = $this->user_profile_model->get_jobseeker_experience($id);
+        $data["qualification"] = $this->user_profile_model->get_jobseeker_qualification();
+        $data["experience"] = $this->user_profile_model->get_jobseeker_experience();
         $data["page"] = "member/jobseeker/jobseeker_details";
         $this->template->__set('title', 'Details');
         $this->template->partial->view("user_layout", $data, $overwrite=FALSE);
@@ -217,7 +217,7 @@ class User_profile extends CI_Controller {
     }
 
 
-     public function edit_experience($experience_id){
+    public function edit_experience($experience_id){
         $data['experience'] = $this->user_profile_model->get_experience($experience_id);
         if($data['experience']['user_id'] != $this->session->userdata('user_id')) { //$this->session->userdata('user_id')
             show_404();
@@ -241,6 +241,74 @@ class User_profile extends CI_Controller {
             $this->session->set_userdata( 'user_flash_msg_type', "success" );
             $this->session->set_flashdata('user_flash_msg', 'Experience updated successfully');
             redirect(base_url().'user_profile/experience', 'refresh');
+        }
+    }
+
+     function qualification(){
+        $data['qualification'] = $this->user_profile_model->get_jobseeker_qualification($this->session->userdata('user_id'));
+        $data["title"] = "Your Qualifications";
+        $data["page"] = "member/jobseeker/qualification/list";
+        $this->template->partial->view("user_layout", $data, $overwrite=FALSE);
+        $this->template->publish('user_layout');
+    }
+
+    function add_qualification() {
+        $this->form_validation->set_rules('degree', "Degree",'required|xss_clean');
+        $this->form_validation->set_rules('institution', "institution",'required|xss_clean');
+        $this->form_validation->set_rules('completion_date', "Completion Date",'required|xss_clean');
+        $this->form_validation->set_rules('gpa_pct', "GPA/Percentage",'required|xss_clean');
+        if($this->form_validation->run()==FALSE) {
+           $data["page"] = "member/jobseeker/qualification/add";
+           $data["title"] = "Add Your Qualifications";
+           $this->template->partial->view("default_layout", $data, $overwrite=FALSE);
+           $this->template->publish('user_layout');
+
+        } else {
+            if($this->user_profile_model->add_qualification()) {
+                $this->session->set_userdata( 'user_flash_msg_type', "success" );
+                $this->session->set_flashdata('user_flash_msg', 'Qualification Added Successfully');
+                redirect('user_profile/qualification');
+            } else {
+                $this->session->set_userdata( 'user_flash_msg_type', "danger" );
+                $this->session->set_flashdata('user_flash_msg', 'Sorry, Unable to Added Qualification');
+                $data["page"] = "member/jobseeker/qualification/add";
+                $data["title"] = "Add Your Qualifications";
+                $this->template->partial->view("default_layout", $data, $overwrite=FALSE);
+                $this->template->publish('user_layout');
+            }
+        }
+    }
+
+    function edit_qualification($id) {
+        $data["row"] = $this->user_profile_model->get_qualification_by_id($id);
+        if($data['row']['user_id'] != $this->session->userdata('user_id')) { //$this->session->userdata('user_id')
+            show_404();
+            exit;
+        }
+        $this->form_validation->set_rules('degree', "Degree",'required|xss_clean');
+        $this->form_validation->set_rules('institution', "institution",'required|xss_clean');
+        $this->form_validation->set_rules('completion_date', "Completion Date",'required|xss_clean');
+        $this->form_validation->set_rules('gpa_pct', "GPA/Percentage",'required|xss_clean');
+        if($this->form_validation->run()==FALSE) {
+            $user_id = $this->session->userdata('user_id');
+            $data["page"] = "member/jobseeker/qualification/edit";
+            $data["title"] = "Edit Qualification";
+            $this->template->partial->view("default_layout", $data, $overwrite=FALSE);
+            $this->template->publish('user_layout');
+
+        } else {
+            if($this->user_profile_model->update_qualification($id,$this->session->userdata('user_id'))) {
+                $this->session->set_userdata( 'user_flash_msg_type', "success" );
+                $this->session->set_flashdata('user_flash_msg', 'Qualification Edited Successfully');
+                redirect('user_profile/qualification');
+            } else {
+                $this->session->set_userdata( 'user_flash_msg_type', "danger" );
+                $this->session->set_flashdata('user_flash_msg', 'Sorry, Unable to Edited Qualification');
+                $data["page"] = "member/jobseeker/qualification/edit";
+                $data["title"] = "Edit Qualification";
+                $this->template->partial->view("default_layout", $data, $overwrite=FALSE);
+                $this->template->publish('user_layout');
+            }
         }
     }
 }
