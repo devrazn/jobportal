@@ -69,23 +69,6 @@
               "aaSorting": [3, "asc"]
       });
 
-      $(document).on('click', '.delete', function(event){    
-        if( ! confirm("Are you sure to delete this experience?")){
-          return false;
-        } else {
-        _this=$(this);
-        var id = _this.attr('data');
-        _this_tr_html = _this.closest('tr').html();
-
-        jQuery.ajax({
-          url: "<?=base_url().'user_profile/delete_experience/'; ?>" + id,
-          dataType: 'json',
-          beforeSend: function(){
-            _this.closest('tr').html("<td colspan='6' align='center'><img src='<?php echo base_url('assets/ajax/images/ajax-loader_dark.gif');?>' ></td>");
-          },
-          <?php $this->load->view('common/ajax_del_success')?>
-        }); 
-      }              
-    });
+      <?php $this->load->view('common/ajax_del')?>
   });
 </script>

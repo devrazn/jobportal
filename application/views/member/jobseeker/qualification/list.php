@@ -65,23 +65,6 @@
             //"order": [[ 3, "desc" ]]
     });
 
-    $(document).on('click', '.delete', function(event){    
-        if( ! confirm("Are you sure to delete this tag?")){
-          return false;
-        } else {
-        _this=$(this);
-        var id = _this.attr('data');
-        _this_tr_html = _this.closest('tr').html();
-
-        jQuery.ajax({
-          url: "<?=base_url().'user_profile/delete_qualification/'; ?>" + id,
-          dataType: 'json',
-          beforeSend: function(){
-            _this.closest('tr').html("<td colspan='5' align='center'><img src='<?php echo base_url('assets/ajax/images/ajax-loader_dark.gif');?>' ></td>");
-          },
-          <?php $this->load->view('common/ajax_del_response')?>
-        }); 
-      }              
-    });
+    <?php $this->load->view('common/ajax_del')?>
   });
 </script>
