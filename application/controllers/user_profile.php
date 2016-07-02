@@ -332,6 +332,23 @@ class User_profile extends CI_Controller {
     }
 
 
+    function delete_qualification($qualification_id) {
+        $data['qualification'] = $this->user_profile_model->get_qualification_by_id($qualification_id);
+        if($data['qualification']['user_id'] != $this->session->userdata('user_id')) { //$this->session->userdata('user_id')
+            echo json_encode(array(
+                    'response' => FALSE,
+                    'message' => "The qualification can't be deleted. Please try again later."
+                ));
+        } else {
+            $table = 'tbl_qualification';
+            $this->helper_model->delete_from_table($qualification_id, $table);
+            echo json_encode(array(
+                    'response' => TRUE,
+                ));
+        }
+    }
+
+
 
 
 }

@@ -27,12 +27,12 @@
                   if(count($qualification)>0){
                   foreach($qualification as $qualification){
                 ?>
-                <tr> 
+                <tr id="tr_<?php echo $qualification['id']; ?>">
                   <td><a href="<?=base_url().'user_profile/edit_qualification/'.$qualification['id']?>"><?=$qualification['degree']?></a></td>
                   <td><a href="<?=base_url().'user_profile/edit_qualification/'.$qualification['id']?>"><?=$qualification['institution']?></a></td>
                   <td><a href="<?=base_url().'user_profile/edit_qualification/'.$qualification['id']?>"><?=$qualification['completion_date']?></a></td>
                   <td><a href="<?=base_url().'user_profile/edit_qualification/'.$qualification['id']?>"><?=$qualification['gpa_pct']?></a></td>
-                  <td><a class="btn btn-danger delete_row" data="<?php echo $qualification['id'];?>" data-toggle="tooltip" title="Delete"  data-original-title="Delete"><i class="fa fa-trash-o fa-lg"></i> Delete</a></td>
+                  <td><a class="btn btn-danger delete" data="<?php echo $qualification['id'];?>" data-toggle="tooltip" title="Delete"  data-original-title="Delete"><i class="fa fa-trash-o fa-lg"></i> Delete</a></td>
                 </tr>
                       <?php
                           
@@ -57,12 +57,31 @@
     </div>
 </div>
 <script>
-    $(document).ready(function() {
-        $('#employer_qualification_dataTables').dataTable({
-                responsive: true,
-                sPaginationType: "full_numbers",
-                "aaSorting": [4, "asc"]
-                //"order": [[ 3, "desc" ]]
-        });
+  $(document).ready(function() {
+    $('#employer_qualification_dataTables').dataTable({
+            responsive: true,
+            sPaginationType: "full_numbers",
+            "aaSorting": [4, "asc"]
+            //"order": [[ 3, "desc" ]]
     });
+
+    $(document).on('click', '.delete', function(event){    
+        if( ! confirm("Are you sure to delete this tag?")){
+          return false;
+        } else {
+        _this=$(this);
+        var id = _this.attr('data');
+        _this_tr_html = _this.closest('tr').html();
+
+        jQuery.ajax({
+          url: "<?=base_url().'user_profile/delete_qualification/'; ?>" + id,
+          dataType: 'json',
+          beforeSend: function(){
+            _this.closest('tr').html("<td colspan='5' align='center'><img src='<?php echo base_url('assets/ajax/images/ajax-loader_dark.gif');?>' ></td>");
+          },
+          <?php $this->load->view('common/ajax_del_response')?>
+        }); 
+      }              
+    });
+  });
 </script>
