@@ -14,7 +14,7 @@ class User_profile extends CI_Controller {
 	}
 
 	public function index() {
-		$this->edit_profile();
+		$this->jobseeker_details();
 	}
 
 	public function change_password() {
@@ -23,6 +23,7 @@ class User_profile extends CI_Controller {
         $this->form_validation->set_rules('c_password', 'Confirm Password', 'required|xss_clean|matches[new_password]');
 
         if ($this->form_validation->run() == FALSE) {
+            $data['controller'] = 'user_profile';
             $data["page"] = "member/change_password";
             $this->template->__set('title', 'Change Password');
             $this->template->partial->view("user_layout", $data, $overwrite=FALSE);
@@ -30,12 +31,12 @@ class User_profile extends CI_Controller {
         } else {
             $password = $this->helper_model->encrypt_me($this->input->post('new_password'));
             if($this->user_profile_model->update_password($password)) {
-                $this->session->set_userdata( 'flash_msg_type_public_user', "success" );
-                $this->session->set_flashdata('flash_msg_public_user', 'Password Changed Successfully');
+                $this->session->set_userdata( 'user_flash_msg_typeuser_flash_msg', "success" );
+                $this->session->set_flashdata('user_flash_msg', 'Password Changed Successfully');
                 redirect(base_url());
             } else {
-                $this->session->set_userdata( 'flash_msg_type_public_user', "danger" );
-                $this->session->set_flashdata('flash_msg_public_user', 'Sorry, Unable to Change the Password');
+                $this->session->set_userdata( 'user_flash_msg_type', "danger" );
+                $this->session->set_flashdata('user_flash_msg', 'Sorry, Unable to Change the Password');
                 $this->index();
             }
         }
