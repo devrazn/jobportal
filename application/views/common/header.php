@@ -67,8 +67,8 @@
 
 <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
 <script src="<?=base_url();?>assets/user/js/jquery.min.js"></script>
-<script src="<?=base_url();?>assets/user/js/custom.js"></script>
 <script src="<?=base_url();?>assets/user/js/bootstrap.min.js"></script>
+<script src="<?=base_url();?>assets/user/js/custom.js"></script>
 
 </head>
 <body>
@@ -197,14 +197,16 @@
 		        <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">Welcome, <?=$this->session->userdata('name');?><b class="caret"></b></a>
                     <ul class="dropdown-menu">
-                    	<li><a href="<?=base_url().'user_profile/jobseeker_details';?>">My Profile</a></li>
+                    	<li><a href="<?=base_url().'user_profile/jobseeker_details';?>">Profile</a></li>
                     	<li><a href="<?=base_url().'user_profile/change_password';?>">Change Password</a></li>
                         <li><a href="<?=base_url().'user_profile/edit_profile';?>">Update Profile</a></li>
                         <?php 
                         	if($this->session->userdata('user_type') == 2) {
                         ?>
                         <li><a href="<?=base_url().'job/'?>">Post Job</a></li>
-                        <?php }  ?>
+                        <?php } else { ?>
+                        <li><a href="<?=base_url().'details/upload_resume'?>">Upload Resume</a></li>
+                        <?php } ?>
                         <li><a href="<?=base_url().'login_user/logout';?>">Logout</a></li>
                     </ul>
                 </li>
