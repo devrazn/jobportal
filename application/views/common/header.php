@@ -182,7 +182,6 @@
                 ?>
 
                 <?php
-                
 		        	if($this->helper_model->validate_user_session() || isset($_SESSION['tw_status']) || isset($_SESSION['gmail_full_name']) || isset($_SESSION['fb_status'])) {
 		        		if(isset($_SESSION['tw_status'])) {
 		        			$user = $_SESSION['tw_status'];
@@ -213,7 +212,6 @@
                     	<li><a href="<?=base_url().'employer_profile';?>">Profile</a></li>
                     	<li><a href="<?=base_url().'employer_profile/change_password';?>">Change Password</a></li>
                         <li><a href="<?=base_url().'employer_profile/edit_profile';?>">Update Profile</a></li>
-                        <li><a href="<?=base_url().'details/post_job'?>">Upload Resume</a></li>
                         <li><a href="<?=base_url().'login_user/logout';?>">Logout</a></li>
                     </ul>
                 </li>
@@ -248,7 +246,6 @@
 		    			 <?php 
 		    			} else {
 		    			 ?>
-		    			}
 		    			<form method="GET" action="<?=base_url().'search'?>">
 				 			<input type="text" name="search" value="<?=set_value('search');?>" placeholder="Enter keywords to search..." class="text" required="true">
 				 			<?=form_error('search')?>

@@ -88,8 +88,8 @@ class Helper_model extends CI_Model {
                                 );
                 $this->db->where($options);
                 $this->db->select("password");
-                $db_pw = $this->db->get('tbl_admin')->row_array();
-                if($this->decrypt_me($this->session->userdata('user_pw')) === $this->decrypt_me($db_pw["password"])){
+                $db_pw = $this->db->get('tbl_users')->row_array();
+                if($this->decrypt_me($this->session->userdata('user_pw')) === $this->decrypt_me($db_pw["password"]) && $this->session->userdata('user_type') == 2){
                     return true;
                 } else{
                     return false;
