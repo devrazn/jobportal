@@ -81,7 +81,7 @@ class Helper_model extends CI_Model {
 
 
     public function validate_employer_session() {
-        if($this->session->userdate('user_type')==2) {
+        if($this->session->userdata('user_type')==2) {
             if($this->session->userdata('user_email') && $this->session->userdata('user_pw')) {
                 $options = array(
                                 'email' => $this->session->userdata('user_email'),

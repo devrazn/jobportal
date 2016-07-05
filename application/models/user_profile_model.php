@@ -36,7 +36,7 @@ class User_profile_model extends CI_Model {
 	public function get_jobseeker_details($id){
 		$options =  array(
     					'id' => $id, 
-    					'user_type' => '0'
+    					'user_type' => '1'
     				);
 		$this->db->where($options);
 		return  $this->db->get("tbl_users")->row_array();
@@ -188,12 +188,13 @@ class User_profile_model extends CI_Model {
 		} else {
 			return false;
 		}
-
     }
 
-    function delete_qualifications($id) {
-        $sql ="Update tbl_qualification set del_flag=1 where id='$id'";
-        $this->db->query($sql);
+    function upload_resume($user_id) {
+      $data = array(
+      		'resume' => $this->input->post('resume'),
+          );
+      $this->db->where('id',$user_id);
+      $this->db->update('tbl_users', $data);
     }
-
 }

@@ -14,7 +14,7 @@ class User_profile extends CI_Controller {
 	}
 
 	public function index() {
-		$this->jobseeker_details();
+		$this->edit_profile();
 	}
 
 	public function change_password() {
@@ -23,7 +23,6 @@ class User_profile extends CI_Controller {
         $this->form_validation->set_rules('c_password', 'Confirm Password', 'required|xss_clean|matches[new_password]');
 
         if ($this->form_validation->run() == FALSE) {
-            $data['controller'] = 'user_profile';
             $data["page"] = "member/change_password";
             $this->template->__set('title', 'Change Password');
             $this->template->partial->view("user_layout", $data, $overwrite=FALSE);
@@ -31,12 +30,12 @@ class User_profile extends CI_Controller {
         } else {
             $password = $this->helper_model->encrypt_me($this->input->post('new_password'));
             if($this->user_profile_model->update_password($password)) {
-                $this->session->set_userdata( 'user_flash_msg_typeuser_flash_msg', "success" );
-                $this->session->set_flashdata('user_flash_msg', 'Password Changed Successfully');
+                $this->session->set_userdata( 'flash_msg_type_public_user', "success" );
+                $this->session->set_flashdata('flash_msg_public_user', 'Password Changed Successfully');
                 redirect(base_url());
             } else {
-                $this->session->set_userdata( 'user_flash_msg_type', "danger" );
-                $this->session->set_flashdata('user_flash_msg', 'Sorry, Unable to Change the Password');
+                $this->session->set_userdata( 'flash_msg_type_public_user', "danger" );
+                $this->session->set_flashdata('flash_msg_public_user', 'Sorry, Unable to Change the Password');
                 $this->index();
             }
         }
@@ -144,37 +143,6 @@ class User_profile extends CI_Controller {
         }
     }
 
-
-    function _handle_upload() {
-        if (isset($_FILES['image']) && !empty($_FILES['image']['name'])) {
-            $config['upload_path']          = './uploads/user';
-            $config['allowed_types']        = 'gif|jpg|png|jpeg';
-            $config['max_size']             = 1000000;
-            $config['max_width']            = 1000000;
-            $config['max_height']           = 1000000;
-            $config['min_width']            = 480;
-            $config['min_height']           = 360;
-            $config['remove_spaces']        = true;
-            $config['file_ext_tolower']     = true;
-            $config['encrypt_name']         = true;
-
-            $this->load->library('upload', $config);
-
-            if ($this->upload->do_upload('image')) {
-                // set a $_POST value for 'image' that we can use later
-                $upload_data    = $this->upload->data();
-                $_POST['image'] = $upload_data['file_name'];
-                return true;
-            } else {
-                // possibly do some clean up ... then throw an error
-                $this->form_validation->set_message('handle_upload', "<div style='color:red'>" . $this->upload->display_errors() . "</div>");
-                return false;
-            }
-        } else {
-            return true;
-        }
-    }
-
     function _valid_url($url){
         $pattern = "|^http(s)?://[a-z0-9-]+(.[a-z0-9-]+)*(:[0-9]+)?(/.*)?$|i";
         if (!preg_match($pattern, $url)){
@@ -222,7 +190,6 @@ class User_profile extends CI_Controller {
         }
     }
 
-
     public function edit_experience($experience_id){
         $data['experience'] = $this->user_profile_model->get_experience($experience_id);
         if($data['experience']['user_id'] != $this->session->userdata('user_id') && $data['experience']['del_flag'] == 1) { //$this->session->userdata('user_id')
@@ -250,7 +217,6 @@ class User_profile extends CI_Controller {
         }
     }
 
-
     function delete_experience($experience_id) {
         $data['experience'] = $this->user_profile_model->get_experience($experience_id);
         if($data['experience']['user_id'] != $this->session->userdata('user_id')) { //$this->session->userdata('user_id')
@@ -266,7 +232,6 @@ class User_profile extends CI_Controller {
                 ));
         }
     }
-
 
     function qualification(){
         $data['qualification'] = $this->user_profile_model->get_jobseeker_qualification($this->session->userdata('user_id'));
@@ -308,7 +273,6 @@ class User_profile extends CI_Controller {
         }
     }
 
-    
     function edit_qualification($id) {
         $data["row"] = $this->user_profile_model->get_qualification_by_id($id);
         if($data['row']['user_id'] != $this->session->userdata('user_id')) { //$this->session->userdata('user_id')
@@ -342,7 +306,6 @@ class User_profile extends CI_Controller {
         }
     }
 
-
     function delete_qualification($qualification_id) {
         $data['qualification'] = $this->user_profile_model->get_qualification_by_id($qualification_id);
         if($data['qualification']['user_id'] != $this->session->userdata('user_id')) { //$this->session->userdata('user_id')
@@ -359,7 +322,63 @@ class User_profile extends CI_Controller {
         }
     }
 
+    function upload_resume() {
+        $this->form_validation->set_rules('title','Title','xss_clean');
+        $this->form_validation->set_rules('resume','Resume','xss_clean|callback_validate_resume');
+        $id = $this->session->userdata('user_id');
 
+        if($this->form_validation->run()==FALSE) {
+            if(isset($_POST['resume']) && file_exists("./uploads/user/resume/".$id.'/'.$_POST['resume'])) {
+                @unlink("./uploads/user/resume/".$id.'/'.$_POST['resume']);
+            }
+            $data["page"] = "member/jobseeker/upload_resume";
+            $data["title"] = "Upload Resume";
+            $this->template->partial->view("default_layout", $data, $overwrite=FALSE);
+            $this->template->publish('user_layout');
+        } else {
+            $user_data = $this->user_profile_model->get_jobseeker_details($id);
+            if(!empty($user_data['resume']) || $user_data['resume']!="") {
+                @unlink("./uploads/user/resume/".$id.'/'.$user_data['resume']);
+            }
+            $this->user_profile_model->upload_resume($id);
+            $this->session->set_userdata( 'user_flash_msg_type', "success" );
+            $this->session->set_flashdata('user_flash_msg', 'Resume addded successfully');
+            redirect(base_url().'User_profile/jobseeker_details', 'refresh');
+        }
+         
+    }
 
+    function validate_resume() {
+        if(isset($_FILES['resume']) && !empty($_FILES['resume']['name'])) {
+            $id = $this->session->userdata('user_id');
+            $dir= 'uploads/user/resume/'.$id.'/';
+
+            if(!is_dir($dir)){
+                mkdir($dir,0777,true);
+            }
+
+            $config['upload_path'] = $dir;
+            $config['allowed_types'] = 'txt|pdf|docx';
+            $config['max_size'] = '100000';
+
+            $this->load->library('upload', $config);
+            $this->upload->display_errors();
+
+            if ($this->upload->do_upload('resume')) {
+                $upload_data = $this->upload->data();
+                $_POST['resume'] = $upload_data['file_name'];
+                return true;
+            } else {
+                // possibly do some clean up ... then throw an error
+                $this->form_validation->set_message('validate_resume', "<div style='color:red'>" . $this->upload->display_errors() . "</div>");
+                return false;
+            }
+        } else {
+            // throw an error because nothing was uploaded
+            $this->form_validation->set_message('validate_resume', "You must select a file to upload.");
+            return false;
+
+        }
+    }
 
 }
