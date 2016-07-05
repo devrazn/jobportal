@@ -11,15 +11,15 @@
         <h6><?=$job_item['category_name']?> <span class="dot"></span><b>Deadline: </b> <?=humanize_date($job_item['deadline_date'])?></h6>
         <p><?=$job_item['job_description']?></p>
         <div class="social">  
-          <a class="btn_1" href="#">
+            <a target="_blank" class="btn_1 facebook_share" data-val="<?php echo $job_item['id'];?>">
             <i class="fa fa-facebook fb"></i>
             <span class="share1 fb">Share</span>                
           </a>
-          <a class="btn_1" href="#">
+          <a target="_blank" class="btn_1 twitter_share" data-val="<?php echo $job_item['id'];?>">
             <i class="fa fa-twitter tw"></i>
-            <span class="share1">Tweet</span>               
+            <span class="share1">Tweet</span>
           </a>
-          <a class="btn_1" href="#">
+          <a target="_blank" class="btn_1 gmail_share" data-val="<?php echo $job_item['id'];?>">
             <i class="fa fa-google-plus google"></i>
             <span class="share1 google">Share</span>
           </a>

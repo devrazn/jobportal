@@ -49,11 +49,13 @@
 
 <script src="<?=base_url();?>assets/user/js/jquery-ui.min.js"></script>
 <script type="text/javascript">
-  $('#datepicker').datepicker({
-      dateFormat: 'yy-mm-dd',
-      changeYear: true,
-      yearRange: "1950:" + new Date('y')
-})
+	$('#datepicker').datepicker({
+		dateFormat: 'yy-mm-dd',
+		changeYear: true,
+		yearRange: "1950:" + new Date('y')
+	});
+
+	var baseUrl = "<?php echo base_url();?>";
 </script>
 
 <script type="application/x-javascript"> 

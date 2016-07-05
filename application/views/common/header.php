@@ -67,6 +67,7 @@
 
 <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
 <script src="<?=base_url();?>assets/user/js/jquery.min.js"></script>
+<script src="<?=base_url();?>assets/user/js/custom.js"></script>
 <script src="<?=base_url();?>assets/user/js/bootstrap.min.js"></script>
 
 </head>

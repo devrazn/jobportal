@@ -8,7 +8,7 @@ class Home extends CI_Controller {
 
     function __construct() {
 		parent::__construct();
-		$this->load->model('home_model');
+        $this->load->model('home_model');
 
 		$config["parser"]   = FALSE;
 		$config["template"] = "template";
@@ -153,6 +153,11 @@ class Home extends CI_Controller {
     	}
     }
 
+    public function job_share($id=NULL) {
+        if(empty($id)) $this->redirect(base_url());
+        $data['job_details'] = $this->home_model->get_jobs($id);
+        $this->job_details($id);
+    }
 
 }
 
