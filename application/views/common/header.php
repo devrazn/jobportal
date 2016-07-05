@@ -182,7 +182,7 @@
                 ?>
 
                 <?php
-                $id = $this->session->userdata('user_id');
+                
 		        	if($this->helper_model->validate_user_session() || isset($_SESSION['tw_status']) || isset($_SESSION['gmail_full_name']) || isset($_SESSION['fb_status'])) {
 		        		if(isset($_SESSION['tw_status'])) {
 		        			$user = $_SESSION['tw_status'];
@@ -200,17 +200,24 @@
                     	<li><a href="<?=base_url().'user_profile/jobseeker_details';?>">Profile</a></li>
                     	<li><a href="<?=base_url().'user_profile/change_password';?>">Change Password</a></li>
                         <li><a href="<?=base_url().'user_profile/edit_profile';?>">Update Profile</a></li>
-                        <?php 
-                        	if($this->session->userdata('user_type') == 2) {
-                        ?>
-                        <li><a href="<?=base_url().'job/'?>">Post Job</a></li>
-                        <?php } else { ?>
                         <li><a href="<?=base_url().'details/upload_resume'?>">Upload Resume</a></li>
-                        <?php } ?>
                         <li><a href="<?=base_url().'login_user/logout';?>">Logout</a></li>
                     </ul>
                 </li>
                 <?php
+            	} elseif($this->helper_model->validate_employer_session()) {
+            		?>
+            		<li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">Welcome, <?=$this->session->userdata('name');?><b class="caret"></b></a>
+                    <ul class="dropdown-menu">
+                    	<li><a href="<?=base_url().'employer_profile';?>">Profile</a></li>
+                    	<li><a href="<?=base_url().'employer_profile/change_password';?>">Change Password</a></li>
+                        <li><a href="<?=base_url().'employer_profile/edit_profile';?>">Update Profile</a></li>
+                        <li><a href="<?=base_url().'details/post_job'?>">Upload Resume</a></li>
+                        <li><a href="<?=base_url().'login_user/logout';?>">Logout</a></li>
+                    </ul>
+                </li>
+            		<?php
                 	} else {
                 ?>
                 <li><a href="<?=base_url().'login';?>">Login</a></li>
@@ -229,17 +236,30 @@
 			<div id="search_wrapper1">
 		   		<div class="clearfix" id="search_form">
 		    		<h1>Start your job search</h1>
-		    		
+		    			
+		    			<?php  
+		    				if($this->session->userdata('user_type') ==2) {
+		    			 ?>
+		    			 <form method="GET" action="<?=base_url().'employer_profile/search'?>">
+				 			<input type="text" name="search" value="<?=set_value('search');?>" placeholder="Enter keywords to search..." class="text" required="true">
+				 			<?=form_error('search')?>
+				 		<label class="btn2 btn-2 btn2-1b"><input type="submit" value="Find Jobs"></label>
+				 		</form>
+		    			 <?php 
+		    			} else {
+		    			 ?>
+		    			}
 		    			<form method="GET" action="<?=base_url().'search'?>">
 				 			<input type="text" name="search" value="<?=set_value('search');?>" placeholder="Enter keywords to search..." class="text" required="true">
 				 			<?=form_error('search')?>
 				 		<label class="btn2 btn-2 btn2-1b"><input type="submit" value="Find Jobs"></label>
 				 		</form>
+				 		<?php } ?>
            		</div>
 			</div>
   		</div> 
 	</div>	
-<div class="col-lg-12" id="alert_parent">
+<div class="col-lg-12" class="alert_parent" id="alert_parent">
 	<?php
 	    $this->load->view('common/alert');
 	?>
