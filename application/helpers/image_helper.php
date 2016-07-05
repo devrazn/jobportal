@@ -117,13 +117,15 @@ if(!function_exists('validate_image')) {
                 }
             }
         } else {
+            //echo 3; exit;
         	if($image_param['image']=='fav_icon') {
             	//echo "Min W: ".$config['min_width']."<br>Min H: ".$config['min_height']; exit;
             }
         	$response = array(
                 			'status' => false,
-                			'msg' => "Please upload image with aspect ratio(width:height) as close to " . $req_aspect_ratio . ":1 as possible.<br>Required Min Width: " . intval($config['min_width']). "<br>Required Min Height: " . ceil($config['min_height']) . "<br>" . strip_tags($CI->upload->display_errors())
+                			'msg' => strip_tags($CI->upload->display_errors())
                 		);
+            //echo $response['msg']; exit;
             return $response;
         }
 	}
