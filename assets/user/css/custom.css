@@ -1,3 +1,6 @@
 .my-control {
 	    width: 400px !important;
 }
+a {
+    cursor: pointer;
+}
