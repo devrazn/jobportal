@@ -35,7 +35,7 @@
                   <td><a href="<?=base_url().'user_profile/edit_experience/'.$experience['id']?>"><?=$experience['start_year']?></a></td>
                   <td><a href="<?=base_url().'user_profile/edit_experience/'.$experience['id']?>"><?=$experience['duration']?> <?php if($experience['duration_unit']==1){echo 'Yr';}else{echo 'Month';} ?></a></td>
                   <td>
-                    <a class="btn btn-danger delete" data="<?php echo $experience['id'];?>" data-toggle="tooltip" title="Delete"  data-original-title="Delete"><i class="fa fa-trash-o fa-lg"></i> Delete</a>
+                    <a class="btn btn-danger delete"  data-id="<?php echo $experience['id'];?>" data-toggle="tooltip" title="Delete"  data-original-title="Delete"><i class="fa fa-trash-o fa-lg"></i> Delete</a>
                   </td>
                 </tr>
                       <?php
@@ -63,12 +63,21 @@
 
 <script>
   $(document).ready(function() {
+
+    $('body').on('click', '.delete', function(e) {
+      setDelete('user_profile/delete_experience/','6',this,'Experience');
+
+    });
       $('#employer_jobs-dataTables').dataTable({
               responsive: true,
               sPaginationType: "full_numbers",
-              "aaSorting": [3, "asc"]
+              "aaSorting": [3, "asc"],
+
+              "columnDefs": [{
+                  "defaultContent": "-",
+                  "targets": "_all"
+                }]
       });
 
-      <?php $this->load->view('common/ajax_del')?>
   });
 </script>

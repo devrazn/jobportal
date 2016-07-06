@@ -86,7 +86,7 @@ $(document).ready(function() {
     });
 
     $(document).on('click', '.delete', function(event){    
-      if( ! confirm("Are you sure to delete this product?")){
+      if( ! alertify.confirm("Are you sure to delete this product?")){
         return false;
       } else {
         _this=$(this);

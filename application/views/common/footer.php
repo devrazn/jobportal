@@ -56,6 +56,10 @@
 	});
 
 	var baseUrl = "<?php echo base_url();?>";
+
+		alertify.defaults.glossary.title= 'Job Portal';
+		alertify.defaults.glossary.ok= 'Ok';
+		alertify.defaults.glossary.cancel= 'Cancel';
 </script>
 
 <script type="application/x-javascript"> 

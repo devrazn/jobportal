@@ -117,8 +117,12 @@
         $('#employer_jobs-dataTables').dataTable({
                 responsive: true,
                 sPaginationType: "full_numbers",
-                "aaSorting": []
-                //"order": [[ 3, "desc" ]]
+                "aaSorting": [],
+
+                "columnDefs": [{
+                  "defaultContent": "-",
+                  "targets": "_all"
+                }]
         });
     });
 </script>

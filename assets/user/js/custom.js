@@ -1,4 +1,4 @@
- $(document).ready(function(e) {
+$(document).ready(function(e) {
 	$('body').on('click', '.twitter_share', function(e) {
 		var getShareId = $(this).data('val'),
 		twLink, fbLink,gLink;
@@ -36,3 +36,57 @@
  		return false;
  	});
 });
+
+function setDelete(del_url,tbl_col_num,element,name) {
+    _this=$(element);
+    var id = _this.data('id');
+    _this_tr_html = _this.closest('tr').html();
+    var del_url = del_url;
+    var loading_img = baseUrl+'assets/ajax/images/ajax-loader_dark.gif';
+    var tbl_col_num = tbl_col_num;
+    var name = name;
+
+	alertify.confirm("Are you sure you want to perform this operation?", function (e) {
+        if (e) {
+
+            jQuery.ajax({
+                url: baseUrl +del_url + id,
+                dataType: 'json',
+                beforeSend: function(){
+                    _this.closest('tr').html("<td colspan='"+tbl_col_num+"' align='center'><img src='"+loading_img+"' ></td>");
+                },
+                success: function(data) {
+                    if(data['response']) {
+                        $('#tr_'+id).remove();
+                            var responseHTML = "<div role='alert' class='alert alert-success fade in' id='alert'>" + 
+                                        "<button aria-label='Close' data-dismiss='alert' class='close' type='button'>" + 
+                                        "<span aria-hidden='true'>×</span>" +
+                                        "</button>" + 
+                                        name +'  Deleted Successfully' + 
+                                        "</div>";
+                        $('.alert').remove();
+                        $(".alert_parent").append(responseHTML);
+                        $('html, body').animate({
+                            scrollTop: $("body").offset().top
+                        }, 1000);
+                    } else {
+                        $('#tr_'+id).html(_this_tr_html);
+                        var responseHTML = "<div role='alert' class='alert alert-danger fade in' id='alert'>" + 
+                                    "<button aria-label='Close' data-dismiss='alert' class='close' type='button'>" + 
+                                    "<span aria-hidden='true'>×</span>" +
+                                    "</button>" + 
+                                    data['message'] + 
+                                    "</div>";
+                        $('.alert').remove();
+                        $(".alert_parent").append(responseHTML);
+                        $('html, body').animate({
+                            scrollTop: $("body").offset().top
+                        }, 1000);
+                    }
+                }
+            });
+        } else {
+            return false;
+        }
+    }); 
+}

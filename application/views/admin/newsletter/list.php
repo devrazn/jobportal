@@ -1,6 +1,6 @@
 <script>
     $(document).on('click', '.delete', function(event){    
-        if( ! confirm("Are you sure to perform this operation?"))
+        if( ! alertify.confirm("Are you sure to perform this operation?"))
             return false;
         _this=$(this);
         var id = $(this).attr('data');
@@ -107,7 +107,12 @@
     $(document).ready(function() {
         $('#dataTables-example').dataTable({
                 responsive: true,
-                sPaginationType: "full_numbers"
+                sPaginationType: "full_numbers",
+
+                "columnDefs": [{
+                  "defaultContent": "-",
+                  "targets": "_all"
+                }]
         });
     });
 </script>
