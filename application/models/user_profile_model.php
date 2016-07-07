@@ -63,7 +63,10 @@ class User_profile_model extends CI_Model {
     	return $this->db->get_where('tbl_users', array('id' => $id))->row_array();
 	}
 
-	public function update_user_detail($image,$id) {
+	public function update_user_detail($image, $id) {
+ 		/*foreach ($_REQUEST['job_category'] as $selectedOption){
+     		echo $selectedOption."<br>";
+ 		} exit;*/
 		if ($image == '')
             $image = $this->input->post('prev_image');
     	$data = array(
@@ -79,11 +82,25 @@ class User_profile_model extends CI_Model {
 			            'image'=> $image,
         );
         $this->db->where('id', $id);
-        if($this->db->update('tbl_users', $data)){
-			return true;
-		} else {
-			return false;
+        $this->db->update('tbl_users', $data);
+
+        $this->db->flush_cache();
+		$this->db->where('user_id', $this->session->userdata('user_id'));
+		$this->db->delete('tbl_user_map_category');
+		
+		if(isset($_REQUEST['job_category'])){
+			$this->db->flush_cache();
+			$data = array();
+			foreach($_REQUEST['job_category'] as $selectedOption) {
+	            $data[] = array(
+					      'user_id' => $this->session->userdata('user_id'),
+					      'category_id' => $selectedOption
+					   );
+	            
+	        }
+			$this->db->insert_batch('tbl_user_map_category', $data);
 		}
+		return true;
 	}
 
 
@@ -196,5 +213,26 @@ class User_profile_model extends CI_Model {
           );
       $this->db->where('id',$user_id);
       $this->db->update('tbl_users', $data);
+    }
+
+
+    function get_all_category_id(){
+    	$this->db->select('id');
+    	$result = $this->db->get('tbl_job_category')->result_array();
+    	$arr = array();
+    	foreach ($result as $row) {
+    		$arr[] = $row['id'];
+    	}
+    	return $arr;
+
+    }
+
+    function get_user_categories($user_id) {
+    	$result = $this->db->get_where('tbl_user_map_category', array('user_id' => $user_id))->result_array();
+    	$arr = array();
+    	foreach ($result as $row) {
+    		$arr[] = $row['category_id'];
+    	}
+    	return $arr;
     }
 }

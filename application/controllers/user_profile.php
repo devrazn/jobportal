@@ -63,6 +63,7 @@ class User_profile extends CI_Controller {
 
     public function edit_profile(){
         $data["user_detail"] = $this->user_profile_model->get_user_detail($this->session->userdata('user_id'));
+        $data["user_categories"] = $this->user_profile_model->get_user_categories($this->session->userdata('user_id'));
         //echo "<pre>"; print_r($data['user_detail']);die;
         $data["page"] = "member/jobseeker/update_jobseeker_details";
         $this->template->__set('title', 'Update Profile');
@@ -88,6 +89,7 @@ class User_profile extends CI_Controller {
             $this->form_validation->set_rules('phone', "Phone",'trim|required|xss_clean|regex_match[/^[0-9]{10}$/]');
             $this->form_validation->set_rules('prev_image', 'Preview Image', 'xss_clean');
             $this->form_validation->set_rules('image', 'Image', 'xss_clean|callback__validate_image['.true.']');
+            $this->form_validation->set_rules('job_category', 'Job Category', 'xss_clean|callback__validate_job_category');
         
         if($this->form_validation->run()==FALSE) {
             if(isset($_POST['post_image'])){
@@ -105,7 +107,7 @@ class User_profile extends CI_Controller {
             } else {
                 $image = $this->input->post('prev_image');
             }
-            if($this->user_profile_model->update_user_detail($image,$this->session->userdata('user_id'))) {
+            if($this->user_profile_model->update_user_detail($image, $this->session->userdata('user_id'))) {
                 $this->session->set_userdata('user_flash_msg_type', "success" );
                 $this->session->set_flashdata('user_flash_msg', 'Profile Updated Successfully');
                 $this->index();
@@ -113,6 +115,31 @@ class User_profile extends CI_Controller {
                 $this->session->set_userdata( 'user_flash_msg_type', "danger" );
                 $this->session->set_flashdata('user_flash_msg', 'Sorry, Unable to Update Profile');
                 $this->index();
+            }
+        }
+    }
+
+
+    function _validate_job_category() {
+        if(!set_value('job_category[0]')){
+            //die('not set');
+            return true;
+        } else {
+            //echo 'set'; exit;
+            $category_ids = $this->user_profile_model->get_all_category_id();
+            //echo '<pre>',print_r($this->input->post('job_category[]'),1),'</pre>'; exit;
+            //print_r($category_ids); exit;
+            $i=1;
+            while (true) {
+                if(set_value('job_category['.$i.']')) {
+                    if(!in_array(set_value('job_category['.$i.']'), $category_ids)){
+                        $this->form_validation->set_message('_validate_job_category', 'Please select the job categories properly.');
+                        return false;
+                    }
+                } else {
+                    return true;
+                }
+                $i++;
             }
         }
     }

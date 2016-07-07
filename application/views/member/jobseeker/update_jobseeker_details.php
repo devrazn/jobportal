@@ -1,6 +1,8 @@
 <?php 
 defined('BASEPATH') OR exit('No direct script access allowed');
 ?>
+<!-- Select2 -->
+  <link rel="stylesheet" href="<?=base_url().'assets/user/'?>select2/select2.min.css">
 
 <div class="col-md-8 single_right">
     <div class="container">
@@ -16,10 +18,11 @@ defined('BASEPATH') OR exit('No direct script access allowed');
     	                <label class="col-md-3 control-lable">First Name</label>
     	                <div class="col-md-4">
     	                    <input type="text" name="f_name" class="form-control"  placeholder="Enter First Name" value="<?=set_value('f_name',$user_detail['f_name']);?>"/>
-    	                    <?= form_error('f_name') ?>
+    	                    <?=form_error('f_name')?>
                         </div>
     	            </div>
     	        </div>
+
                 <div class="form-group">
                     <div class="form-group col-md-12">
                         <label class="col-md-3 control-lable">Last Name</label>
@@ -99,6 +102,25 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                             </div>
                     </div>
                 </div>
+
+                 <div class="form-group">
+                <?php 
+                    $categories = $this->helper_model->get_category();
+                ?>
+                    <div class="form-group col-md-12">
+                        <label class="col-md-3 control-lable">Please select job categories that you'd like to receive notification for.</label>
+                        <div class="col-md-4">
+                            <select style="width:120%" class="form-control select2" name="job_category[]" multiple="multiple" data-placeholder="Select job categories" style="width: 100%;">
+                            <?php 
+                                foreach ($categories as $category) {
+                             ?>
+                                <option value="<?=$category['id']?>" <?php if(in_array($category['id'], $user_categories)){echo 'selected';} ?>><?=$category['name']?></option>
+                          <?php } ?>
+                            </select>
+                            <?= form_error('job_category') ?>
+                        </div>
+                    </div>
+                </div>
                
                 <div class="form-group">
                     <div class="form-group col-md-12">
@@ -121,3 +143,13 @@ defined('BASEPATH') OR exit('No direct script access allowed');
      </div>
     </div>
 </div>
+
+<!-- Select2 -->
+<script src="<?=base_url().'assets/user/'?>select2/select2.full.min.js"></script>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+    //Initialize Select2 Elements
+        $(".select2").select2()
+    })
+</script>
