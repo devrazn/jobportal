@@ -207,6 +207,11 @@ class Helper_model extends CI_Model {
     }
 
 
+    function get_jobs_by_employer_id($employer_id) {
+        return $this->db->get_where('tbl_jobs', array('user_id' => $employer_id))->result_array();
+    }
+
+
 }
 
 ?>
