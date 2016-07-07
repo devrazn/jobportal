@@ -228,7 +228,7 @@ if(!function_exists('generate_captcha')) {
         $CI =& get_instance();
         $CI->load->helper('captcha');
         $vals = array(
-            'img_path'      => './Sample.captcha/',
+            'img_path'      => './captcha/',
             'img_url'       => base_url().'captcha',
             'font_path'     => './assets/user/fonts/timesbd.ttf',
             'img_width'     => 175,

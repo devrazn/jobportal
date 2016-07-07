@@ -106,7 +106,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                       ?>
               <div class="form-group">
                 <label>Captcha</label><br>
-                <img id="image_captcha" src="<?=base_url().'Sample.captcha/'.$captcha['filename']?>" alt="captcha here">
+                <img id="image_captcha" src="<?=base_url().'captcha/'.$captcha['filename']?>" alt="captcha here">
 
                 <label>Can't read the letters shown? Click <a id="captcha_refresh" href="javascript:void(0)">here</a> to refresh</label>
                 <input name="captcha" type='text' size="20" class="form-control" placeholder="Enter characters seen above" value="">

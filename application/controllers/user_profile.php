@@ -212,14 +212,8 @@ class User_profile extends CI_Controller {
 
     function experience(){
         $data['experiences'] = $this->user_profile_model->get_all_user_experience($this->session->userdata('user_id'));
-        //echo "<pre>"; print_r($data['user_detail']);die;
         $data["page"] = "member/jobseeker/experience/list";
         $data["title"] = 'Your Experiences';
-        $data["ajax"] = array(
-                                'name' => 'Experience',
-                                'request_controller' => 'user_profile/delete_experience/',
-                                'tbl_col_num' => 6,
-                            );
         $this->template->partial->view("user_layout", $data, $overwrite=FALSE);
         $this->template->publish('user_layout');
     }
@@ -295,11 +289,6 @@ class User_profile extends CI_Controller {
         $data['qualification'] = $this->user_profile_model->get_jobseeker_qualification($this->session->userdata('user_id'));
         $data["title"] = "Your Qualifications";
         $data["page"] = "member/jobseeker/qualification/list";
-        $data["ajax"] = array(
-                                'name' => 'Qualification',
-                                'request_controller' => 'user_profile/delete_qualification/',
-                                'tbl_col_num' => 5,
-                            );
         $this->template->partial->view("user_layout", $data, $overwrite=FALSE);
         $this->template->publish('user_layout');
     }
