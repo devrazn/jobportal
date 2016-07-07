@@ -11,7 +11,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
     <?php
       if($this->session->userdata('user_type') == 2) {
-        $this->load->view('common/employeer_sidebar');
+        $this->load->view('common/employer_sidebar');
       } else {
         $this->load->view('common/jobseeker_sidebar');
       }
