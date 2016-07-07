@@ -64,6 +64,7 @@ class User_profile extends CI_Controller {
     public function edit_profile(){
         $data["user_detail"] = $this->user_profile_model->get_user_detail($this->session->userdata('user_id'));
         $data["user_categories"] = $this->user_profile_model->get_user_categories($this->session->userdata('user_id'));
+        $data["user_tags"] = $this->user_profile_model->get_user_tags($this->session->userdata('user_id'));
         //echo "<pre>"; print_r($data['user_detail']);die;
         $data["page"] = "member/jobseeker/update_jobseeker_details";
         $this->template->__set('title', 'Update Profile');
@@ -89,7 +90,8 @@ class User_profile extends CI_Controller {
             $this->form_validation->set_rules('phone', "Phone",'trim|required|xss_clean|regex_match[/^[0-9]{10}$/]');
             $this->form_validation->set_rules('prev_image', 'Preview Image', 'xss_clean');
             $this->form_validation->set_rules('image', 'Image', 'xss_clean|callback__validate_image['.true.']');
-            $this->form_validation->set_rules('job_category', 'Job Category', 'xss_clean|callback__validate_job_category');
+            $this->form_validation->set_rules('job_category[]', 'Job Category', 'xss_clean|callback__validate_job_category');
+            $this->form_validation->set_rules('tag[]', 'Tag', 'xss_clean|callback__validate_tag');
         
         if($this->form_validation->run()==FALSE) {
             if(isset($_POST['post_image'])){
@@ -131,9 +133,38 @@ class User_profile extends CI_Controller {
             //print_r($category_ids); exit;
             $i=1;
             while (true) {
+                if($i>=6){
+                    $this->form_validation->set_message('_validate_job_category', 'You cannot select more than 5 categories.');
+                    return false;
+                }
                 if(set_value('job_category['.$i.']')) {
                     if(!in_array(set_value('job_category['.$i.']'), $category_ids)){
                         $this->form_validation->set_message('_validate_job_category', 'Please select the job categories properly.');
+                        return false;
+                    }
+                } else {
+                    return true;
+                }
+                $i++;
+            }
+        }
+    }
+
+
+    function _validate_tag() {
+        if(!set_value('tag[0]')){
+            return true;
+        } else {
+            $tag_ids = $this->user_profile_model->get_all_tag_id();
+            $i=1;
+            while (true) {
+                if($i>=11){
+                    $this->form_validation->set_message('_validate_tag', 'You cannot select more than 5 tag words.');
+                    return false;
+                }
+                if(set_value('tag['.$i.']')) {
+                    if(!in_array(set_value('tag['.$i.']'), $tag_ids)) {
+                        $this->form_validation->set_message('_validate_job_category', 'Please select the tags properly.');
                         return false;
                     }
                 } else {

@@ -100,6 +100,23 @@ class User_profile_model extends CI_Model {
 	        }
 			$this->db->insert_batch('tbl_user_map_category', $data);
 		}
+
+		$this->db->flush_cache();
+		$this->db->where('user_id', $this->session->userdata('user_id'));
+		$this->db->delete('tbl_user_map_tag');
+		
+		if(isset($_REQUEST['tag'])){
+			$this->db->flush_cache();
+			$data = array();
+			foreach($_REQUEST['tag'] as $selectedOption) {
+	            $data[] = array(
+					      'user_id' => $this->session->userdata('user_id'),
+					      'tag_id' => $selectedOption
+					   );
+	            
+	        }
+			$this->db->insert_batch('tbl_user_map_tag', $data);
+		}
 		return true;
 	}
 
@@ -227,6 +244,7 @@ class User_profile_model extends CI_Model {
 
     }
 
+
     function get_user_categories($user_id) {
     	$result = $this->db->get_where('tbl_user_map_category', array('user_id' => $user_id))->result_array();
     	$arr = array();
@@ -234,5 +252,26 @@ class User_profile_model extends CI_Model {
     		$arr[] = $row['category_id'];
     	}
     	return $arr;
+    }
+
+    function get_user_tags($user_id) {
+    	$result = $this->db->get_where('tbl_user_map_tag', array('user_id' => $user_id))->result_array();
+    	$arr = array();
+    	foreach ($result as $row) {
+    		$arr[] = $row['tag_id'];
+    	}
+    	return $arr;
+    }
+
+
+    function get_all_tag_id(){
+    	$this->db->select('id');
+    	$result = $this->db->get('tbl_tags')->result_array();
+    	$arr = array();
+    	foreach ($result as $row) {
+    		$arr[] = $row['id'];
+    	}
+    	return $arr;
+
     }
 }

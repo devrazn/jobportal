@@ -117,7 +117,26 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                                 <option value="<?=$category['id']?>" <?php if(in_array($category['id'], $user_categories)){echo 'selected';} ?>><?=$category['name']?></option>
                           <?php } ?>
                             </select>
-                            <?= form_error('job_category') ?>
+                            <?= form_error('job_category[]') ?>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                <?php 
+                    $tags = $this->helper_model->get_tags();
+                ?>
+                    <div class="form-group col-md-12">
+                        <label class="col-md-3 control-lable">Please select keywords that best describe the skills you have.</label>
+                        <div class="col-md-4">
+                            <select style="width:120%;" class="form-control select2" name="tag[]" multiple="multiple" data-placeholder="Select job categories" style="width: 100%;">
+                            <?php 
+                                foreach ($tags as $tag) {
+                             ?>
+                                <option value="<?=$tag['id']?>" <?php if(in_array($tag['id'], $user_tags)){echo 'selected';} ?>><?=$tag['name']?></option>
+                          <?php } ?>
+                            </select>
+                            <?= form_error('tags[]') ?>
                         </div>
                     </div>
                 </div>
@@ -149,7 +168,6 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 <script type="text/javascript">
     $(document).ready(function () {
-    //Initialize Select2 Elements
         $(".select2").select2()
     })
 </script>
