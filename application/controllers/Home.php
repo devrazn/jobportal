@@ -143,10 +143,10 @@ class Home extends CI_Controller {
         
     }
 
-
     public function job_apply(){
     	if($this->helper_model->validate_user_session()) {
-    		$this->home_model->apply_job();
+            $employer_id = $this->home_model->get_employer_id_by_job_id($this->input->post('job_id'));
+            $this->home_model->apply_job($employer['user_id']);
 			echo "success";
     	} else {
     		echo 'failure';

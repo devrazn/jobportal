@@ -53,8 +53,8 @@ class User_profile extends CI_Controller {
     public function jobseeker_details(){
         $id = $this->session->userdata('user_id');
         $data["jobseeker_details"] = $this->user_profile_model->get_jobseeker_details($id);
-        $data["qualification"] = $this->user_profile_model->get_jobseeker_qualification();
-        $data["experience"] = $this->user_profile_model->get_jobseeker_experience();
+        $data["qualification"] = $this->user_profile_model->get_jobseeker_qualification($id);
+        $data["experience"] = $this->user_profile_model->get_jobseeker_experience($id);
         $data["page"] = "member/jobseeker/jobseeker_details";
         $this->template->__set('title', 'Details');
         $this->template->partial->view("user_layout", $data, $overwrite=FALSE);
@@ -65,7 +65,6 @@ class User_profile extends CI_Controller {
         $data["user_detail"] = $this->user_profile_model->get_user_detail($this->session->userdata('user_id'));
         $data["user_categories"] = $this->user_profile_model->get_user_categories($this->session->userdata('user_id'));
         $data["user_tags"] = $this->user_profile_model->get_user_tags($this->session->userdata('user_id'));
-        //echo "<pre>"; print_r($data['user_detail']);die;
         $data["page"] = "member/jobseeker/update_jobseeker_details";
         $this->template->__set('title', 'Update Profile');
         $this->template->partial->view("user_layout", $data, $overwrite=FALSE);
@@ -229,7 +228,6 @@ class User_profile extends CI_Controller {
         $this->form_validation->set_rules('duration_unit', 'Duration Unit', 'required|xss_clean|integer|greater_than_equal_to[1]|less_than_equal_to[2]');
         $this->form_validation->set_rules('description', 'Description', 'xss_clean');
         if(!$this->form_validation->run()) {
-            //echo "<pre>"; print_r($data['user_detail']);die;
             $data["page"] = "member/jobseeker/experience/add";
             $this->template->__set('title', 'Add Your Experiences');
             $this->template->partial->view("user_layout", $data, $overwrite=FALSE);

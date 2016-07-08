@@ -105,8 +105,29 @@ class Employer_profile_model extends CI_Model {
     	return $this->db->get_where('tbl_jobs', array('id' => $job_id))->row_array();
     }
 
+    function get_all_applied_jobs($id) {
+    	$this->db->select('t1.*,t2.*,t3.*');
+    	$this->db->select('t1.id as user_map_job_id');
+    	$this->db->select('t3.id as jobseeker_id');
+		$this->db->from('tbl_user_map_jobs t1');
+		$this->db->join('tbl_jobs t2', 't1.job_id = t2.id','left');
+		$this->db->join('tbl_users t3', 't1.user_id = t3.id','left');
+		$options =  array(
+    					't1.del_flag' => '0',
+    					't1.status' => '1',
+    					't2.user_id'=>$id,
+    				);
+		$this->db->where($options);
+		return $this->db->get()->result_array();
+    }
 
-	
+    function update_read_flag_status($id){
+      $data = array('read_flag' => '1');
+      $this->db->where('id',$id);
+      $this->db->update('tbl_user_map_jobs', $data);
+    }
 
-
+    function get_map_job_details($id){
+      return $this->db->get_where('tbl_user_map_jobs', array('id' => $id))->row_array();
+    }
 }

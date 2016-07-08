@@ -6,7 +6,8 @@ class Employer_profile extends CI_Controller {
 	public function __construct()
 	{
 	  	parent::__construct();
-	  	$this->load->model('employer_profile_model');
+        $this->load->model('employer_profile_model');
+	  	$this->load->model('user_profile_model');
 	  	$this->load->model('home_model');
         if(!$this->helper_model->validate_employer_session()){
           redirect(base_url());
@@ -240,9 +241,26 @@ class Employer_profile extends CI_Controller {
     }
 
     
+    function notifications() {
+        $user_id = $this->session->userdata('user_id');
+        $data['data'] = $this->employer_profile_model->get_all_applied_jobs($user_id);
+        $data["title"] = "Applied Jobs";
+        $data["page"] = "member/employer/employer_notification";
+        $this->template->partial->view("user_layout", $data, $overwrite=FALSE);
+        $this->template->publish('user_layout');
+    }
 
+    function user_details($id){
+        $arrData = $this->employer_profile_model->get_map_job_details($id);
+        $this->employer_profile_model->update_read_flag_status($arrData['id']);
 
-
-
+        $data["jobseeker_details"] = $this->user_profile_model->get_jobseeker_details($arrData['user_id']);
+        $data["qualification"] = $this->user_profile_model->get_jobseeker_qualification($arrData['user_id']);
+        $data["experience"] = $this->user_profile_model->get_jobseeker_experience($arrData['user_id']);
+        $data["page"] = "member/jobseeker/jobseeker_details";
+        $this->template->__set('title', 'Details');
+        $this->template->partial->view("user_layout", $data, $overwrite=FALSE);
+        $this->template->publish('user_layout');
+    }
 
 }

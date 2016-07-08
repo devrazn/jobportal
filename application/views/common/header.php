@@ -213,7 +213,6 @@
             		<li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">Welcome, <?=$this->session->userdata('name');?><b class="caret"></b></a>
                     <ul class="dropdown-menu">
-                        <li><a href="<?=base_url().'user_profile/show_applied_jobs';?>">Show Applied Jobs</a></li>
                     	<li><a href="<?=base_url().'employer_profile';?>">Profile</a></li>
                     	<li><a href="<?=base_url().'employer_profile/change_password';?>">Change Password</a></li>
                         <li><a href="<?=base_url().'employer_profile/edit_profile';?>">Update Profile</a></li>

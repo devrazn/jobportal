@@ -92,7 +92,6 @@ class Home_model extends CI_Model {
 			$email = $this->input->post('email');
 			$user_id = NULL;
 		}
-		//echo $user_id; exit;
 		$data_to_db = array(
                     'name'  => $name,
                     'email'  => $email,
@@ -114,23 +113,20 @@ class Home_model extends CI_Model {
 		$this->db->join('tbl_job_category t2', 't1.category_id = t2.id');
 		$this->db->join('tbl_users t3', 't1.user_id = t3.id');
 		$this->db->where('t1.id', $id);
-		//$query = ->get_compiled_select();
-		//$query = $this->db->get()->result_array();
-		//echo $query; exit; 
 		return  $this->db->get()->row_array();
     }
 
 
-    function apply_job(){
+    function apply_job($employer_id){
     	$date = new DateTime('now');
     	$date_to_insert = $date->format('Y-m-d h:i:s');
     	$data = array(
                     'user_id'  => $this->session->userdata('user_id'),
+                    'employer_id'  => $employer_id,
                     'job_id'  => $this->input->post('job_id'),
                     'applied_date'  => $date_to_insert
                 );
     	$this->db->insert('tbl_user_map_jobs', $data);
-             //$this->db->query($query);
     }
 
 
@@ -140,9 +136,6 @@ class Home_model extends CI_Model {
     					'user_type' => '2'
     				);
 		$this->db->where($options);
-		//$query = ->get_compiled_select();
-		//$query = $this->db->get()->result_array();
-		//echo $query; exit; 
 		return  $this->db->get("tbl_users")->row_array();
     }
 
@@ -155,9 +148,6 @@ class Home_model extends CI_Model {
     				);
 		$this->db->where($options);
 		$this->db->order_by('deadline_date DESC');
-		//$query = ->get_compiled_select();
-		//$query = $this->db->get()->result_array();
-		//echo $query; exit; 
 		return  $this->db->get("tbl_jobs")->result_array();
     }
 
@@ -206,6 +196,10 @@ class Home_model extends CI_Model {
 		$this->db->join('tbl_job_category t2', 't1.category_id = t2.id');
 		$this->db->join('tbl_users t3', 't1.user_id = t3.id');
 		$this->db->where('t1.id', $id);*/
+    }
+
+    function get_employer_id_by_job_id($job_id){
+    	return $this->db->get_where('tbl_jobs', array('job_id' => $job_id))->row_array();
     }
 
 }
