@@ -110,10 +110,10 @@ class Home_model extends CI_Model {
 		$this->db->select('t2.name AS category_name');
 		$this->db->select('t3.*');
 		$this->db->from('tbl_jobs t1');
-		$this->db->join('tbl_job_category t2', 't1.category_id = t2.id');
-		$this->db->join('tbl_users t3', 't1.user_id = t3.id');
+		$this->db->join('tbl_job_category t2', 't1.category_id = t2.id','left');
+		$this->db->join('tbl_users t3', 't1.user_id = t3.id','left');
 		$this->db->where('t1.id', $id);
-		return  $this->db->get()->row_array();
+		return $this->db->get()->row_array();
     }
 
 

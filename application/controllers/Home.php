@@ -126,7 +126,6 @@ class Home extends CI_Controller {
         $this->session->set_userdata('referred_from', current_url());
     	$this->data["job_details"] = $this->home_model->get_job_details($id);
     	$this->data["page"] = 'job_details';
-    	//echo '<pre>',print_r($data,1),'</pre>'; exit;
 		$this->template->partial->view("default_layout", $this->data, $overwrite=FALSE);
 		$this->template->publish('default_layout');
     	

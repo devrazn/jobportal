@@ -32,7 +32,7 @@
                 <dd><?=$job_details['openings']?></dd>
                 <dt>Published On</dt>
                 <dd>
-                    <?=humanize_date($job_details['published_date'])?>&nbsp;&nbsp;&nbsp;
+                    <?= isset($job_details['published_date'])?humanize_date($job_details['published_date']):''?>&nbsp;&nbsp;&nbsp;
                         <?php
                                     $age_day = calculate_age_day_signed($job_details['published_date']);
                                     if($age_day==0) echo ' (Today)';
@@ -47,7 +47,7 @@
                     $deadline_day = calculate_age_day_signed($job_details['deadline_date']);
                 ?>
                 <dd <?php if($deadline_day<0) echo "style='color:red'"?> >
-                    <?=humanize_date($job_details['deadline_date'])?>&nbsp;&nbsp;&nbsp;
+                    <?= isset($job_details['deadline_date'])?humanize_date($job_details['deadline_date']):''?>&nbsp;&nbsp;&nbsp;
                     
                     <?php
                         $deadline_day = calculate_age_day_signed($job_details['deadline_date']);
@@ -120,7 +120,7 @@ endif;
                     <?php $addressValues = explode(",", $job_details["address"]); ?>
                     <strong><?=$job_details['f_name'] . ','?></strong>
                     <br><?=$addressValues['0'];?>
-                    <br><?=$addressValues['1'] . ', ' . $addressValues['2'];?>
+                    <!-- <br><?=$addressValues['1'] . ', ' . $addressValues['2'];?> -->
                     <br>
                     <abbr title="Phone">P: </abbr><?=$job_details['phone']?>
                 </p></address>
@@ -129,7 +129,6 @@ endif;
         <?php
             endif;
         ?>
-
         <?php if(in_array("1", $checkboxValues)): ?>
         <li>
         Apply via email to:
