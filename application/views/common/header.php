@@ -148,7 +148,7 @@
 		        		}
 		        ?>
 		        <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">Welcome, <?=$this->session->userdata('name');?><b class="caret"></b></a>
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">Welcome, <?php echo $user;?><b class="caret"></b></a>
                     <ul class="dropdown-menu">
                     	<li><a href="<?=base_url().'user_profile/jobseeker_details';?>">Profile</a></li>
                     	<li><a href="<?=base_url().'user_profile/change_password';?>">Change Password</a></li>
