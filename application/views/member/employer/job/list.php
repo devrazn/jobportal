@@ -35,7 +35,7 @@
                   <td><a href="<?=base_url().'employer_profile/edit_job/'.$job['id']?>"><?=humanize_date($job['published_date'])?></a></td>
                   <td><a href="<?=base_url().'employer_profile/edit_job/'.$job['id']?>"><?=humanize_date($job['deadline_date'])?></a></td>
                   <td>
-                    <a class="btn btn-danger delete" data="<?php echo $job['id'];?>" data-toggle="tooltip" title="Delete"  data-original-title="Delete"><i class="fa fa-trash-o fa-lg"></i> Delete</a>
+                    <a class="btn btn-danger delete"  data-id="<?php echo $job['id'];?>" data-toggle="tooltip" title="Delete"  data-original-title="Delete"><i class="fa fa-trash-o fa-lg"></i> Delete</a>
                   </td>
                 </tr>
                       <?php
@@ -63,12 +63,16 @@
 
 <script>
   $(document).ready(function() {
-      $('#employer_jobs-dataTables').dataTable({
-              responsive: true,
-              sPaginationType: "full_numbers",
-              "aaSorting": [3, "asc"]
-      });
+    $('body').on('click', '.delete', function(e) {
+      setDelete('employer_profile/delete_job/','6',this,'Job');
 
-      <?php $this->load->view('common/ajax_del')?>
+    });
+
+    $('#employer_jobs-dataTables').dataTable({
+      responsive: true,
+      sPaginationType: "full_numbers",
+      "aaSorting": [3, "asc"]
+    });
+
   });
 </script>
