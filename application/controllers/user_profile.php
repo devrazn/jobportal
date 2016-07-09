@@ -415,7 +415,7 @@ class User_profile extends CI_Controller {
                 return true;
             } else {
                 // possibly do some clean up ... then throw an error
-                $this->form_validation->set_message('validate_resume', "<div style='color:red'>" . $this->upload->display_errors() . "</div>");
+                $this->form_validation->set_message('validate_resume', "<p style='color:red'>" . strip_tags($this->upload->display_errors()) . "</p>");
                 return false;
             }
         } else {

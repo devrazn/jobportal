@@ -100,7 +100,7 @@ class Category extends CI_Controller {
 
     function edit($id) {
         $this->form_validation->set_rules('name', 'Name', 'required|xss_clean');
-    $this->form_validation->set_rules('status', 'Status', 'required|xss_clean');
+        $this->form_validation->set_rules('status', 'Status', 'required|xss_clean');
 
         if ($this->form_validation->run() == FALSE) {
             $data['info'] = $this->category_model->get_category($id);

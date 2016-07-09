@@ -49,6 +49,7 @@ class Category_model extends CI_Model {
         $this->db->where($options1);
         $job_count = $this->db->get('tbl_jobs')->num_rows();
 
+        $this->db->flush_cache();
         $options2 = array(
                         'del_flag' => 0,
                         'parent_id' => $id
@@ -57,10 +58,14 @@ class Category_model extends CI_Model {
         $child_category_count = $this->db->get('tbl_job_category')->num_rows();
 
         if($job_count==0 && $child_category_count==0) {
-            //$data = array('del_flag' => '1');
+            $this->db->flush_cache();
+            $this->db->where('category_id', $id);
+            $this->db->delete('tbl_user_map_category');
+
+            $this->db->flush_cache();
             $this->db->where('id', $id);
             $this->db->delete('tbl_job_category');
-            return $this->db->affected_rows();
+            return true;
         } else {
             return FALSE;
         }

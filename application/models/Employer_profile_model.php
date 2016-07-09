@@ -130,4 +130,45 @@ class Employer_profile_model extends CI_Model {
     function get_map_job_details($id){
       return $this->db->get_where('tbl_user_map_jobs', array('id' => $id))->row_array();
     }
+
+
+    public function get_search_result($page='', $per_page='', $count=false){
+        $keyword = $this->input->get('search');
+
+        $where_options = array(
+                            'u.del_flag' => '0',
+                            'q.del_flag' => '0',
+                            'e.del_flag' => '0',
+                            'u.user_type' => '1',
+                            'ut.user_id' => 'u.id',
+                            'ut.tag_id' => 't.id',
+                            'uc.user_id' => 'u.id',
+                            'uc.category_id' => 'c.id'
+                        );
+        $like_options = array(
+                            'u.profile' => $keyword,
+                            'e.title' => $keyword,
+                            'q.degree' => $keyword,
+                            'q.remarks' => $keyword,
+                            't.name' => $keyword,
+                            'c.name' => $keyword,
+                        );
+        $this->db->select('u.id, u.f_name, u.l_name, u.gender, u.profile, u.image, u.resume');
+        $this->db->from("tbl_users u");
+        $this->db->join("tbl_user_map_tag ut", 'u.id = ut.user_id');
+        $this->db->join("tbl_tags t", 't.id = ut.tag_id');
+        $this->db->join("tbl_user_map_category uc", 'u.id = uc.user_id');
+        $this->db->join("tbl_job_category c", 'c.id = uc.category_id');
+        $this->db->join("tbl_experience e", 'e.user_id = u.id');
+        $this->db->join("tbl_qualification q", 'q.user_id = u.id');
+        $this->db->or_like($like_options);
+        $this->db->where($where_options);
+        $this->db->group_by('u.id');
+        $query = $this->db->get();
+        if($count) {
+            return $query->num_rows();
+        } else {
+            return $query->result_array();
+        }
+    }
 }

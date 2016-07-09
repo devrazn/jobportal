@@ -55,6 +55,7 @@ class Home extends CI_Controller {
             $data2 = $this->data["search_results"];
             //echo '<pre>',print_r($data2,1),'</pre>'; exit;
             $this->data["page"] = 'search';
+            $this->data["title"] = $this->input->get('search');
             $this->template->__set('title', $this->input->get('search'));
             $this->template->partial->view("default_layout", $this->data, $overwrite=FALSE);
             $this->template->publish('default_layout');

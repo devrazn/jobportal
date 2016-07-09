@@ -188,16 +188,52 @@ class Employer_profile extends CI_Controller {
             if($this->session->userdata('referred_from')) {
                 redirect($this->session->userdata('referred_from'));
             } else {
-                redirect(base_url());
+                redirect(base_url().'employer_profile', 'refresh');
             }
             
         } else {
-            $this->data["search_results"] = $this->home_model->get_search_result();
-            $data2 = $this->data["search_results"];
-            $this->data["page"] = 'search';
+            $this->load->library('pagination');
+            if(count($_GET) > 0) {
+                $config['suffix'] = '?' . http_build_query($_GET, '', "&");
+            }
+            $config['base_url'] = base_url()."employer_profile";
+            $config['first_url'] = $config['base_url'].'?'.http_build_query($_GET);
+            $config['total_rows'] = $this->employer_profile_model->get_search_result(null, null, true);
+            $config['per_page'] = 10; //$this->config->item('products_per_page');
+            $config['num_links'] = 5;
+            $config['full_tag_open'] = "<ul class='pagination'>";
+            $config['full_tag_close'] ="</ul>";
+            $config['num_tag_open'] = '<li>';
+            $config['num_tag_close'] = '</li>';
+            $config['cur_tag_open'] = "<li class='disabled'><li class='active'><a href='javascript:void(0)'>";
+            $config['cur_tag_close'] = "<span class='sr-only'></span></a></li>";
+            $config['next_tag_open'] = "<li>";
+            $config['next_tag_close'] = "</li>";
+            $config['prev_tag_open'] = "<li>";
+            $config['prev_tag_close'] = "</li>";
+            $config['first_tag_open'] = "<li>";
+            $config['first_tag_close'] = "</li>";
+            $config['last_tag_open'] = "<li>";
+            $config['last_tag_close'] = "</li>";
+
+            $this->pagination->initialize($config);
+
+            $page = ($this->uri->segment(3)) ? $this->uri->segment(3) : 0;
+
+            //prePrint($data); exit;
+
+            $data["search_results"] = $this->employer_profile_model->get_search_result(null, null);
+            //echo $this
+            // prePrint($data); exit;
+            $data['pagination_links'] = $this->pagination->create_links();
+            $data['page_title'] = "Search results for '" . $this->input->get('search') ."'";
+
+            $data["page"] = 'member/employer/jobseeker_search';
+            $data["title"] = $this->input->get('search');
+            $data["num_rows"] = $config['total_rows'];
             $this->template->__set('title', $this->input->get('search'));
-            $this->template->partial->view("default_layout", $this->data, $overwrite=FALSE);
-            $this->template->publish('default_layout');
+            $this->template->partial->view("user_layout", $data, $overwrite=FALSE);
+            $this->template->publish('user_layout');
 
         }
 

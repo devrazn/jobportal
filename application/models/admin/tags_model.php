@@ -37,8 +37,17 @@ class Tags_model extends CI_Model {
     }
 
     function delete_tags($id) {
-        $sql ="Update tbl_tags set del_flag=1 where id='$id'";
-        $this->db->query($sql);
+        $this->db->where('tag_id', $id);
+        $this->db->delete('tbl_user_map_tag');
+
+        $this->db->flush_cache();
+        $this->db->where('tag_id', $id);
+        $this->db->delete('tbl_user_map_job');        
+
+        $this->db->flush_cache();
+        $this->db->where('id', $id);
+        $this->db->delete('tbl_tags');        
+
     }
 
     function change_status($status, $id) {
