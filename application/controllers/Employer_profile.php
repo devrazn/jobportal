@@ -351,4 +351,73 @@ class Employer_profile extends CI_Controller {
         }
     }
 
+    function jobseeker($jobseeker_id='') {
+        if($jobseeker_id==''){
+            show_404(); exit;
+        }
+        $this->load->model('user_profile_model');
+        $data['jobseeker'] = $this->user_profile_model->get_jobseeker_details($jobseeker_id);
+        if(count($data['jobseeker']) < 1){
+            show_404(); exit;
+        }
+        $data['qualifications'] = $this->user_profile_model->get_jobseeker_qualification($jobseeker_id);
+        $data['experiences'] = $this->user_profile_model->get_jobseeker_experience($jobseeker_id);
+        $data['tags'] = $this->employer_profile_model->get_jobseeker_tags($jobseeker_id);
+        $data["page"] = "member/employer/jobseeker_details";
+        $data["title"] = $data['jobseeker']['f_name'].' '.$data['jobseeker']['f_name'].' - Details';
+        $this->template->__set('title', $data['jobseeker']['f_name'].' '.$data['jobseeker']['f_name'].' - Details');
+        $this->template->partial->view("user_layout", $data, $overwrite=FALSE);
+        $this->template->publish('user_layout');
+    }
+
+
+    public function send_email() {
+        $this->form_validation->set_rules('receiver_email', 'Receiver', 'required|xss_clean|valid_email|callback_validate_receiver');
+        $this->form_validation->set_rules('subject', 'Subject', 'required|xss_clean');
+        $this->form_validation->set_rules('content', 'Content', 'required|xss_clean');
+
+        if ($this->form_validation->run() == FALSE) {
+            echo json_encode(array(
+                'error_title' => 'validation_error',
+                'error_description' => "<p style='color:red'>Please fill all the required fields correctly.</p>",
+                'subject' => form_error('subject'),
+                'content' => form_error('content'),
+                'receiver_email' => form_error('receiver_email'),
+
+            ));
+        } else {
+            $this->load->model('admin/settings_model');
+            $mail_settings = $this->settings_model->get_email_settings();
+            $mail_params = array(
+                        'from' => $this->session->userdata('user_email'),
+                        'from_name' => $this->session->userdata('name'),
+                        'to' => $this->input->post('receiver_email'),
+                        'subject' => $this->input->post('subject'),
+                        'message' => $this->input->post('content'),
+                );
+            if(send_email($mail_settings, $mail_params)) {
+                echo json_encode(array(
+                    'error_msg' => 'Email Sent Successfully.',
+                    'error_title' => 'success'
+                ));
+            } else {
+                echo json_encode(array(
+                    'error_msg' => 'Email sending failed. Please try again later.',
+                    'error_title' => 'email_error'
+                ));
+            }
+        }
+
+    }
+
+
+    function validate_receiver() {
+        if($this->employer_profile_model->verify_receiver()){
+            return true;
+        } else {
+            $this->form_validation->set_message('validate_receiver', 'Incorrect Receiver Email');
+            return false;
+        }
+    }
+
 }

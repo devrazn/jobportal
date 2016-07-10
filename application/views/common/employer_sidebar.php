@@ -1,4 +1,4 @@
-<div class="col-md-4">
+<div class="col-md-3">
 	<div class="col_3">
 		<h3>Menu</h3>
 		<ul class="list_2">

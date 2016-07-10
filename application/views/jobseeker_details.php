@@ -2,7 +2,7 @@
     <h3><?=$jobseeker_details["f_name"]?></h3>
     <div class="row_1">
         <div class="col-sm-3 single_img">
-            <img src="<?=base_url().'uploads/user/'.$jobseeker_details["image"]?>" class="img-responsive" alt="<?=$jobseeker_details["f_name"]?>" title="<?=$jobseeker_details["f_name"]?>"/>
+            <img src="<?=base_url().'uploads/user/'.$jobseeker_details["image"]?>" class="img-responsive img-rounded" alt="<?=$jobseeker_details["f_name"]?>" title="<?=$jobseeker_details["f_name"]?>"/>
         </div>
         <div class="col-sm-9 single-para">
             <dl class="dl-horizontal">

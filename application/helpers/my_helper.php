@@ -52,7 +52,12 @@ if(!function_exists('send_email')) {
                                                 'smtp_pass' => $CI->helper_model->decrypt_me($mail_settings['smtp_pass']),
                                                 'charset' => $mail_settings['charset'],
                                                 'newline' => "\r\n"));
-        $CI->email->from($mail_settings['receive_email'], 'The JobPortal');
+        if(isset($mail_params['from'])) {
+            $CI->email->from($mail_params['from'], $mail_params['from_name']);    
+        } else {
+            $CI->email->from($mail_settings['receive_email'], 'The JobPortal');
+        }
+        //prePrint($mail_params);
         $CI->email->to($mail_params['to']);
         $CI->email->subject($mail_params['subject']);
         $CI->email->message($mail_params['message']);
@@ -291,6 +296,7 @@ if(!function_exists('multilevel_category_select')) {
         return $menu_html;
     }
 }
+
 
 if(!function_exists('convert_to_url')) {
     function convert_to_url($url) {

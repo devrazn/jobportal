@@ -1,4 +1,4 @@
-<div class="alert_parent">
+<div class="col-lg-12 alert_parent" id="alert_parent">
 <?php
 if ($this->session->flashdata('user_flash_msg'))
 {

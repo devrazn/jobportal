@@ -1,4 +1,4 @@
-<div class="col-md-8 single_right">
+<div class="col-md-9 single_right">
 	      <div class="but_list">
 	       <div data-example-id="togglable-tabs" role="tabpanel" class="bs-example bs-example-tabs">
 			<ul role="tablist" class="nav nav-tabs" id="myTab">
@@ -13,7 +13,7 @@
 		  ?>
 		    <div class="tab_grid">
 			    <div class="col-sm-3 loc_1">
-			    	<a href="<?=base_url().'employer_profile/jobseeker/'.$search_result['id']?>"><img style="height: 140px; width: 100%; display: block;" data-holder-rendered="true" src="<?=base_url().'uploads/user/'.$search_result['image']?>" alt="<?=$search_result['f_name'].' '.$search_result['l_name']?>" title="<?=$search_result['f_name'].' '.$search_result['l_name']?>" data-src="holder.js/100%x180"></a>
+			    	<a href="<?=base_url().'employer_profile/jobseeker/'.$search_result['id']?>"><img class="img-responsive img-rounded" style="height: 140px; width: 100%; display: block;" data-holder-rendered="true" src="<?=base_url().'uploads/user/images/'.$search_result['image']?>" alt="<?=$search_result['f_name'].' '.$search_result['l_name']?>" title="<?=$search_result['f_name'].' '.$search_result['l_name']?>" data-src="holder.js/100%x180"></a>
 			    </div>
 			    <div class="col-sm-9">
 			       <div class="location_box1">
@@ -21,7 +21,7 @@
 			    	 	</h6>
 			    	 <p><span class="m_2">Gender : </span><?php echo $search_result['gender'] ? "Male": "Female"; ?></p>
 			    	 <p>	
-			    	 	<a><span class="m_2">Bio : </span><?=substr($search_result['profile'], 0, 155)?> <?php if(strlen($search_result['profile']) > 155) {echo "...";} ?>
+			    	 	<?=substr($search_result['profile'], 0, 155)?> <?php if(strlen($search_result['profile']) > 155) {echo "...";} ?>
 			    	 </p>
 			    	 <ul class="links_bottom">
 		  		    	<!-- <li><a href="location_single.html"><i class="fa fa-envelope-o icon_1"> </i><span class="icon_text">Email this Job</span></a></li> -->

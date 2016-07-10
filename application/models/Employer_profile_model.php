@@ -171,4 +171,27 @@ class Employer_profile_model extends CI_Model {
             return $query->result_array();
         }
     }
+
+
+    function get_jobseeker_tags($jobseeker_id) {
+        $this->db->select('t.name');
+        $this->db->from('tbl_tags t');
+        $this->db->join("tbl_user_map_tag ut", 't.id = ut.tag_id');
+        $this->db->where('ut.user_id', $jobseeker_id);
+        // $this->db->group_by('t.name');
+        return $this->db->get()->result_array();
+    }
+
+
+    function verify_receiver() {
+        $options = array(
+                    'email' => $this->input->post('receiver_email'),
+                    'user_type' => '1'
+                );
+        if($this->db->get_where('tbl_users', $options)->num_rows() > 0){
+            return true;
+        } else {
+            return false;
+        }
+    }
 }

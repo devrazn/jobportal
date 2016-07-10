@@ -210,8 +210,8 @@
 			</div>
   		</div> 
 	</div>	
-<div class="col-lg-12" class="alert_parent" id="alert_parent">
+
 	<?php
 	    $this->load->view('common/alert');
 	?>
-</div>
+
