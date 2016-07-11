@@ -315,15 +315,7 @@ class Employer_profile extends CI_Controller {
 
     function user_details($id){
         $arrData = $this->employer_profile_model->get_map_job_details($id);
-        $this->employer_profile_model->update_read_flag_status($arrData['id']);
-
-        $data["jobseeker_details"] = $this->user_profile_model->get_jobseeker_details($arrData['user_id']);
-        $data["qualification"] = $this->user_profile_model->get_jobseeker_qualification($arrData['user_id']);
-        $data["experience"] = $this->user_profile_model->get_jobseeker_experience($arrData['user_id']);
-        $data["page"] = "member/jobseeker/jobseeker_details";
-        $this->template->__set('title', 'Details');
-        $this->template->partial->view("user_layout", $data, $overwrite=FALSE);
-        $this->template->publish('user_layout');
+        $this->jobseeker($arrData['user_id']);
     }
 
     function _validate_image($image='', $edit=false) {

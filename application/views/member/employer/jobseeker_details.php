@@ -184,7 +184,7 @@
                                                     <dt>Started on</dt>
                                                     <dd><?=$experiences[$j]['start_year']?></dd>
                                                     <dt>Duration</dt>
-                                                    <dd><?php=$experiences[$j]['duration'].' '.$experiences[$j]['duration_unit']?></dd>
+                                                    <dd><?php echo $experiences[$j]['duration'].' '.$experiences[$j]['duration_unit']?></dd>
                                                 </dl>
                                                 <?php 
                                                     if($experiences[$j]['description']){
