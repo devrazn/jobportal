@@ -167,17 +167,6 @@ class Employer_profile extends CI_Controller {
         $this->template->publish('user_layout');
     }
 
-
-    function _validate_checkbox() {
-        if(count($this->input->post('application_procedure'))==0){
-            $this->form_validation->set_message('_validate_checkbox','Application Procedure is required');
-            return false;
-        } else{
-            return true;
-        }
-    }
-
-
     public function search() {
         $data = array(
             'search' => $this->input->get('search')
@@ -219,24 +208,16 @@ class Employer_profile extends CI_Controller {
             $this->pagination->initialize($config);
 
             $page = ($this->uri->segment(3)) ? $this->uri->segment(3) : 0;
-
-            //prePrint($data); exit;
-
             $data["search_results"] = $this->employer_profile_model->get_search_result(null, null);
-            //echo $this
-            // prePrint($data); exit;
             $data['pagination_links'] = $this->pagination->create_links();
             $data['page_title'] = "Search results for '" . $this->input->get('search') ."'";
-
             $data["page"] = 'member/employer/jobseeker_search';
             $data["title"] = $this->input->get('search');
             $data["num_rows"] = $config['total_rows'];
             $this->template->__set('title', $this->input->get('search'));
             $this->template->partial->view("user_layout", $data, $overwrite=FALSE);
             $this->template->publish('user_layout');
-
         }
-
     }
 
 
@@ -259,13 +240,13 @@ class Employer_profile extends CI_Controller {
 
     function edit_job($id) {
         $data["job"] = $this->employer_profile_model->get_job_by_id($id);
-        if($data['row']['user_id'] != $this->session->userdata('user_id')) {
+        if($data['job']['user_id'] != $this->session->userdata('user_id')) {
             show_404();
             exit;
         }
 
         $temp_procedure = $this->input->post('application_procedure');
-        $procedure_data = isset($temp_procedure)?implode(",", $temp_procedure):'';
+        $data['procedure_data'] = isset($temp_procedure)?implode(",", $temp_procedure):explode(",",$data['job']['application_procedure']);
 
         $this->form_validation->set_rules('title', "Title",'required|xss_clean');
         $this->form_validation->set_rules('position', "Position",'required|xss_clean');
@@ -282,8 +263,8 @@ class Employer_profile extends CI_Controller {
         $this->form_validation->set_rules('application_procedure', "Application Procedure",'xss_clean|callback__validate_checkbox');
         
         if($this->form_validation->run()==FALSE) {
-            $data["page"] = "member/employer/job/edit";
-            $data["title"] = "Edit Qualification";
+            $data["page"] = "member/employer/job/edit_job";
+            $data["title"] = "Edit Job";
             $this->template->partial->view("user_layout", $data, $overwrite=FALSE);
             $this->template->publish('user_layout');
 
@@ -402,13 +383,22 @@ class Employer_profile extends CI_Controller {
 
     }
 
-
     function validate_receiver() {
         if($this->employer_profile_model->verify_receiver()){
             return true;
         } else {
             $this->form_validation->set_message('validate_receiver', 'Incorrect Receiver Email');
             return false;
+        }
+    }
+
+    function _validate_checkbox() {
+        if(count($this->input->post('application_procedure'))==0){
+            $this->form_validation->set_message('_validate_checkbox','Application Procedure is required');
+            return false;
+        } else{
+            die("here");
+            return true;
         }
     }
 
