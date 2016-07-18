@@ -16,22 +16,6 @@ class Category extends CI_Controller {
         $data['main'] = 'admin/category/list';
         $data['title'] = 'Categories';
         $this->load->view('admin/admin', $data);
-        //$this->cms_category();
-    }
-
-
-    function datatable() {
-        //$this->datatables->where('id', '5');
-        $this->datatables->select('id,name,status')
-            ->from('tbl_job_category')
-            ->where('del_flag', '0');
-        $this->datatables->add_column('edit', '<a href="category/edit/$1/" data-toggle="tooltip" title="Edit" class="btn btn-effect-ripple btn-xs btn-success" data-original-title="Edit"><i class="fa fa-pencil"></i></a>', 'id');
-        $this->datatables->add_column('delete', '<div class=""><a onClick="return doConfirm()" class="delete btn btn-effect-ripple btn-xs btn-warning" href="category/delete_category/$1" data-original-title="Delete"><i class="fa fa-times"></i></a></div>', 'id');
-        //if()
-        $this->datatables->edit_column('status', '$1 :: <a href="category/change_status/$2/$3">$4</a>', 'ucfirst(status), status, id, Change Status');
-        $this->datatables->unset_column('id');
-        
-        echo $this->datatables->generate();
     }
 
 
@@ -57,34 +41,9 @@ class Category extends CI_Controller {
 
 
     function add() {
-        //$category = $this->helper_model->get_category();
-        //echo json_encode($category); exit;
-        //$data['category_list'] = $this->category_model->category_list();
-        $this->form_validation->set_rules('name', 'Name', 'trim|required|xss_clean');
+        $this->form_validation->set_rules('name', 'Name', 'trim|required|xss_clean|is_unique[tbl_job_category.name]');
         $this->form_validation->set_rules('parent_id', 'Parent Category', 'trim|xss_clean');
-        $this->form_validation->set_rules('status', 'Status', 'trim|required|xss_clean');
-        //$this->form_validation->set_rules('parent', 'Parent Category', 'required')
-
-       /* $refs = array();
-        $list = array();
-
-        $sql = "SELECT id, parent_id, name FROM items ORDER BY name";
-        $result = mysqli_query($sql);
-        while($data = @mysql_fetch_assoc($result)) {
-            $thisref = &$refs[ $data['id'] ];
-
-            $thisref['parent_id'] = $data['parent_id'];
-            $thisref['name'] = $data['name'];
-
-            if ($data['parent_id'] == 0) {
-                $list[ $data['id'] ] = &$thisref;
-            } else {
-                $refs[ $data['parent_id'] ]['children'][ $data['id'] ] = &$thisref;
-            }
-        }*/
-
-        //echo $list; exit;
-
+        $data['parentable_categories'] = $this->category_model->get_parentable_categories();
         if ($this->form_validation->run() == FALSE) {
             $data['main'] = 'admin/category/add';
             $data['title'] = 'Add Category';
@@ -100,7 +59,10 @@ class Category extends CI_Controller {
 
     function edit($id) {
         $this->form_validation->set_rules('name', 'Name', 'required|xss_clean');
-        $this->form_validation->set_rules('status', 'Status', 'required|xss_clean');
+        $data['is_childable'] = $this->category_model->is_childable($id);
+        if($data['is_childable']) {
+            $data['parentable_categories'] = $this->category_model->get_parentable_categories($id);
+        }
 
         if ($this->form_validation->run() == FALSE) {
             $data['info'] = $this->category_model->get_category($id);
@@ -109,27 +71,6 @@ class Category extends CI_Controller {
             $this->load->view('admin/admin', $data);
         } else {
             $this->category_model->update_category($id);
-            $this->session->set_userdata( 'flash_msg_type', "success" );
-            $this->session->set_flashdata('flash_msg', 'Category Updated Successfully');
-            redirect(ADMIN_PATH . '/category', 'refresh');
-        }
-
-        $data['is_childable'] = $this->category_model->is_childable($category_id);
-        $this->form_validation->set_rules('name', 'Name', 'required|xss_clean|callback__matches_existing_category['.$category_id.']');
-        $this->form_validation->set_rules('parent_id', 'Parent Category', 'xss_clean');
-
-        if ($this->form_validation->run() == FALSE) {
-            $data['info'] = $this->category_model->get_category($category_id);
-            $data['main'] = 'admin/category/edit';
-            $data['title'] = 'Edit Category';
-            $this->load->view('admin/admin', $data);
-        } else {
-            if($data['is_childable']) {
-                $parent_id = $this->input->post('parent_id');
-            } else {
-                $parent_id=0;
-            }
-            $this->category_model->update_category($category_id, $parent_id);
             $this->session->set_userdata( 'flash_msg_type', "success" );
             $this->session->set_flashdata('flash_msg', 'Category Updated Successfully');
             redirect(ADMIN_PATH . '/category', 'refresh');
@@ -151,24 +92,6 @@ class Category extends CI_Controller {
                     'msg' => 'You cannot delete this category until there are jobs & sub-categories under it.'
                 ));
         }
-    }
-
-
-    function change_status($status = '', $id = '') {
-        $this->category_model->change_status(strtolower($status), $id);
-        redirect(ADMIN_PATH . '/category', 'refresh');
-    }
-
-
-    function change_status_ajax($status = '', $id = '') {
-        //($status)? $status = 0 : $status = 1;
-        if($status == 0) {
-            $status = 1;
-        } else {
-            $status = 0;
-        }
-        $this->category_model->change_status($status, $id);
-        echo $status;
     }
 
 }

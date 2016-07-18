@@ -51,6 +51,13 @@ class Helper_model extends CI_Model {
     }
 
 
+    function get_parentable_category() {
+        $this->db->where('parent_id', '0');
+        $this->db->order_by('name', 'ASC');
+        return $this->db->get('tbl_job_category')->result_array();
+    }
+
+
     public function count_admin_new_messages(){
         $options = array('del_flag' => '0',
                             'read_flag' => '0');
@@ -135,7 +142,6 @@ class Helper_model extends CI_Model {
         if($user_details["user_type"]==1){
             $name .= " " . $user_details["l_name"];
         }
-        //echo '<pre>',print_r($user_details,1),'</pre>'; exit;
         $data = array(
                     'user_email' => $email,
                     'user_pw' => $user_details['password'],
@@ -145,7 +151,6 @@ class Helper_model extends CI_Model {
                     'user_type' => $user_details["user_type"],
                 );
         $this->session->set_userdata($data);
-        //echo $this->session->userdata('user_id'); exit;
     }
 
 
@@ -178,14 +183,6 @@ class Helper_model extends CI_Model {
         } else {
             return false;
         }
-    }
-
-
-    function get_all_categories_except_current($id) {
-        $this->db->where('id !=', $id);
-        $this->db->order_by('name', 'ASC');
-        $query = $this->db->get('tbl_job_category');
-        return $query->result_array();
     }
 
 

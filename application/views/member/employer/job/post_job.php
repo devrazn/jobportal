@@ -74,12 +74,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 	                		<div class="col-md-4">
 	                		<select name="category_id" class="form-control"  id="category">
 	                			<option value=""> Select Category</option>
-	                			<?php
-	                				foreach ($categories as $key => $value) {
-	                			?>
-	                				<option value="<?php echo $value["name"];?>" <?php if(isset($_POST['category_id']) && $_POST['category_id']==$value['name']) echo 'selected'; ?>><?php echo $value["name"];?></option>
-	                				<?php }
-	                			?>
+	                			<?=$category_options = multilevel_select_job_category($categories, 0, array(), 0, set_value('category_id'));?>
 	                		</select>
 	                			<?php echo form_error('category_id');?>
 	                		</div>

@@ -11,7 +11,6 @@ class Category_model extends CI_Model {
     function add_category() {
         //$url = $this->helper_model->humanize_url($this->input->post('name'));
         $data = array('name' => $this->input->post('name'),
-                      'status' => $this->input->post('status'),
                       'parent_id' => $this->input->post('parent_id'),
                       'url' => convert_to_url($this->input->post('name'))
         );
@@ -34,7 +33,7 @@ class Category_model extends CI_Model {
 
     function update_category($id) {
         $data = array('name' => $this->input->post('name'),
-                      'status' => $this->input->post('status')
+                      'parent_id' => $this->input->post('parent_id')
         );
         $this->db->where('id', $id);
         $this->db->update('tbl_job_category', $data);
@@ -109,8 +108,9 @@ class Category_model extends CI_Model {
     }
 
 
-    function get_all_categories_except_current($id) {
+    function get_parentable_categories($id='') {
         $this->db->where('id !=', $id);
+        $this->db->where('parent_id', 0);
         $this->db->order_by('name', 'ASC');
         $query = $this->db->get('tbl_job_category');
         return $query->result_array();

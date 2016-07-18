@@ -1,8 +1,6 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-//echo "<h1>Hello</h1>"; exit;
-
 if(!function_exists('humanize_admin')) {
 	function humanize_admin($string) {
         $my_val = array('(', ')', '&', '', '&pound;', ' ', ',', '/', '_', '"', "'", '&quot;', 'quot;', '&amp;', 'amp;', '£', '+', '=', '?', '%', '@', '!', '#', '$', '^', '&', '*', "'", '!', ':', '[', ']', '{', '}', '|');
@@ -17,7 +15,6 @@ if(!function_exists('humanize_admin')) {
 
 if(!function_exists('editor')) {
 	function editor($width='',$height='') {
-		//echo 'Heri'; exit;
 		$CI =& get_instance();
         //Loading Library For Ckeditor
         $CI->load->library('ckeditor');
@@ -79,7 +76,6 @@ if(!function_exists('send_email')) {
 if(!function_exists('humanize_date')) {
     function humanize_date($date) {
         $temp_date = date_create_from_format('Y-m-d', $date);
-        //echo $temp_date; exit;
         return(date_format($temp_date,  'jS M Y'));
     }
 }
@@ -307,14 +303,14 @@ if(!function_exists('convert_to_url')) {
 }
 
 
-if(!function_exists('multilevel_select_edit')) {
-    function multilevel_select_edit($categories, $parent_id = 0, $parents = array(), $level=0, $parent='') {
-        static $i=0;
+if(!function_exists('multilevel_select_category')) {
+    function multilevel_select_category($categories, $parent_id = 0, $parents = array(), $level=0, $parent='') {
+        /*static $i=0;
         static $k=0;
         if($k==0){
             $parent_cat = $parent;
             $k++;
-        }
+        }*/
         
         if($parent_id==0) {
             foreach ($categories as $element) {
@@ -334,14 +330,14 @@ if(!function_exists('multilevel_select_edit')) {
                     $menu_html .= ' style="font-style:italic;"';
                 }
                 $menu_html .= ' value="' . $element['id'] .'"';
-                if($element['id'] == $parent_cat){
+                if($element['id'] == $parent){
                     $menu_html .= " selected";
                 }
                 $menu_html .= '>';
                 $menu_html .= $element['name'].'</option>';
                 if(in_array($element['id'], $parents)){
                     $i++;
-                    $menu_html .= multilevel_select_edit($categories, $element['id'], $parents, $level+1);
+                    $menu_html .= multilevel_select_category($categories, $element['id'], $parents, $level+1, $parent);
                 }
             }
         }
@@ -349,6 +345,7 @@ if(!function_exists('multilevel_select_edit')) {
         return $menu_html;
     }
 }
+
 
 if (!function_exists('prePrint')) {
     function prePrint($arrData, $exit = TRUE)
@@ -358,5 +355,46 @@ if (!function_exists('prePrint')) {
         if ($exit === TRUE) {
             die();
         }
+    }
+}
+
+
+if(!function_exists('multilevel_select_job_category')) {
+    function multilevel_select_job_category($array,$parent_id = 0,$parents = array(), $level=0, $selected='') {
+        static $k=0;
+        if($parent_id==0)
+        {
+            foreach ($array as $element) {
+                if (($element['parent_id'] != 0) && !in_array($element['parent_id'],$parents)) {
+                    $parents[] = $element['parent_id'];
+                }
+            }
+        }
+
+        $menu_html = '';
+        foreach($array as $element){
+            if($element['parent_id']==$parent_id && $level < 2){
+                $menu_html .= '<option';
+                if($element['id'] == $selected) {
+                    $menu_html .= ' selected';
+                }
+                if($level==0){
+                    $menu_html .= ' style="font-weight:bold;"';
+                } else {
+                    $menu_html .= ' style="font-style:italic;"';
+                }
+                $menu_html .= ' value="' . $element['id'] .'">';
+                for($j=0; $j<$k; $j++) {
+                    $menu_html .= '&mdash;';
+                }
+                $menu_html .= $element['name'].'</option>';
+                if(in_array($element['id'], $parents)){
+                    $k++;
+                    $menu_html .= multilevel_select_job_category($array, $element['id'], $parents, $level+1, $selected);
+                }
+            }
+        }
+        $k--;
+        return $menu_html;
     }
 }

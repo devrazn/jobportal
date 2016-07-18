@@ -20,21 +20,11 @@
                 <label>Parent Category</label><p style="color:blue">Select only if you want to create a subcategory</p>
                 <select name = "parent_id" class="form-control">
                   <option>Select Parent Category</option>
-                  <?=multilevel_category_select($this->helper_model->get_category());?>
+                  <?=multilevel_select_category($parentable_categories, 0, array(), 0, set_value('parent_id'));?>
                   ?>
                 </select>
               </div>
               
-              <div class="form-group">
-                <label>Status&nbsp;&nbsp;</label>
-                <label class="radio-inline">
-                    <input type="radio" value="1" name="status" <?php if(set_value('status')=='1') echo "checked";?> >Active
-                </label>
-                <label class="radio-inline">
-                    <input type="radio" value="0" name="status" <?php if(set_value('status')==='0') echo "checked";?> >Inactive
-                </label>
-                <?=form_error('status')?>
-              </div>
               <button class="btn btn-success" type="submit">Submit</button>
               <button class="btn btn-warning" type="reset">Reset</button>
 

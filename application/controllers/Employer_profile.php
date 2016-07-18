@@ -245,8 +245,10 @@ class Employer_profile extends CI_Controller {
             exit;
         }
 
+        $data['categories'] = $this->helper_model->get_category();
+
         $temp_procedure = $this->input->post('application_procedure');
-        $data['procedure_data'] = isset($temp_procedure)?implode(",", $temp_procedure):explode(",",$data['job']['application_procedure']);
+        $data['temp_procedure'] = $temp_procedure?implode(",", $temp_procedure):$data['job']['application_procedure'];
 
         $this->form_validation->set_rules('title', "Title",'required|xss_clean');
         $this->form_validation->set_rules('position', "Position",'required|xss_clean');
@@ -294,10 +296,12 @@ class Employer_profile extends CI_Controller {
         $this->template->publish('user_layout');
     }
 
+
     function user_details($id){
         $arrData = $this->employer_profile_model->get_map_job_details($id);
         $this->jobseeker($arrData['user_id']);
     }
+
 
     function _validate_image($image='', $edit=false) {
         if(isset($_FILES['image']) && !empty($_FILES['image']['name'])) {     //check if the field is empty or not
@@ -323,6 +327,7 @@ class Employer_profile extends CI_Controller {
             return true;
         }
     }
+
 
     function jobseeker($jobseeker_id='') {
         if($jobseeker_id==''){
@@ -383,6 +388,7 @@ class Employer_profile extends CI_Controller {
 
     }
 
+
     function validate_receiver() {
         if($this->employer_profile_model->verify_receiver()){
             return true;
@@ -397,7 +403,7 @@ class Employer_profile extends CI_Controller {
             $this->form_validation->set_message('_validate_checkbox','Application Procedure is required');
             return false;
         } else{
-            die("here");
+            //die("here");
             return true;
         }
     }

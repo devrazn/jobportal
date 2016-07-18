@@ -83,7 +83,7 @@
                   foreach($jobs as $job){
                 ?>
                 <tr> 
-                  <td><a href="<?=base_url().'employer_profile/edit_job'.$job['id']?>"><?=$job['title']?></a></td>
+                  <td><a href="<?=base_url().'employer_profile/edit_job/'.$job['id']?>"><?=$job['title']?></a></td>
                   <td><a href="<?=base_url().'employer_profile/edit_job/'.$job['id']?>"><?=$job['position']?></a></td>
                   <td><a href="<?=base_url().'employer_profile/edit_job/'.$job['id']?>"><?=$job['openings']?></a></td>
                   <td><a href="<?=base_url().'employer_profile/edit_job/'.$job['id']?>"><?=humanize_date($job['published_date'])?></a></td>

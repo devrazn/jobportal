@@ -16,30 +16,20 @@
                 <?=form_error('name')?>
               </div>
 
+              <?php
+                  if($is_childable && $info['parent_id']!=0):
+                ?>
               <div class="form-group">
                 <label>Parent Category</label><p style="color:blue">Select only if you want to create a subcategory</p>
                 <select name = "parent_id" class="form-control">
                   <option>Select Parent Category</option>
-                  <?php
-                    $selected = '';
-                    if(set_value('parent_id', $info['parent_id'])) {
-                      $selected = set_value('parent_id');
-                    }
-                    echo $this->helper_model->multilevel_select_edit($this->helper_model->get_category());
-                  ?>
+                  <?=multilevel_select_category($parentable_categories, 0, array(), 0, set_value('parent_id', $info['parent_id']));?>
                 </select>
+                <?=form_error('parent_id')?>
               </div>
-              
-              <div class="form-group">
-                <label>Status&nbsp;&nbsp;</label>
-                <label class="radio-inline">
-                    <input type="radio" value="active" name="status" <?php if(set_value('status',$info['status'])=='active'){echo "checked";}?> >Active
-                </label>
-                <label class="radio-inline">
-                    <input type="radio" value="inactive" name="status" <?php if(set_value('status',$info['status'])=='inactive') {echo "checked";}?> >Inactive
-                </label>
-                <?=form_error('status')?>
-              </div>
+              <?php 
+                  endif;
+                ?>
               <button class="btn btn-success" type="submit">Update</button>
               <button class="btn btn-warning" type="reset">Reset</button>
 

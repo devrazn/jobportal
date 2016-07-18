@@ -19,7 +19,6 @@
                   <!-- <th>Id</th> -->
                   <th>Name</th>
                   <th>Parent Category</th>
-                  <th>Status</th>
                   <th>Delete</th>
                   <!-- <th>Options</th> -->
                 </tr>
@@ -38,7 +37,7 @@
                           }
                         }
                     ?></td>
-                    <td><i id="cell_<?php echo $category['id']; ?>" href="javascript:void(0)" dataId="<?php echo $category['id'];?>" dataStatus="<?php echo $category['status'];?>" class="change_status btn <?php echo ($category['status'])? 'btn-success' : 'btn-danger'?>"><?php echo ($category['status'])? 'Active' : 'Inactive'?></i></a></td>
+
                   <td>
                     <a class="btn btn-danger delete" data="<?php echo $category['id'];?>" data-toggle="tooltip" title="Delete"  data-original-title="Delete"><i class="fa fa-trash-o fa-lg"></i> Delete</a>
                   </td>
@@ -97,7 +96,7 @@ $(document).ready(function() {
           url: "<?=base_url().'admin/category/delete_category_ajax/'; ?>" + id,
           dataType: 'json',
           beforeSend: function(){
-            _this.closest('tr').html("<td colspan='4' align='center'><img src='<?php echo base_url('assets/ajax/images/ajax-loader_dark.gif');?>' ></td>");
+            _this.closest('tr').html("<td colspan='3' align='center'><img src='<?php echo base_url('assets/ajax/images/ajax-loader_dark.gif');?>' ></td>");
           },
           success: function(data) {
             if(data['response']) {
@@ -130,33 +129,6 @@ $(document).ready(function() {
           }
         });
       }              
-    });
-
-    $(document).on('click', '.change_status', function(){
-      _this=$(this);
-      var id = _this.attr('dataId');
-      var status = _this.attr('dataStatus');
-      _this_tr_html = _this.closest('tr').html();
-      cell_id=_this.attr('id');
-      
-      jQuery.ajax({
-        url : "<?=base_url().'admin/category/change_status_ajax'; ?>/" + status + "/" + id,
-        beforeSend: function(){
-          _this.closest('tr').html("<td colspan='4' align='center'><img src='<?php echo base_url('assets/ajax/images/ajax-loader_dark.gif');?>' ></td>");
-        },
-        success: function(data) {
-          $('#tr_'+id).html(_this_tr_html);
-          if(status == '1') {
-            $('#' + cell_id).attr("dataStatus", '0');
-            $('#' + cell_id).removeClass('btn-success').addClass('btn-danger');
-            $('#' + cell_id).html("Inactive");
-          } else {
-            $('#' + cell_id).attr("dataStatus", '1');
-            $('#' + cell_id).removeClass('btn-danger').addClass('btn-success');
-            $('#' + cell_id).html("Active");
-          }
-        }
-      });         
     });
 
   });
