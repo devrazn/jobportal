@@ -108,6 +108,7 @@
     <script src="<?=base_url();?>assets/admin/template/dist/js/sb-admin-2.js"></script>
 
     <script src="<?=base_url();?>assets/alertify.js"></script>
+    <script src="<?=base_url();?>assets/user/js/custom.js"></script>
 
      <!-- DataTables JavaScript -->
     <script src="<?=base_url();?>assets/admin/template/bower_components/datatables/media/js/jquery.dataTables.min.js"></script>

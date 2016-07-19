@@ -1,38 +1,3 @@
-<script>
-    $(document).on('click', '.delete', function(event){    
-        if( ! alertify.confirm("Are you sure to perform this operation?"))
-            return false;
-        _this=$(this);
-        var id = $(this).attr('data');
-        
-        jQuery.ajax({
-            url: "<?=base_url().'admin/newsletter/delete_newsletter'; ?>/"+id,
-            beforeSend: function(){_this.html("<img src='<?php echo base_url('images/ajax-loader.gif');?>' >")},
-            success: function(data) {
-               _this.closest('tr').remove();                  
-            }
-        });               
-    });
-
-    $(document).on('click', '.change_status', function(){
-        _this=$(this);
-        id=_this.attr("data");
-        
-        jQuery.ajax({
-            url : "<?=base_url().'admin/newsletter/change_status'; ?>/"+id,
-            beforeSend: function(){_this.html("<img src='<?php echo base_url('images/ajax-loader.gif');?>' >")},
-            success: function(data) {
-              if(data == 'Active') {
-                _this.removeClass('btn-danger').addClass('btn-success');
-              } else {
-                _this.removeClass('btn-success').addClass('btn-danger');
-              }
-                _this.html(data);
-        }
-        });         
-    });  
-</script>
-
 <div class="panel-heading">
     <a class="btn btn-primary" href="<?=base_url().'admin/newsletter/add';?>">Add New</a>   
 </div>
@@ -59,7 +24,7 @@
                     if(count($newsletter_list)>0){
                     foreach($newsletter_list as $newsletter){
                   ?>
-                <tr>
+                <tr id="tr_<?php echo $newsletter['id']; ?>">
                   <td><?=$newsletter['subject']?></td>
                   <td><a href="<?=site_url(ADMIN_PATH.'/newsletter/send_newsletter/'.$newsletter['id'])?>">
                     SEND
@@ -67,7 +32,7 @@
                   <td><i href="javascript:void(0)" data="<?php echo $newsletter['id'];?>" class="change_status btn <?php echo ($newsletter['status'])? 'btn-success' : 'btn-danger'?>"><?php echo ($newsletter['status'])? 'Active' : 'Inactive'?></i></td>
                   <td>
                     <a href="<?=site_url(ADMIN_PATH.'/newsletter/edit/'.$newsletter['id']) ?>" data-toggle="tooltip" title="Edit" class="btn btn-effect-ripple btn-xs btn-success"  data-original-title="Edit"><i class="fa fa-pencil"></i></a>
-                    <a href="<?=site_url(ADMIN_PATH.'/newsletter/delete_newsletter/'.$newsletter['id']) ?>" data-toggle="tooltip" title="Delete" class="btn btn-effect-ripple btn-xs btn-warning delete"  data-original-title="Delete"><i onClick="return doConfirm()" class="fa fa-times"></i></a>
+                    <a class="btn btn-danger delete" data-id="<?php echo $newsletter['id'];?>" data-toggle="tooltip" title="Delete"  data-original-title="Delete"><i class="fa fa-trash-o fa-lg"></i> Delete</a>
                     <?php
                       }
                     ?>
@@ -114,5 +79,27 @@
                   "targets": "_all"
                 }]
         });
+    });
+
+    $('body').on('click', '.delete', function(e) {
+      setDelete('admin/newsletter/delete_newsletter/','4',this,'Newsletter');
+
+    });
+    $(document).on('click', '.change_status', function(){
+      _this=$(this);
+      id=_this.attr("data");
+      
+      jQuery.ajax({
+        url : "<?=base_url().'admin/newsletter/change_status'; ?>/"+id,
+            // beforeSend: function(){_this.html("<img src='<?php echo base_url('images/ajax-loader.gif');?>' >")},
+            success: function(data) {
+              if(data == 'Active') {
+                _this.removeClass('btn-danger').addClass('btn-success');
+              } else {
+                _this.removeClass('btn-success').addClass('btn-danger');
+              }
+              _this.html(data);
+            }
+          });         
     });
 </script>

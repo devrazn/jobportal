@@ -39,7 +39,11 @@ class Newsletter_model extends CI_Model {
 
     function delete_newsletter($id) {
         $sql ="Update tbl_newsletter set del_flag=1 where id='$id'";
-        $this->db->query($sql);
+        if($this->db->query($sql)){
+            return true;
+        } else {
+            return false;
+        }
     }
 
     function change_status($status, $id) {

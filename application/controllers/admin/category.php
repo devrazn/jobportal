@@ -83,13 +83,13 @@ class Category extends CI_Controller {
             echo json_encode(array(
                     'response' => TRUE,
                     'title' => "success",
-                    'msg' => 'Category successfully deleted'
+                    'message' => 'Category successfully deleted'
                 ));
         } else {
             echo json_encode(array(
                     'response' => FALSE,
                     'title' => "failure",
-                    'msg' => 'You cannot delete this category until there are jobs & sub-categories under it.'
+                    'message' => 'You cannot delete this category until there are jobs & sub-categories under it.'
                 ));
         }
     }

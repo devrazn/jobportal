@@ -13,7 +13,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 <!-- Page Content -->
         <div id="page-wrapper">
                 <div class="row">
-                    <div id="alert_parent" class="col-lg-12">
+                    <div id="alert_parent" class="col-lg-12 alert_parent">
                         <h2 class='page-header'>
                             <?php
                                 if($this->uri->segment(3)!='') {

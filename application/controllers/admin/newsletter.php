@@ -70,10 +70,17 @@ class Newsletter extends CI_Controller {
     }
 
     function delete_newsletter($id) {
-        $this->newsletter_model->delete_newsletter($id);
-        $this->session->set_userdata( 'flash_msg_type', "success" );
-        $this->session->set_flashdata('flash_msg', 'Newsletter Deleted Successfully.');
-        redirect(ADMIN_PATH . '/newsletter', 'refresh');
+        if($this->newsletter_model->delete_newsletter($id)) {
+            echo json_encode(array(
+                    'response' => TRUE,
+                    'message' => 'Newsletter successfully deleted'
+                ));
+        } else {
+            echo json_encode(array(
+                    'response' => FALSE,
+                    'message' => "The newsletter can't be deleted. Please try again later.",
+                ));
+        }
     }
 
     public function change_status($id) {
