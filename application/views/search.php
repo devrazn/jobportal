@@ -21,8 +21,8 @@
 			    	 	</h6>
 			    	 <p><span class="m_2">Description : </span><?=$search_result["job_description"]?></p>
 			    	 <p>	
-			    	 	<span class="m_2">Posted : </span>humanize_date($search_result['published_date']);?> (<?=$this->helper_model->calculate_age_with_unit($search_result['published_date'])?>)
-			    	 	<span class="m_2">Deadline : </span>humanize_date($search_result['deadline_date']);?> (<?=$this->helper_model->calculate_age_with_unit($search_result['deadline_date'])?>)
+			    	 	<span class="m_2">Posted : </span><?php echo humanize_date($search_result['published_date']);?> (<?echo calculate_age_with_unit($search_result['published_date'])?>)</br>
+			    	 	<span class="m_2">Deadline : </span><?php echo humanize_date($search_result['deadline_date']);?> (<?echo calculate_age_with_unit($search_result['deadline_date'])?>)
 			    	 </p>
 			    	 <ul class="links_bottom">
 		  		    	<!-- <li><a href="location_single.html"><i class="fa fa-envelope-o icon_1"> </i><span class="icon_text">Email this Job</span></a></li> -->
