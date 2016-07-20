@@ -37,17 +37,21 @@ class Tags_model extends CI_Model {
     }
 
     function delete_tags($id) {
-        $this->db->where('tag_id', $id);
-        $this->db->delete('tbl_user_map_tag');
+        $options1 = array(
+                        'tag_id' => $id,
+                    );
+        $this->db->where($options1);
+        $tag_count = $this->db->get('tbl_user_map_tag')->num_rows();
 
         $this->db->flush_cache();
-        $this->db->where('tag_id', $id);
-        $this->db->delete('tbl_user_map_job');        
-
-        $this->db->flush_cache();
-        $this->db->where('id', $id);
-        $this->db->delete('tbl_tags');        
-
+        if($tag_count==0) {
+            $this->db->flush_cache();
+            $this->db->where('id', $id);
+            $this->db->delete('tbl_tags');
+            return true;
+        } else {
+            return FALSE;
+        }
     }
 
     function change_status($status, $id) {

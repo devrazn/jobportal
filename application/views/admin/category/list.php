@@ -35,7 +35,7 @@
                     ?></td>
 
                   <td>
-                    <a class="btn btn-danger delete" data-id="<?php echo $category['id'];?>" data-toggle="tooltip" title="Delete"  data-original-title="Delete"><i class="fa fa-trash-o fa-lg"></i> Delete</a>
+                    <a class="btn btn-danger delete btn-xs" data-id="<?php echo $category['id'];?>" data-toggle="tooltip" title="Delete"  data-original-title="Delete"><i class="fa fa-trash-o fa-lg"></i></a>
                   </td>
                 </tr>
                       <?php

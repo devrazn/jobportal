@@ -75,16 +75,18 @@ class Tags extends CI_Controller {
     }
 
     function delete_tags($id) {
-        $this->tags_model->delete_tags($id);
-        $this->session->set_userdata( 'flash_msg_type', "success" );
-        $this->session->set_flashdata('flash_msg', 'Tags Deleted Successfully.');
-        redirect(ADMIN_PATH . '/tags', 'refresh');
+         if($this->tags_model->delete_tags($id)) {
+            echo json_encode(array(
+                    'response' => TRUE,
+                    'message' => 'Tags successfully deleted'
+                ));
+        } else {
+            echo json_encode(array(
+                    'response' => FALSE,
+                    'message' => 'You cannot delete this tags until there are user tags under it.'
+                ));
+        }
     }
-
-    // function change_status($status = '', $id = '') {
-    //     $this->tags_model->change_status($status, $id);
-    //     redirect(ADMIN_PATH . '/tags', 'refresh');
-    // }
 
     public function change_status($id) {
         $options = array('id' => $id);
