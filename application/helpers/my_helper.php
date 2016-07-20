@@ -190,10 +190,10 @@ if(!function_exists('bootstrap_menu')) {
                 if(in_array($element['id'], $parents))
                 {
                     $menu_html .= '<li class="dropdown-submenu">';
-                    $menu_html .= '<a href="' . base_url() . 'admin/category/' .$element['id'].'" class="dropdown-toggle" data-toggle="" role="button" aria-expanded="true">'.$element['name'].' </a>';
+                    $menu_html .= '<a href="' . base_url() . 'category/' .$element['url'].'" class="dropdown-toggle" data-toggle="" role="button" aria-expanded="true">'.$element['name'].' </a>';
                 } else {
                     $menu_html .= '<li>';
-                    $menu_html .= '<a href="' . base_url() . 'admin/category/' . $element['id'] . '">' . $element['name'] . '</a>';
+                    $menu_html .= '<a href="' . base_url() . 'category/' . $element['url'] . '">' . $element['name'] . '</a>';
                 }
                 if(in_array($element['id'],$parents))
                 {

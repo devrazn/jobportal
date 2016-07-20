@@ -158,6 +158,56 @@ class Home extends CI_Controller {
         $data['job_details'] = $this->home_model->get_jobs($id);
         $this->job_details($id);
     }
+    
+
+    function job_by_category($url='') {
+        if($url == '') {
+            show_404();
+            exit;
+        }
+
+        $category_details = $this->home_model->get_category_by_url($url);
+        if(count($category_details) == 0){
+            show_404();
+            exit;
+        }
+
+        $this->load->library('pagination');
+        $config['base_url'] = base_url()."category/$url";
+        $config['total_rows'] = $this->home_model->count_jobs_by_category($category_details['id']);
+        //echo $config['total_rows']; exit;
+
+        $config['per_page'] = 1;
+        $config['num_links'] = 5;
+
+        $config['full_tag_open'] = "<ul class='pagination'>";
+        $config['full_tag_close'] ="</ul>";
+        $config['num_tag_open'] = '<li>';
+        $config['num_tag_close'] = '</li>';
+        $config['cur_tag_open'] = "<li class='disabled'><li class='active'><a href='javascript:void(0)'>";
+        $config['cur_tag_close'] = "<span class='sr-only'></span></a></li>";
+        $config['next_tag_open'] = "<li>";
+        $config['next_tag_close'] = "</li>";
+        $config['prev_tag_open'] = "<li>";
+        $config['prev_tag_close'] = "</li>";
+        $config['first_tag_open'] = "<li>";
+        $config['first_tag_close'] = "</li>";
+        $config['last_tag_open'] = "<li>";
+        $config['last_tag_close'] = "</li>";
+
+        $this->pagination->initialize($config);
+
+        $page = ($this->uri->segment(3)) ? $this->uri->segment(3) : 0;
+
+        $this->data['jobs'] = $this->home_model->get_jobs_by_category($category_details['id'], $config['per_page'], $page);
+        //echo "<pre>"; print_r($this->data['jobs']); exit;
+        $this->data['links'] = $this->pagination->create_links();
+        $this->data['page'] = 'job_list';
+        $this->data['title'] = "'". $category_details['name'] ."' Jobs";
+        $this->template->__set('title', "'". $category_details['name'] ."' Jobs");
+        $this->template->partial->view("default_layout", $this->data, $overwrite=FALSE);
+        $this->template->publish('default_layout');
+    }
 
 }
 

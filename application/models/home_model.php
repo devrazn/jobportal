@@ -202,4 +202,69 @@ class Home_model extends CI_Model {
     	return $this->db->get_where('tbl_jobs', array('job_id' => $job_id))->row_array();
     }
 
+
+    function get_category_by_url($url) {
+    	$this->db->where('url', $url);
+    	return $this->db->get('tbl_job_category')->row_array();
+    }
+
+
+    // public function get_jobs_by_category($page='', $per_page='', $count=false){
+    //     $keyword = $this->input->get('search');
+
+    //     $where_options = array(
+    //                         'u.del_flag' => '0',
+    //                         'q.del_flag' => '0',
+    //                         'e.del_flag' => '0',
+    //                         'u.user_type' => '1',
+    //                         'ut.user_id' => 'u.id',
+    //                         'ut.tag_id' => 't.id',
+    //                         'uc.user_id' => 'u.id',
+    //                         'uc.category_id' => 'c.id'
+    //                     );
+    //     $like_options = array(
+    //                         'u.profile' => $keyword,
+    //                         'e.title' => $keyword,
+    //                         'q.degree' => $keyword,
+    //                         'q.remarks' => $keyword,
+    //                         't.name' => $keyword,
+    //                         'c.name' => $keyword,
+    //                     );
+    //     $this->db->select('u.id, u.f_name, u.l_name, u.gender, u.profile, u.image, u.resume');
+    //     $this->db->from("tbl_users u");
+    //     $this->db->join("tbl_user_map_tag ut", 'u.id = ut.user_id');
+    //     $this->db->join("tbl_tags t", 't.id = ut.tag_id');
+    //     $this->db->join("tbl_user_map_category uc", 'u.id = uc.user_id');
+    //     $this->db->join("tbl_job_category c", 'c.id = uc.category_id');
+    //     $this->db->join("tbl_experience e", 'e.user_id = u.id');
+    //     $this->db->join("tbl_qualification q", 'q.user_id = u.id');
+    //     $this->db->or_like($like_options);
+    //     $this->db->where($where_options);
+    //     $this->db->group_by('u.id');
+    //     $query = $this->db->get();
+    //     if($count) {
+    //         return $query->num_rows();
+    //     } else {
+    //         return $query->result_array();
+    //     }
+    // }
+
+
+    function count_jobs_by_category($id) {
+      return $this->db->get_where('tbl_jobs', array('category_id' => $id))->num_rows();
+    }
+
+    function get_jobs_by_category($category_id, $per_page, $offset) {
+        $options = array('category_id' => $category_id);
+        $this->db->select('t1.*, t1.id AS job_id');
+        $this->db->select('t2.*');
+        $this->db->select('t3.*, t3.id AS user_id');
+        $this->db->from("tbl_jobs t1");
+        $this->db->join('tbl_job_category t2', 't1.category_id = t2.id');
+        $this->db->join('tbl_users t3', 't1.user_id = t3.id');
+        $this->db->where('t1.category_id', $category_id);
+        $this->db->limit($per_page, $offset);
+      return $this->db->get()->result_array();
+    }
+
 }

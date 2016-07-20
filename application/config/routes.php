@@ -66,6 +66,8 @@ $route['contact_us'] = "home/contact_us";
 $route['login'] = "login_user";
 $route['jobs/(:any)'] = "home/job_details/$1";
 $route['employer/(:any)'] = "home/employer_details/$1";
+$route['category/(:any)'] = "home/job_by_category/$1";
+$route['category/(:any)/(:any)'] = "home/job_by_category/$1/$2";
 $route['search'] = "home/search";
 
 /*

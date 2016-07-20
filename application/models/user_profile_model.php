@@ -62,9 +62,6 @@ class User_profile_model extends CI_Model {
 	}
 
 	public function update_user_detail($image, $id) {
- 		/*foreach ($_REQUEST['job_category'] as $selectedOption){
-     		echo $selectedOption."<br>";
- 		} exit;*/
 		if ($image == '')
             $image = $this->input->post('prev_image');
     	$data = array(
@@ -96,6 +93,7 @@ class User_profile_model extends CI_Model {
 					   );
 	            
 	        }
+
 			$this->db->insert_batch('tbl_user_map_category', $data);
 		}
 
