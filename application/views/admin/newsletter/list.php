@@ -32,7 +32,7 @@
                   <td><i href="javascript:void(0)" data="<?php echo $newsletter['id'];?>" class="change_status btn <?php echo ($newsletter['status'])? 'btn-success' : 'btn-danger'?>"><?php echo ($newsletter['status'])? 'Active' : 'Inactive'?></i></td>
                   <td>
                     <a href="<?=site_url(ADMIN_PATH.'/newsletter/edit/'.$newsletter['id']) ?>" data-toggle="tooltip" title="Edit" class="btn btn-effect-ripple btn-xs btn-success"  data-original-title="Edit"><i class="fa fa-pencil"></i></a>
-                    <a class="btn btn-danger delete" data-id="<?php echo $newsletter['id'];?>" data-toggle="tooltip" title="Delete"  data-original-title="Delete"><i class="fa fa-trash-o fa-lg"></i> Delete</a>
+                    <a class="btn btn-danger delete btn-xs" data-id="<?php echo $newsletter['id'];?>" data-toggle="tooltip" title="Delete"  data-original-title="Delete"><i class="fa fa-trash-o fa-lg"></i></a>
                     <?php
                       }
                     ?>
