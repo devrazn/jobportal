@@ -79,15 +79,15 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                         </div>
                     </div>
                 </div>
-        	    <div class="form-group">
-        	        <div class="form-group col-md-12">
-        	            <label class="col-md-3 control-lable">Address</label>
-        	            <div class="col-md-4">
-                            <textarea cols="39" rows="6" name="address"><?=set_value('address',$user_detail['address']);?></textarea>
-        	            <?= form_error('address') ?>
+                <div class="form-group">
+                    <div class="form-group col-md-12">
+                        <label class="col-md-3 control-lable">Address</label>
+                        <div class="col-md-4">
+                            <input type="text" id="address" name="address" value="<?php echo set_value('address',$user_detail['address']);?>" class="form-control input-sm"></input>
+                            <?= form_error('address') ?>
                         </div>
                     </div>
-        	    </div>
+                </div>
                 <div class="form-group">
                     <div class="form-group col-md-12">
                         <label class="col-md-3 control-lable">Marital Status</label>
@@ -165,9 +165,14 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 <!-- Select2 -->
 <script src="<?=base_url().'assets/user/'?>select2/select2.full.min.js"></script>
+<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB3mcOi_5RRKzmpzxBDNyFherTvxr59z3M&libraries=places"></script>
 
 <script type="text/javascript">
     $(document).ready(function () {
-        $(".select2").select2()
-    })
+        $(".select2").select2();
+
+        // get location from google map
+        getAddress();
+    });
+
 </script>
