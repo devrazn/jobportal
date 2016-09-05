@@ -10,8 +10,7 @@
 			<li>
 				<a href="<?=base_url().'employer_profile/notifications';?>">Jobs Applied Notifications
 					<?php 
-						$employer_id = isset($data[0]['employer_id'])?$data[0]['employer_id']:'';
-						$new_msg = $this->helper_model->count_jobs_applied($employer_id);
+						$new_msg = $this->helper_model->count_jobs_applied();
 						if($new_msg>0)
 							echo "<b>(" . $new_msg . ")</b>";
 					?>

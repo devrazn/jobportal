@@ -6,12 +6,12 @@ class Login_User_Model extends CI_Model {
     {
         parent::__construct();
         $this->load->model('admin/settings_model');
+        $this->load->helper('email_helper');
     }
 
     public function can_log_in() {
 		$this->db->where('email', $this->input->post('email'));
 		$query = $this->db->get('tbl_users');
-		//print_r($this->db->last_query()); exit;
 
 		if($query->num_rows() == 1){
 			$row = $query->row_array(); 
@@ -56,10 +56,8 @@ class Login_User_Model extends CI_Model {
             "LINK" => $confirm,
             "SITELINK" => base_url()
         );
-        $subject = $this->parse_email($parseElement, $subject);
-	    $message = $this->parse_email($parseElement, $emailbody);
-	    //echo $message; die;
-	    //$sendTo = $this->input->post('email');
+        $subject = parse_email($parseElement, $subject);
+	    $message = parse_email($parseElement, $emailbody);
         $data = array(
 					'subject' => $subject,
 					'message' => $message,
@@ -153,18 +151,6 @@ class Login_User_Model extends CI_Model {
 		}
     }
 
-
-	//to parse the the email which is available in the
-    function parse_email($parseElement, $mail_body) {
-        foreach ($parseElement as $name => $value) {
-            $parserName = $name;
-            $parseValue = $value;
-            $mail_body = str_replace("[$parserName]", $parseValue, $mail_body);
-        }
-        return $mail_body;
-    }
-
-
     public function get_user_details($email) {
     	return $this->db->get_where('tbl_users', array('email' => $email))->row_array();
 	}
@@ -175,10 +161,6 @@ class Login_User_Model extends CI_Model {
 		$this->db->where('email', $email);
 		$this->db->update('tbl_users');
 	}
-
-
-
-
 }
 
 ?>

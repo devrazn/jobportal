@@ -213,7 +213,7 @@ class Helper_model extends CI_Model {
         return $this->db->get_where('tbl_tags', array('del_flag' => 0, 'status' => 1))->result_array();
     }
 
-    public function count_jobs_applied($id){
+    public function count_jobs_applied(){
         $user_id = $this->session->userdata('user_id');
         $options = array('del_flag' => '0',
                         'employer_id' => $user_id,

@@ -194,4 +194,29 @@ class Employer_profile_model extends CI_Model {
             return false;
         }
     }
+
+    function update_notify_status($job_id,$employer_id,$jobseeker_id){
+        $data = array('notify_status' => '1');
+        $options = array(
+                        'user_id'       =>$jobseeker_id,
+                        'employer_id'   =>$employer_id,
+                        'job_id'        =>$job_id
+                    );
+        $this->db->where($options);
+        if($this->db->update('tbl_user_map_jobs', $data)){
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    function getUserEmail($id) {
+        $this->db->select('email');
+        $this->db->from('tbl_users');
+        $this->db->where('id', $id);
+
+        $query = $this->db->get();
+        $ret = $query->row();
+        return $ret->email;
+    }
 }

@@ -3,6 +3,7 @@ class Registration_Model extends CI_Model {
     function __construct() {
         parent::__construct();
         $this->load->model('admin/settings_model');
+        $this->load->helper('email_helper');
     }
    
     function get_aleady_registered_email() {
@@ -55,8 +56,8 @@ class Registration_Model extends CI_Model {
             "CONFIRM" => $confirm,
             "LINK" => base_url()
         );
-        $subject = $this->parse_email($parseElement, $subject);
-        $emailbody = $this->parse_email($parseElement, $emailbody);
+        $subject = parse_email($parseElement, $subject);
+        $emailbody = parse_email($parseElement, $emailbody);
         //echo $emailbody;exit;
         $mail_params = array(
                         'to' => $this->input->post('email'),
@@ -103,18 +104,6 @@ class Registration_Model extends CI_Model {
         $query = $this->db->query($sql);
         return $query->row_array();
     }
-
-
-    //to parse the the email which is available in the
-    function parse_email($parseElement, $mail_body) {
-        foreach ($parseElement as $name => $value) {
-            $parserName = $name;
-            $parseValue = $value;
-            $mail_body = str_replace("[$parserName]", $parseValue, $mail_body);
-        }
-        return $mail_body;
-    }
-
 
     public function hard_delete_user($id){
         $this->db->where('id', $id);

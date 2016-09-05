@@ -18,6 +18,7 @@
                   <th>Position</th>
                   <th>Deadline Date</th>
                   <th>Job Applied Date</th>
+                  <th></th>
                 </tr>
               </thead>
               <tbody>
@@ -33,6 +34,14 @@
                     <td><a href="<?=base_url().'jobs/'.$data["job_id"]?>"><?=$data['position']?></a></td>
                     <td><a href="<?=base_url().'jobs/'.$data["job_id"]?>"><?=$data['deadline_date']?></a></td>
                     <td><a href=""><?=$data['applied_date']?></a></td>
+                    <?php 
+                      if($data['notify_status']==0) { 
+                    ?>
+                    <td><a class='btn btn-primary' id="select_for_job" data-jobseeker_id="<?php echo $data['jobseeker_id'];?>" data-job_id="<?php echo $data["job_id"];?>">Select For Job</a></td>
+                    <?php } else { ?>
+                         <td><a class='btn btn-success'>Selected</a></td>
+                    <?php }?>
+
                 </tr>
                       <?php
                           
@@ -69,5 +78,26 @@
         "targets": "_all"
       }]
     });
+
+    $('body').on('click','#select_for_job',function(e){
+      var jobseeker_id = $(this).data('jobseeker_id'),
+          job_id = $(this).data('job_id');
+
+        $.ajax({
+            url:baseUrl+'employer_profile/select_for_job',
+            type:'POST',
+            data:{jobseeker_id:jobseeker_id,job_id:job_id},
+            dataType:'json',
+            success:function(response){
+                if(response.success){
+
+                    alertify.alert(("Notification send to user"),function(e){
+                        window.location.reload();
+                    });
+                }
+            }
+        });
+    });
+
   });
 </script>

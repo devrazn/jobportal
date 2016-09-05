@@ -56,7 +56,6 @@ function setDelete(del_url,tbl_col_num,element,name) {
                     _this.closest('tr').html("<td colspan='"+tbl_col_num+"' align='center'><img src='"+loading_img+"' ></td>");
                 },
                 success: function(data) {
-                debugger;
                     if(data['response']) {
                         $('#tr_'+id).remove();
                             var responseHTML = "<div role='alert' class='alert alert-success fade in' id='alert'>" + 

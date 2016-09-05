@@ -9,6 +9,9 @@ class Employer_profile extends CI_Controller {
         $this->load->model('employer_profile_model');
 	  	$this->load->model('user_profile_model');
 	  	$this->load->model('home_model');
+        $this->load->helper('email_helper');
+        $this->load->model('admin/settings_model');
+
         if(!$this->helper_model->validate_employer_session()){
           redirect(base_url());
         }
@@ -299,10 +302,10 @@ class Employer_profile extends CI_Controller {
 
     function user_details($id){
         $arrData = $this->employer_profile_model->get_map_job_details($id);
+        $this->employer_profile_model->update_read_flag_status($arrData['id']);
         $this->jobseeker($arrData['user_id']);
     }
-
-
+    
     function _validate_image($image='', $edit=false) {
         if(isset($_FILES['image']) && !empty($_FILES['image']['name'])) {     //check if the field is empty or not
             $image = array(
@@ -403,9 +406,53 @@ class Employer_profile extends CI_Controller {
             $this->form_validation->set_message('_validate_checkbox','Application Procedure is required');
             return false;
         } else{
-            //die("here");
             return true;
         }
+    }
+
+    function select_for_job() {
+        if(isset($_POST['job_id']) && !empty($_POST['job_id']) && isset($_POST['jobseeker_id']) && !empty($_POST['jobseeker_id'])){
+            $job_id = $_POST['job_id'];
+            $jobseeker_id = $_POST['jobseeker_id'];
+            $employer_id = $this->session->userdata('user_id');
+            $userEmail = $this->employer_profile_model->getUserEmail($jobseeker_id);
+            $data = $this->employer_profile_model->update_notify_status($job_id,$employer_id,$jobseeker_id);
+            if($data){
+                $this->sendJobNotification($userEmail);
+                echo json_encode(array('success'=>true));
+            } else {
+                echo json_encode(array('success'=>false));
+            }
+        } else {
+            echo json_encode(array('success'=>false));
+        }
+    }
+
+    // send mail to jobbseeker to notify he/she is selected for the job
+    private function sendJobNotification($email) {
+        $mail_setting = $this->settings_model->get_email_settings();
+        $message = $this->settings_model->get_email_template('NOTIFY_USER');
+        $subject = $message['subject'];
+        $emailbody = $message['content'];
+        
+        $parseElement = array(
+            "USERNAME" => $email,
+            "SITENAME" => 'JobPortal',
+            "SITELINK" => base_url()
+        );
+        $subject = parse_email($parseElement, $subject);
+        $emailbody = parse_email($parseElement, $emailbody);
+        $mail_params = array(
+                        'to' => $email,
+                        'subject' => $subject,
+                        'message' => $emailbody,
+                );
+        if(send_email($mail_setting, $mail_params)){
+            return true;
+        } else {
+            return false;
+        }
+
     }
 
 }
